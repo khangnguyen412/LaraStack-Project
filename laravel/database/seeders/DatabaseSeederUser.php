@@ -4,23 +4,22 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class DatabaseSeederUser extends Seeder
-{
+class DatabaseSeederUser extends Seeder {
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
+    public function run(): void {
         $arr = [
             [
-                'id'                => (string) Str::uuid(),
+                'uuid'                => Str::uuid()->toString(),
                 'user_name'         => "admin",
                 'display_name'      => "Admin CMS",
                 'email'             => "example@example.com",
                 'email_verified_at' => now(),
-                'password'          => bcrypt('khang412'),
+                'password'          => bcrypt('admin@123'),
                 'address'           => "Lạc Long Quân",
                 'phone'             => "000000000",
                 'bio'               => "Learn, Keep Learning, Learn Forever",
@@ -30,12 +29,12 @@ class DatabaseSeederUser extends Seeder
                 'updated_at'        => now(),
             ],
             [
-                'id'                => (string) Str::uuid(),
+                'uuid'                => Str::uuid()->toString(),
                 'user_name'         => "khangnguyen",
                 'display_name'      => "Khang Nguyễn",
                 'email'             => "khangnguyen@gmail.com",
                 'email_verified_at' => now(),
-                'password'          => bcrypt('khang412'),
+                'password'          => bcrypt('khang123'),
                 'address'           => "Lạc Long Quân",
                 'phone'             => "0973626954",
                 'bio'               => "Learn, Keep Learning, Learn Forever",
