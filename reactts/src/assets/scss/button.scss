@@ -1,0 +1,27 @@
+/*
+ * Linear Gradient Button
+ */
+
+#edit-profile-btn {
+    margin-top: 20px;
+    
+    .linear-gradient-btn.ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
+        > span {
+            position: relative;
+        }
+    
+        &::before {
+            content: '';
+            background: linear-gradient(135deg, #6253e1, #04befe);
+            position: absolute;
+            inset: -1px;
+            opacity: 1;
+            transition: all 0.3s;
+            border-radius: inherit;
+        }
+    
+        &:hover::before {
+            opacity: 0;
+        }
+    }
+}

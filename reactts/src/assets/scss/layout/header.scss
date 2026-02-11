@@ -1,0 +1,28 @@
+header.header-layout {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 0 20px;
+
+    .header-logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-menu {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        justify-content: end;
+        margin-left: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-layout {
+        justify-content: space-between;
+    }
+}

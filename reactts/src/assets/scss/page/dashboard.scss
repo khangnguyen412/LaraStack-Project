@@ -1,0 +1,14 @@
+.dashboard-container {
+    .dashboard-col{
+        padding: 0 10px;
+        
+        .dashboard-col-wrapper{
+            height: 100%;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: #ffff;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    }
+}
