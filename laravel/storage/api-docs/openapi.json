@@ -68,6 +68,29 @@
                 }
             }
         },
+        "/api/v1/admin/roles": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get role list",
+                "description": "Display a listing of the resource.",
+                "operationId": "fca5db0fa5666e4e2ebf340ec412bae3",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GetRolesList"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/admin/user": {
             "get": {
                 "tags": [
@@ -173,18 +196,6 @@
                     "guard_name": {
                         "type": "string",
                         "example": "web"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2023-01-01T00:00:00Z",
-                        "nullable": true
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2023-01-01T00:00:00Z",
-                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -281,6 +292,24 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/Exception"
+                        }
+                    }
+                }
+            },
+            "GetRolesList": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "roles_list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Roles"
+                                    }
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 }
@@ -404,6 +433,10 @@
         {
             "name": "Auth",
             "description": "Operations about authentication"
+        },
+        {
+            "name": "Roles",
+            "description": "Role management"
         },
         {
             "name": "Users",

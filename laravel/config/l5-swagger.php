@@ -12,10 +12,10 @@ return [
                  * Route for accessing api documentation interface
                  */
                 'api'  => 'swagger/documentation', // Không được trung với các route khác
-                'docs' => 'docs',
+                'docs' => 'swagger/docs',
             ],
             'paths'  => [
-                'docs'                   => 'storage/api-docs',
+                'docs'                   => storage_path('api-docs'),
 
                 /*
                  * Edit to include full URL in ui for assets
@@ -58,7 +58,8 @@ return [
             /*
              * Route for accessing parsed swagger annotations.
              */
-            'docs'            => 'docs',
+            'api'             => 'swagger/documentation',
+            'docs'            => 'swagger/docs',
 
             /*
              * Route for Oauth2 authentication callback.

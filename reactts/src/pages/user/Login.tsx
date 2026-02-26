@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { theme } from 'antd';
 import { LockOutlined, UserOutlined, } from '@ant-design/icons';
 import { LoginFormPage, ProFormCheckbox, ProFormText, } from '@ant-design/pro-components';
-import type { SizeType } from 'antd/es/config-provider/SizeContext';
+
 
 /**
  *  Component
@@ -29,10 +29,15 @@ import '@/assets/scss/page/login.scss';
 /**
  * Redux
  */
-import type { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from 'react-redux';
 import { LoginThunk } from "@/redux/features/auth";
 
+/**
+ * Type
+*/
+import type { SizeType } from 'antd/es/config-provider/SizeContext';
+import type { AppDispatch } from "@/redux/store";
+import type { LoginType } from "@/types/login.type";
 
 /**
  * Login Page
@@ -53,7 +58,7 @@ const LoginPage = () => {
      * 
      * @param values 
      */
-    const OnFinish = async (values: { username: string, password: string }) => {
+    const OnFinish = async (values: LoginType) => {
         await dispatch(LoginThunk(values));
     }
 

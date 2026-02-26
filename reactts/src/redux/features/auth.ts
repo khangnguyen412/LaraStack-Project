@@ -9,6 +9,13 @@ import { Login, Logout, UserProfile, CheckAuth } from "@/services/servicesAuth";
 /**
  * Type
  */
+import type { LoginType } from "@/types/login.type";
+
+/**
+ * Model
+ */
+import LoginModel from "@/models/login";
+
 type AuthState = {
     data: any;
     loading: boolean;
@@ -23,9 +30,9 @@ const IsEmail = (input: string) => {
 
 export const LoginThunk = createAsyncThunk(
     'auth/login',
-    async ({ username, password }: { username: string, password: string }, { rejectWithValue }) => {
+    async ({ username, password }: LoginType, { rejectWithValue }) => {
         try {
-            let payload = IsEmail(username) ? { email: username, password } : { username, password };
+            let payload = IsEmail(username || "") ? { email: username || "", password: password || "" } : { username: username || "", password: password || "" };
             const response = await Login(payload);
             if (response?.status === 200) {
                 return {data: response};

@@ -1,11 +1,10 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 /**
  * Redux
  */
-import type { AppDispatch } from '@/redux/store.js';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 /**
  * Dayjs
@@ -42,7 +41,7 @@ const { Title, Text } = Typography;
 /**
  * Admin Dashboard
  */
-const AdminDashboard = () => {
+const AdminDashboard: React.FC = () => {
     /**
      * Hook
      */

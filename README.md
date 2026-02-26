@@ -1,13 +1,14 @@
-## Laravel - Reactjs Project 
-- Descripttion: Project Laravel + ReactJs for fullstack web.
+## Laravel - React Project 
+- Descripttion: Project Laravel + ReactTs for fullstack web.
 - Purpose: Create CMS system
 
 ## Technology in project:
-- Language: HTML, CSS, PHP, JS
+- Language: HTML, CSS, PHP, JavaScript, TypeScript
 - Tailwind
 - Docker
 - Laravel
-- Reactjs
+- ReactJs
+- ReactTs
 
 ## How to start and testing project
 ### Start with docker (don't need install xampp, wamp)
@@ -47,22 +48,29 @@ php artisan db:seed
 - Reset migrate and seeding:
 ```
 docker exec -it Laravel-React-Web bash
-hp artisan migrate:fresh
+php artisan migrate:fresh
 php artisan db:seed
 ```
 
 ### Install swagger
 - Install swagger:
 ```
-composer require l5-swagger
+composer require darkaonline/l5-swagger
 ```
 - Publish swagger:
 ```
 php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
+- Regenerate swagger:
+```
+php artisan config:clear
+php artisan route:clear
+php artisan cache:clear
+php artisan l5-swagger:generate
+```
 - Access swagger:
 ```
-http://localhost:8000/api/documentation
+http://localhost:8000/swagger/documentation
 ```
 
 ## Project structure 
@@ -78,7 +86,7 @@ Laravel-React-Project/
 │   └── php.ini             # Cấu hình PHP
 ├── react/                  # React project
 │   ├── Dockerfile          # File cấu hình Docker cho React
-│   ├── README-REACTJS.MD   # Hướng dẫn về React
+│   ├── README-REACT.MD     # Hướng dẫn về React
 │   ├── public/             # Show giao diện lên web
 │   ├── src/                # Thư mục nguồn của React
 │   │    ├── assets         # Hình ảnh, font,...
@@ -88,8 +96,8 @@ Laravel-React-Project/
 │   │    ├── services       # API, fetch dữ liệu
 │   │    ├── store          # Redux, context,...
 │   │    └── utils          # Hàm hỗ trợ chung
-│   ├── App.js              # Component gốc của React
-│   ├── index.js            # Điểm khởi đầu ứng dụng
+│   ├── App.tsx             # Component gốc của React
+│   ├── main.tsx            # Điểm khởi đầu ứng dụng
 │   └── styles.css          # File CSS
 ├── dockerignore            # Danh sách file không cần build Docker
 ├── .env                    # Biến môi trường chung
