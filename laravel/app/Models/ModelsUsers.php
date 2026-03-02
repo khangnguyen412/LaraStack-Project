@@ -60,16 +60,18 @@ class ModelsUsers extends Authenticatable implements JWTSubject {
         return Carbon::parse($value)->format('Y-m-d');
     }
 
-    public function role() {
+    public function roles() {
         return $this->belongsTo(ModelsRoles::class, "role_id", "id");
     }
 
-    public function getJWTIdentifier()
-    {
+    public function getJWTIdentifier() {
         return $this->getKey();
     }
 
     public function getJWTCustomClaims() {
-        return [];
+        return [
+            'role_id'     => $this->role_id,
+            'permissions' => $this->roles?->permissions ? $this->roles->permissions->pluck('name')->filter()->values()->toArray() : [],
+        ];
     }
 }

@@ -97,7 +97,7 @@ const UserList = () => {
      */
     const getUserList = async () => {
         try {
-            await dispatch(GetUserListAdminThunk()).unwrap();
+            await dispatch(GetUserListAdminThunk("")).unwrap();
         } catch (error) {
             console.log(error)
         }
@@ -153,7 +153,7 @@ const UserList = () => {
                                                     <p><b>Username:</b> {item.username}</p>
                                                     <p><b>Email:</b> {item.email}</p>
                                                     <p><b>Address:</b> {item.address}</p>
-                                                    <p><b>Role:</b> {item.role.name}</p>
+                                                    <p><b>Role:</b> {item.roles.name}</p>
                                                 </Card>
                                             ))}
                                         </React.Fragment>

@@ -106,7 +106,7 @@ const AdminDashboard: React.FC = () => {
                                                 </Col>
                                                 <Col span={24}>
                                                     <Text strong>Role: </Text>
-                                                    <Text>{profile?.role?.name ?? "N/A"}</Text>
+                                                    <Text>{profile?.roles?.name ?? "N/A"}</Text>
                                                 </Col>
                                             </Row>
                                             <Row id="edit-profile-btn">

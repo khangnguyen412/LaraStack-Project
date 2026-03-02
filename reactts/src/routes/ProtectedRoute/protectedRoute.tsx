@@ -18,17 +18,23 @@ export const ProtectedAdmin = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch<AppDispatch>()
     const { checked, authenticated } = useSelector((state: any) => state.auth)
 
+    const checkAuthHandle = async () => {
+        try {
+            await dispatch(CheckAuthThunk())
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
-        dispatch(CheckAuthThunk())
+        checkAuthHandle()
     }, [dispatch])
 
     if (!checked) {
         return <Loading IsLoading={true} />;
     }
 
-
     if (!authenticated) {
-        console.log('not authenticated')
         return <Navigate to="/login" replace />
     }
 

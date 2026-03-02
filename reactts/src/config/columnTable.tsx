@@ -10,10 +10,10 @@ import type { Breakpoint } from 'antd/es/_util/responsiveObserver';
 import type { PresetColorType } from 'antd/es/_util/colors';
 import type { LiteralUnion } from 'antd/es/_util/type';
 
-const color: React.FC<{ role: { id: number; name: string } }> = ({ role }) => {
-    if (role?.id === 1) { return 'volcano'; }
-    else if (role?.id === 2) { return 'blue'; }
-    else if (role?.id === 3) { return 'green'; }
+const color: React.FC<{ roles: { id: number; name: string } }> = ({ roles }) => {
+    if (roles?.id === 1) { return 'volcano'; }
+    else if (roles?.id === 2) { return 'blue'; }
+    else if (roles?.id === 3) { return 'green'; }
 }
 
 export const columns = (showModal: (key: string) => void) => [
@@ -49,9 +49,9 @@ export const columns = (showModal: (key: string) => void) => [
     },
     {
         title: 'Role',
-        dataIndex: 'role',
-        key: 'role',
-        render: (role: { id: number; name: string }) => <Tag color={color({ role }) as LiteralUnion<PresetColorType, string>} key={role?.id}> {role.name} </Tag>,
+        dataIndex: 'roles',
+        key: 'roles',
+        render: (roles: { id: number; name: string }) => <Tag color={color({ roles }) as LiteralUnion<PresetColorType, string>} key={roles?.id}> {roles.name} </Tag>,
     },
     {
         title: 'Action',

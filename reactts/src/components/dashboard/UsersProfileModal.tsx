@@ -110,13 +110,13 @@ const UserProfileModal: React.FC<{ isOpen: boolean, onOk: () => void, onCancel: 
                     <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel} footer={footer} width={1000}>
                         <div>
                             <h1 className="text-2xl font-bold">{userData.display_name}</h1>
-                            <p className="text-gray-600">{userData.role.name} • Register Date: {CreateAt}</p>
+                            <p className="text-gray-600">{userData.roles.name} • Register Date: {CreateAt}</p>
                         </div>
                         <ul className="space-y-2 mt-2" key={userData.id}>
                             <li><span className="font-medium">Email:</span> {userData.email}</li>
                             <li><span className="font-medium">Number Phone:</span> {userData.phone}</li>
                             <li><span className="font-medium">Address:</span> {userData.address}</li>
-                            <li><span className="font-medium">Role:</span> {userData.role.name}</li>
+                            <li><span className="font-medium">Role:</span> {userData.roles.name}</li>
                             <li><span className="font-medium">Update At:</span> {UpdateAt}</li>
                         </ul>
                     </Modal>

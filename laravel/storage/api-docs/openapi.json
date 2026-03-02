@@ -359,6 +359,12 @@
                                 },
                                 "profile": {
                                     "$ref": "#/components/schemas/Users"
+                                },
+                                "permissions": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "type": "object"

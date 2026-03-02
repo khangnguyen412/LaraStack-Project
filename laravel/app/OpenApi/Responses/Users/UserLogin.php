@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
         properties: [
             new OA\Property(property: 'token', type: 'string', example: 'Bearer token'),
             new OA\Property(property: 'profile', ref: '#/components/schemas/Users'),
+            new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),
         ]
     )
 )]

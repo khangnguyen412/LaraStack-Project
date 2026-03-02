@@ -10,17 +10,17 @@ import { Login, Logout, UserProfile, CheckAuth } from "@/services/servicesAuth";
  * Type
  */
 import type { LoginType } from "@/types/login.type";
+import type { ErrorType } from "@/types/error.type";
 
 /**
  * Model
  */
-import LoginModel from "@/models/login";
 
 type AuthState = {
     data: any;
     loading: boolean;
-    error: string | null;
-    authenticated: boolean;
+    error: any;
+    authenticated: boolean | undefined;
     checked: boolean;
 }
 
@@ -28,24 +28,21 @@ const IsEmail = (input: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
 };
 
-export const LoginThunk = createAsyncThunk(
+export const LoginThunk = createAsyncThunk<{ data: any }, LoginType, { rejectValue: ErrorType }>(
     'auth/login',
     async ({ username, password }: LoginType, { rejectWithValue }) => {
         try {
             let payload = IsEmail(username || "") ? { email: username || "", password: password || "" } : { username: username || "", password: password || "" };
             const response = await Login(payload);
-            if (response?.status === 200) {
-                return {data: response};
-            } else {
-                return rejectWithValue(response || "Login Failed");
-            }
-        } catch (error) {
-            return rejectWithValue(error || "Login Failed");
+            return { data: response };
+        } catch (error: any) {
+            const errorData: ErrorType = error || { errorMessage: error.message || "Login Failed" };
+            return rejectWithValue(errorData);
         }
     }
 )
 
-export const LogoutThunk = createAsyncThunk(
+export const LogoutThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
     'auth/logout',
     async (_, { rejectWithValue }) => {
         try {
@@ -53,53 +50,56 @@ export const LogoutThunk = createAsyncThunk(
             if (response?.status === 200) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("profile");
+                localStorage.removeItem("permissions");
             } else {
-                return rejectWithValue(response || "Logout Failed");
+                throw { errorMessage: "Logout Failed" };
             }
-            return {data: response};
-        } catch (err) {
-            return rejectWithValue(err || "Logout Failed");
+            return { data: response };
+        } catch (error: any) {
+            const errorData: ErrorType = error || { errorMessage: error.message || "Logout Failed" };
+            return rejectWithValue(errorData);
         }
     }
 )
 
-export const CheckAuthThunk = createAsyncThunk(
+export const CheckAuthThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
     'auth/check',
     async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                console.error("Token not found")
-                return;
+                throw { errorMessage: "Token not found" };
             }
             const response = await CheckAuth(token);
             if (response?.status !== 200) {
                 await Logout();
-                return rejectWithValue("Token invalid");
+                throw { errorMessage: "Token invalid" };
             }
-            return {data: response};
-        } catch (error) {
-            rejectWithValue(error || "Check Auth Failed")
+            return { data: response };
+        } catch (error: any) {
+            const errorData: ErrorType = error || { errorMessage: error.message || "Check Auth Failed" };
+            return rejectWithValue(errorData);
         }
     }
 )
 
 
-export const GetProfileThunk = createAsyncThunk(
+export const GetProfileThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
     'auth/profile',
     async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                return rejectWithValue("Coundn't take userprofile");
+                throw { errorMessage: "Token not found" };
             }
             const response = await UserProfile(token);
             if (response?.status !== 200) {
-                return rejectWithValue("Coundn't take userprofile");
+                throw { errorMessage: "Coundn't take userprofile" };
             }
-            return {data: response};
-        } catch (error) {
-            rejectWithValue(error || "Get Profile Failed")
+            return { data: response };
+        } catch (error: any) {
+            const errorData: ErrorType = error || { errorMessage: error.message || "Get Profile Failed" };
+            return rejectWithValue(errorData);
         }
     }
 )
@@ -122,9 +122,13 @@ const AuthSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(CheckAuthThunk.fulfilled, (state, action) => {
+        builder.addCase(CheckAuthThunk.fulfilled, (state) => {
             state.checked = true;
-            state.authenticated = action.payload?.data?.status === 200 ? true : false;
+            state.authenticated = true;
+        })
+        builder.addCase(CheckAuthThunk.rejected, (state) => {
+            state.checked = true;
+            state.authenticated = false;
         })
         builder.addCase(GetProfileThunk.pending, (state) => {
             state.loading = true;
@@ -135,7 +139,9 @@ const AuthSlice = createSlice({
         })
         builder.addCase(LogoutThunk.fulfilled, (state) => {
             state.data = null;
-            state.error = null;
+        })
+        builder.addCase(LogoutThunk.rejected, (state, action) => {
+            state.error = action.payload?.errorMessage || "Logout Failed";
         })
         builder.addCase(LoginThunk.pending, (state) => {
             state.loading = true;
@@ -146,7 +152,7 @@ const AuthSlice = createSlice({
         })
         builder.addCase(LoginThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload as string;
+            state.error = action.payload?.errorMessage || "Login Failed";
         });
     },
 });

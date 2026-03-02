@@ -29,7 +29,7 @@ class ControllerUsers extends Auth {
     )]
     public function index() {
         try {
-            $users_list = ModelsUsers::with('role')->get();
+            $users_list = ModelsUsers::with('roles')->get();
             return ApiResponse::sendResponse(["users_list" => $users_list], 200);
         } catch (NotFoundHttpException $e) {
             throw new NotFoundHttpException($e->getMessage());
@@ -71,7 +71,7 @@ class ControllerUsers extends Auth {
         if (!$id) {
             throw new NotFoundHttpException("Couldn't get userid");
         }
-        $users_with_id = ModelsUsers::with('role')->find($id);
+        $users_with_id = ModelsUsers::with('roles')->find($id);
         if (!$users_with_id) {
             throw new NotFoundHttpException("Couldn't get user with id: $id");
         }

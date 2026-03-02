@@ -70,5 +70,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof TokenMismatchException) {
             return ErrorResponse::getErrorResponse(419, "TOKEN_MISMATCH", $e->getMessage());
         }
+
+        // Default (500)
     }
 }

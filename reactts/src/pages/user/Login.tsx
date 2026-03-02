@@ -41,14 +41,15 @@ import type { LoginType } from "@/types/login.type";
 
 /**
  * Login Page
-*/
+ */
 const LoginPage = () => {
     /**
      * Hook
-    */
+     */
     const { token } = theme.useToken();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const check = useSelector((state: any) => state.auth?.check);
     const data = useSelector((state: any) => state.auth?.data);
     const loading = useSelector((state: any) => state.auth?.loading);
     const error = useSelector((state: any) => state.auth?.error);
@@ -59,7 +60,11 @@ const LoginPage = () => {
      * @param values 
      */
     const OnFinish = async (values: LoginType) => {
-        await dispatch(LoginThunk(values));
+        try {
+            await dispatch(LoginThunk(values));
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
@@ -92,9 +97,13 @@ const LoginPage = () => {
     }
 
     useEffect(() => {
+        if (localStorage.getItem("token") && check) {
+            navigate("/admin");
+        }
         if (data?.token && data?.profile) {
             localStorage.setItem("token", data?.token);
             localStorage.setItem("profile", JSON.stringify(data?.profile));
+            localStorage.setItem("permissions", JSON.stringify(data?.permissions));
             navigate("/admin");
         }
     }, [data, navigate])

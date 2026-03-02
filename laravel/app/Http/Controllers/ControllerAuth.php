@@ -7,10 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use Tymon\JWTAuth\Facades\JWTAuth;
+
 use OpenApi\Attributes as OA;
 
-
+use App\Models\ModelsPermissions;
 use App\Models\ModelsUsers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Response\ApiResponse;
@@ -74,10 +79,7 @@ class ControllerAuth extends Controller {
                 "password" => "required"
             ]);
             if ($valid->fails() || (empty($request->email) && empty($request->username))) {
-                return response()->json([
-                    "status" => 401,
-                    "error"  => "Invalid email or password"
-                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                throw new ValidationException("Invalid email or password");
             }
 
             $credentials = $request->only("password");
@@ -89,52 +91,37 @@ class ControllerAuth extends Controller {
 
             $user = ModelsUsers::where("email", $request->email)->orWhere("user_name", $request->username)->first();
             if (!$user) {
-                return response()->json([
-                    "status" => 401,
-                    "error"  => "Username not found"
-                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                throw new AuthenticationException("Username not found");
             }
 
             if (!Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    "status" => 401,
-                    "error"  => "Invalid password"
-                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                throw new AuthenticationException("Invalid password");
             }
 
             $token = auth()->attempt($credentials);
-            \Log::info($token);
             if (!$token) {
-                // throw new AuthenticationException("Invalid credentials");
-                return response()->json([
-                    "status" => 401,
-                    "error"  => "Invalid credentials"
-                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                throw new AuthenticationException("Invalid credentials");
             }
 
-            $profile = ModelsUsers::with("role")->find(auth()->user()->uuid);
-            $cookie = cookie(
-                "jwt",
-                $token,
-                config('jwt.ttl'),  // Thời gian sống (phút)
-                '/',                // Path
-                null,               // Domain
-                false,              // Secure (Bật true nếu dùng https)
-                true,               // HttpOnly (QUAN TRỌNG: Chặn JavaScript truy cập)
-                false,              // Raw
-                'Lax'               // SameSite
-            );
+            $profile = ModelsUsers::with("roles.permissions")->find(auth()->user()->uuid);
+            $permissions = $profile->roles->permissions->pluck("name");
+            $profile->roles->makeHidden('permissions');
+            /**
+             * Cookie (jwt, Expires, Path - Thời gian sống (phút), Domain, Secure (Bật true nếu dùng https), HttpOnly (QUAN TRỌNG: Chặn JavaScript truy cập), Raw, Samesite)
+             */
+            $cookie = cookie("jwt", $token, config('jwt.ttl'), '/', null, false, true, false, 'Lax');
             return response()->json([
-                "status"  => 200,
-                "token"   => $token,
-                "profile" => $profile,
+                "status"      => 200,
+                "token"       => $token,
+                "profile"     => $profile,
+                "permissions" => $permissions
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)->withCookie($cookie);
+        } catch (AuthenticationException $e) {
+            throw new AuthenticationException($e->getMessage());
+        } catch (AuthorizationException $e) {
+            throw new AuthorizationException($e->getMessage());
         } catch (Exception $e) {
-            return response()->json([
-                "status" => 403,
-                "error"  => "Error: " . $e->getMessage(),
-                "req"    => $request,
-            ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -184,10 +171,13 @@ class ControllerAuth extends Controller {
     )]
     public function profile(Request $request) {
         try {
-            $profile = ModelsUsers::with("role")->find($request->user()->uuid); // Call user() form setUserResolver in middleware AuthMiddleware
+            $profile = ModelsUsers::with("roles.permissions")->find($request->user()->uuid);
+            $permissions = $profile->roles->permissions->pluck("name");
+            $profile->roles->makeHidden('permissions');
             return response()->json([
-                "status"  => 200,
-                "profile" => $profile
+                "status"      => 200,
+                "profile"     => $profile,
+                "permissions" => $permissions
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             throw new AuthenticationException($e->getMessage());
