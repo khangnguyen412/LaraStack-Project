@@ -11,7 +11,7 @@ import { menuItems, menuItemsMobile } from '@/config/menuItem.tsx';
  * Ant Design
  */
 import { Layout, Menu, Button, Drawer, Grid } from 'antd';
-import { UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 
 /**
  * Redux

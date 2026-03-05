@@ -21,8 +21,7 @@ export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, any, { reje
     'user/getUserListAdmin',
     async (_, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-            const response = await GetUserListAdmin(token || "");
+            const response = await GetUserListAdmin();
             return { data: response };
         } catch (error: any) {
             const errorData: ErrorType = error || { errorMessage: error.message || "Get User List Failed" };
@@ -35,8 +34,7 @@ export const GetUserIDAdminThunk = createAsyncThunk<{ data: any }, any, { reject
     'user/getUserIDAdmin',
     async (id: string, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-            const response = await GetUserIDAdmin(token || "", id);
+            const response = await GetUserIDAdmin(id);
             return response;
         } catch (error: any) {
             const errorData: ErrorType = error || { errorMessage: error.message || "Get User ID Failed" };

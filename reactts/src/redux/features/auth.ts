@@ -50,7 +50,6 @@ export const LogoutThunk = createAsyncThunk<{ data: any }, void, { rejectValue: 
             if (response?.status === 200) {
                 localStorage.removeItem("token");
                 localStorage.removeItem("profile");
-                localStorage.removeItem("permissions");
             } else {
                 throw { errorMessage: "Logout Failed" };
             }
@@ -66,11 +65,7 @@ export const CheckAuthThunk = createAsyncThunk<{ data: any }, void, { rejectValu
     'auth/check',
     async (_, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw { errorMessage: "Token not found" };
-            }
-            const response = await CheckAuth(token);
+            const response = await CheckAuth();
             if (response?.status !== 200) {
                 await Logout();
                 throw { errorMessage: "Token invalid" };
@@ -88,11 +83,7 @@ export const GetProfileThunk = createAsyncThunk<{ data: any }, void, { rejectVal
     'auth/profile',
     async (_, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw { errorMessage: "Token not found" };
-            }
-            const response = await UserProfile(token);
+            const response = await UserProfile();
             if (response?.status !== 200) {
                 throw { errorMessage: "Coundn't take userprofile" };
             }
@@ -110,7 +101,7 @@ const AuthSlice = createSlice({
         data: null,
         loading: false,
         error: null,
-        authenticated: false,
+        authenticated: undefined,
         checked: false,
     } as AuthState,
     reducers: {

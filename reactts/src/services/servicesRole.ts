@@ -1,17 +1,17 @@
 /* eslint-disable */
 import { postRequest, getRequest } from '@/api/axios';
 
-export const GetRoleList = async (token?: string) => {
+export const GetRoleList = async () => {
     try {
-        return await getRequest('/admin/roles', { "Authorization": `Bearer ${token}` });
+        return await getRequest('/admin/roles', { withCredentials: true });
     } catch (error) {
         throw error
     }
 }
 
-export const GetRoleID = async (token?: string, id?: number) => {
+export const GetRoleByID = async (id?: number) => {
     try {
-        return await getRequest(`/admin/roles/${id}`, { "Authorization": `Bearer ${token}` });
+        return await getRequest(`/admin/roles/${id}`, { withCredentials: true });
     } catch (error) {
         throw error
     }

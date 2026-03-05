@@ -30,7 +30,7 @@ import '@/assets/scss/page/login.scss';
  * Redux
  */
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginThunk } from "@/redux/features/auth";
+import { LoginThunk, CheckAuthThunk } from "@/redux/features/auth";
 
 /**
  * Type
@@ -53,6 +53,14 @@ const LoginPage = () => {
     const data = useSelector((state: any) => state.auth?.data);
     const loading = useSelector((state: any) => state.auth?.loading);
     const error = useSelector((state: any) => state.auth?.error);
+
+    const checkAuthHandle = async () => {
+        try {
+            await dispatch(CheckAuthThunk())
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     /**
      * On Finish Login Form
@@ -97,16 +105,20 @@ const LoginPage = () => {
     }
 
     useEffect(() => {
-        if (localStorage.getItem("token") && check) {
+        if (localStorage.getItem("profile")) {
             navigate("/admin");
         }
-        if (data?.token && data?.profile) {
-            localStorage.setItem("token", data?.token);
+        if (data?.profile) {
             localStorage.setItem("profile", JSON.stringify(data?.profile));
-            localStorage.setItem("permissions", JSON.stringify(data?.permissions));
             navigate("/admin");
         }
     }, [data, navigate])
+
+    useEffect(() => {
+        if (localStorage.getItem("profile")) {
+            checkAuthHandle()
+        }
+    }, [check])
 
     return (
         <React.Fragment>

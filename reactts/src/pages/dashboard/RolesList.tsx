@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React, { useState, useMemo, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 
 /**
  * Ant Design
@@ -18,35 +17,38 @@ import { ListData } from "@/components/dashboard/partials/ListData";
 /**
  * Redux
  */
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch } from '@/redux/store';
 import { GetRolesListThunk } from '@/redux/features/roles';
 
 /**
  * Style
- */
+*/
 import "@/assets/scss/style.scss";
 import "@/assets/scss/page/userList.scss";
 
 const UserRole = () => {
+    /**
+     * Hook
+     */
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
-    const dispatch = useDispatch();
+    const actionRef = useRef<any>(null);
+    const formRef = useRef<any>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const data = useSelector((state: any) => state.roles.data);
+
+    /**
+     * State
+     */
+    const [open, setOpen] = useState(false);
+    const [UserId, SetUserId] = useState<string>('')
 
     /**
      * User Data
      */
-    const getRolesList = async () => {
-        try {
-            const response = await dispatch(GetRolesListThunk()).unwrap();
-            console.log(response);
-            if (response?.data) return response
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
-    const [open, setOpen] = useState(false);
-    const [UserId, SetUserId] = useState(null)
-    const showModal = (id) => {
+    const showModal = (id: string) => {
         SetUserId(id)
         setOpen(true);
     };
@@ -65,29 +67,21 @@ const UserRole = () => {
      * Page Container Config
      */
     const PageContainerConfig = {
-        SideBarActiveKey: 'users-role',
-        SideBarActiveOpenKey: 'users',
-        HeaderTitle: 'Users Role',
+        SideBarActiveKey: 'roles-list',
+        SideBarActiveOpenKey: ['access-control'],
+        HeaderTitle: undefined,
         BreadcrumbItems: {
             items: [
-                { title: 'Users', path: '/admin' },
-                { title: 'Users Role' },
+                { title: 'Access Control', path: '/admin' },
+                { title: 'Role List' },
             ],
         },
     };
 
     /**
-     * Search Config
-     */
-    const searchConfig = {
-        name: { label: 'Name', placeholder: 'Search by name...' },
-        guard_name: { label: 'Guard Name', placeholder: 'Search by guard name...' },
-    };
-
-    /**
      * Table Config
      */
-    const columnsConfig = [
+    const columnsConfig: any = [
         {
             title: 'id',
             hidden: true,
@@ -98,62 +92,50 @@ const UserRole = () => {
             dataIndex: 'name',
             key: 'name',
             search: true,
-            formItemProps: { label: searchConfig.name.label },
-            fieldProps: { placeholder: searchConfig.name.placeholder },
-            render: (text, record) => <Typography.Text>{text}</Typography.Text>,
+            formItemProps: { label: "Name" },
+            fieldProps: { placeholder: "Search by name..." },
+            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
         },
         {
             title: 'Guard Name',
             dataIndex: 'guard_name',
             key: 'guard_name',
             search: true,
-            formItemProps: { label: searchConfig.guard_name.label },
-            fieldProps: { placeholder: searchConfig.guard_name.placeholder },
-            render: (text, record) => <Typography.Text>{text}</Typography.Text>,
+            formItemProps: { label: "Guard" },
+            fieldProps: { placeholder: "Search by guard name..." },
+            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
         },
-        // {
-        //     title: 'Permissions',
-        //     dataIndex: 'permissions',
-        //     key: 'permissions',
-        //     search: false,
-        //     render: (role) => {
-        //         let colorRole = ''
-        //         if (role.id === 1) { colorRole = 'volcano'; }
-        //         else if (role.id === 2) { colorRole = 'blue'; }
-        //         else if (role.id === 3) { colorRole = 'green'; }
-        //         return (
-        //             <Tag color={'blue'} key={role.id}> {role.name} </Tag>
-        //         )
-        //     },
-        // },
         {
             title: 'Action',
             key: 'action',
             responsive: ['md'],
             search: false,
-            render: (_, record) => (
+            render: (_: any, record: { id: string }) => (
                 <Space size="middle">
-                    <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="info" variant="outlined" />
-                    <Button to={{/* /admin/user/${record.key}/edit */ }} icon={<EditOutlined />} key="edit" color="primary" variant="outlined" />
-                    <Button to={{/* /admin/user/${record.key}/delete */ }} icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" />
+                    <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
+                    <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
+                    <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
                 </Space>
             ),
         },
     ]
 
-    const actionRef = useRef();
-    const formRef = useRef();
+
     const tablePropsConfig = {
         actionRef: actionRef,
         formRef: formRef,
         rowKey: 'id',
         headerTitle: 'Roles List',
         columns: columnsConfig,
-        request: async (params, sort, filter) => {
-            const response = await getRolesList();
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+            guard_name: { label: 'Guard', placeholder: 'Search by guard name...' },
+        },
+        request: async (params: any, sort: any, filter: any) => {
+            const response = await dispatch(GetRolesListThunk()).unwrap();
             return {
-                data: response?.data || [],
-                total: response?.total || 0,
+                data: response?.data?.roles_list || [],
+                // total: response?.total || 0,
                 success: true,
             }
         }
@@ -166,35 +148,52 @@ const UserRole = () => {
         formRef: formRef,
         actionRef: actionRef,
         headerTitle: 'Roles List',
+        actions: {
+            title: 'Action',
+            key: 'action',
+            // responsive: ['md'],
+            search: false,
+            render: (_: any, record: { id: string }) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
+                    <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
+                    <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
+                </div>
+            ),
+        },
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+            guard_name: { label: 'Guard', placeholder: 'Search by guard name...' },
+        },
         metas: {
             title: {
                 title: 'Name',
                 dataIndex: 'name',
-                render: (text, record) => {
+                render: (text: string, record: { name: string, guard_name: string }) => {
                     return (
                         <React.Fragment>
-                            <Typography level={3} style={{ fontWeight: "bold" }} >{record?.name}</Typography>
+                            <Typography style={{ fontWeight: "bold" }} >{record?.name}</Typography>
                         </React.Fragment>
                     )
                 }
             },
             description: {
                 title: 'Role Info',
-                render: (text, record) => {
+                render: (text: string, record: { name: string, guard_name: string }) => {
                     return (
                         <React.Fragment>
-                            <Typography level={3}>Guard Name: {record?.guard_name}</Typography>
+                            <Typography >Guard Name: {record?.guard_name}</Typography>
                         </React.Fragment>
                     )
                 },
                 search: false,
             },
         },
-        request: async (params) => {
-            const response = await getRolesList();
+        request: async (params: any) => {
+            const response = await dispatch(GetRolesListThunk()).unwrap();
             return {
-                data: response?.data || [],
-                total: response?.total || 0,
+                data: response?.data?.roles_list || [],
+                // total: response?.total || 0,
                 success: true,
             }
         }

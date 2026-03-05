@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 /**
  * Ant Design
  */
-import { UserOutlined, HomeOutlined, LogoutOutlined, PieChartOutlined, FileOutlined, CopyOutlined, ProductOutlined } from '@ant-design/icons';
+import { UserOutlined, HomeOutlined, LogoutOutlined, PieChartOutlined, FileOutlined, CopyOutlined, ProductOutlined, LockOutlined } from '@ant-design/icons';
 
 export const menuItems = (Profile: { user_name: string }, HandleLogout: () => void) => [
     {
@@ -86,6 +86,22 @@ export const menuItemsSidebar = (HandleLogout: () => void) => [
             {
                 key: 'users-profile',
                 label: <Link to={''}>Profile</Link>,
+            },
+        ],
+    },
+    {
+        key: "access-control",
+        label: <Link to="">Access Control</Link>,
+        icon: <LockOutlined />,
+        access: ['Admin', 'Manager'],
+        children: [
+            {
+                key: 'roles-list',
+                label: <Link to={'/admin/roles'}>Role List</Link>,
+            },
+            {
+                key: 'permissions-list',
+                label: <Link to={'/admin/permissions'}>Permission List</Link>,
             },
         ],
     },
