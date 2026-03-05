@@ -70,7 +70,6 @@ const UserList = () => {
      * @param uuid - User ID
      */
     const showModal = (uuid: string) => {
-        console.log(uuid)
         SetUserId(uuid)
         setOpen(true);
     };

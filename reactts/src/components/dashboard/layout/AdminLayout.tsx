@@ -21,14 +21,27 @@ import '@/assets/scss/page/dashboard.scss'
 import SideBar from "@/components/dashboard/partials/SideBar.jsx";
 import HeaderLayout from "@/components/dashboard/partials/Header.jsx";
 import FooterLayout from "@/components/dashboard/partials/Footer.jsx";
-import { Loading } from '@/components/Loading.jsx'
 
-const AdminDashboard = ({ SideBarActiveKey, SideBarActiveOpenKey, HeaderTitle, BreadcrumbItems, children }) => {
+/**
+ * Type
+ */
+type AdminDashboardProps = {
+    SideBarActiveKey: string;
+    SideBarActiveOpenKey: string[];
+    HeaderTitle?: string;
+    BreadcrumbItems?: {
+        items: { path?: string; title: string }[];
+    };
+    children: React.ReactNode;
+}
+
+
+const AdminDashboard: React.FC<AdminDashboardProps> = ({ SideBarActiveKey, SideBarActiveOpenKey, HeaderTitle, BreadcrumbItems, children }) => {
     const PageContainerConfig = {
         title: HeaderTitle || '',
         breadcrumb: {
-            items: BreadcrumbItems?.items.map((it) => ({
-                title: it.path ? <Link to={it.path}>{it.title}</Link> : it.title,
+            items: BreadcrumbItems?.items.map(({ path, title }) => ({
+                title: path ? <Link to={path}>{title}</Link> : title,
             })),
         },
     };
@@ -37,7 +50,7 @@ const AdminDashboard = ({ SideBarActiveKey, SideBarActiveOpenKey, HeaderTitle, B
         <React.Fragment>
             <HeaderLayout></HeaderLayout>
             <Layout className="layout-wrapper">
-                <SideBar activeKey={SideBarActiveKey} activeOpenKey={SideBarActiveOpenKey || ''}></SideBar>
+                <SideBar activeKey={SideBarActiveKey} activeOpenKey={SideBarActiveOpenKey}></SideBar>
                 <Layout>
                     <PageContainer {...PageContainerConfig}>
                         {children}

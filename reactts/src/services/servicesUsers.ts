@@ -1,17 +1,17 @@
 /* eslint-disable */
 import { getRequest } from '../api/axios';
 
-export const GetUserListAdmin = async (token?: string): Promise<any> => {
+export const GetUserListAdmin = async (): Promise<any> => {
     try {
-        return await getRequest('/admin/user', { "Authorization": `Bearer ${token}` });
+        return await getRequest('/admin/user', { withCredentials: true });
     } catch (error) {
         throw error
     }
 }
 
-export const GetUserIDAdmin = async (token?: string, id?: string): Promise<any> => {
+export const GetUserIDAdmin = async (id?: string): Promise<any> => {
     try {
-        return await getRequest(`/admin/user/${id}`, { "Authorization": `Bearer ${token}` });
+        return await getRequest(`/admin/user/${id}`, { withCredentials: true });
     } catch (error) {
         throw error
     }

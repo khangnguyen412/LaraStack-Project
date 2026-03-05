@@ -25,24 +25,27 @@ API.interceptors.response.use(
         return response.data
     },
     (error) => {
-        if (error.response?.status === 401) {}
-        return Promise.reject(error.response?.data || {errorMessage: "Error"});
-    }  
+        if (error.response?.status === 401) { 
+            window.location.href = '/login';
+            localStorage.removeItem('profile');
+        }
+        return Promise.reject(error.response?.data || { errorMessage: "Error" });
+    }
 );
 
 export const postRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
     return API.post(`${API_URL}${endpoint}`, payload, config);
 };
 
-export const getRequest = (endpoint: string, headers: object = {}) => {
-    return API.get(`${API_URL}${endpoint}`, { headers });
+export const getRequest = (endpoint: string, config: object = {}) => {
+    return API.get(`${API_URL}${endpoint}`, config);
 };
 
-export const putRequest = (endpoint: string, payload: object = {}, headers: object = {}) => {
-    return API.put(`${API_URL}${endpoint}`, payload, { headers });
+export const putRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
+    return API.put(`${API_URL}${endpoint}`, payload, config);
 };
 
-export const deleteRequest = (endpoint: string, headers: object = {}) => {
-    return API.delete(`${API_URL}${endpoint}`, { headers });
+export const deleteRequest = (endpoint: string, config: object = {}) => {
+    return API.delete(`${API_URL}${endpoint}`, config);
 };
 

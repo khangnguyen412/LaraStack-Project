@@ -103,18 +103,14 @@ class ControllerAuth extends Controller {
                 throw new AuthenticationException("Invalid credentials");
             }
 
-            $profile = ModelsUsers::with("roles.permissions")->find(auth()->user()->uuid);
-            $permissions = $profile->roles->permissions->pluck("name");
-            $profile->roles->makeHidden('permissions');
+            $profile = ModelsUsers::with("roles")->find(auth()->user()->uuid);
             /**
              * Cookie (jwt, Expires, Path - Thời gian sống (phút), Domain, Secure (Bật true nếu dùng https), HttpOnly (QUAN TRỌNG: Chặn JavaScript truy cập), Raw, Samesite)
              */
             $cookie = cookie("jwt", $token, config('jwt.ttl'), '/', null, false, true, false, 'Lax');
             return response()->json([
-                "status"      => 200,
-                "token"       => $token,
-                "profile"     => $profile,
-                "permissions" => $permissions
+                "status"  => 200,
+                "profile" => $profile,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)->withCookie($cookie);
         } catch (AuthenticationException $e) {
             throw new AuthenticationException($e->getMessage());
@@ -140,13 +136,7 @@ class ControllerAuth extends Controller {
     )]
     public function logout(Request $request) {
         try {
-            // Lấy token từ cookie thủ công nếu middleware không tự nhận
-            $token = $request->cookie('jwt');
-
-            if ($token) {
-                // Set token vào hệ thống auth để thực hiện logout/invalidate
-                JWTAuth::setToken($token)->invalidate();
-            }
+            auth('api')->logout();
             return response()->json([
                 "status"  => 200,
                 "message" => "Logout Successfully"
@@ -171,13 +161,10 @@ class ControllerAuth extends Controller {
     )]
     public function profile(Request $request) {
         try {
-            $profile = ModelsUsers::with("roles.permissions")->find($request->user()->uuid);
-            $permissions = $profile->roles->permissions->pluck("name");
-            $profile->roles->makeHidden('permissions');
+            $profile = ModelsUsers::with("roles")->find($request->user()->uuid);
             return response()->json([
-                "status"      => 200,
-                "profile"     => $profile,
-                "permissions" => $permissions
+                "status"  => 200,
+                "profile" => $profile,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             throw new AuthenticationException($e->getMessage());

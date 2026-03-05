@@ -52,26 +52,50 @@ class ModelsUsers extends Authenticatable implements JWTSubject {
         ];
     }
 
-    public function getCreatedAtAttribute($value) {
-        return Carbon::parse($value)->format('Y-m-d');
-    }
-
-    public function getUpdatedAtAttribute($value) {
-        return Carbon::parse($value)->format('Y-m-d');
-    }
-
     public function roles() {
         return $this->belongsTo(ModelsRoles::class, "role_id", "id");
     }
 
+    /**
+     * Summary of getCreatedAtAttribute
+     * @param mixed $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value) {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    /**
+     * Summary of getUpdatedAtAttribute
+     * @param mixed $value
+     * @return string
+     */
+    public function getUpdatedAtAttribute($value) {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    /**
+     * Accessor for permissions attribute.
+     * 
+     * @return array
+     */
+    public function getPermissionsAttribute() {
+        return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->pluck('name')->unique()->values()->toArray();
+    }
+
+    /**
+     * Summary of getJWTIdentifier
+     * 
+     * @return string
+     */
     public function getJWTIdentifier() {
-        return $this->getKey();
+        return $this->uuid;
     }
 
     public function getJWTCustomClaims() {
         return [
-            'role_id'     => $this->role_id,
-            'permissions' => $this->roles?->permissions ? $this->roles->permissions->pluck('name')->filter()->values()->toArray() : [],
+            'role_id'     => $this->roles()->pluck("id")->first(),
+            'permissions' => $this->getPermissionsAttribute(),
         ];
     }
 }

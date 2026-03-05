@@ -8,7 +8,7 @@ import { Layout} from 'antd';
 
 const { Footer } = Layout;
 
-const UserList: React.FC = () => {
+const FooterLayout: React.FC = () => {
     return (
         <React.Fragment>
             <Footer style={{ textAlign: 'center' }}>
@@ -17,4 +17,4 @@ const UserList: React.FC = () => {
         </React.Fragment>
     )
 }
-export default UserList
+export default FooterLayout

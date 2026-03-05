@@ -22,13 +22,13 @@ export const columns = (showModal: (key: string) => void) => [
         dataIndex: 'uuid',
         key: 'uuid',
         hidden: true,
-        render: (text: string, record: { uuid: string }) => <Link onClick={() => {console.log(record); showModal(record.uuid)}} to={``}>{text}</Link>,
+        render: (text: string, record: { uuid: string }) => <Link onClick={() => {showModal(record.uuid)}} to={``}>{text}</Link>,
     },
     {
         title: 'Display Name',
         dataIndex: 'display_name',
         key: 'display_name',
-        render: (text: string, record: { uuid: string }) => <Link onClick={() => {console.log(record); showModal(record.uuid)}} to={``}>{text}</Link>,
+        render: (text: string, record: { uuid: string }) => <Link onClick={() => {showModal(record.uuid)}} to={``}>{text}</Link>,
     },
     {
         title: 'Username',

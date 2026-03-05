@@ -55,9 +55,10 @@ class Kernel extends HttpKernel
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.check' => \App\Http\Middleware\AuthMiddleware::class,
-        'permission' => \App\Http\Middleware\CheckPermissionMiddleware::class,
+        'auth.permission' => \App\Http\Middleware\CheckPermissionMiddleware::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'jwt.cookie' => \App\Http\Middleware\CheckJwtFormCookie::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
@@ -66,5 +67,15 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
+    
+    /**
+     * Summary of middlewarePriority
+     * Put CheckJwtFormCookie middleware before Authenticate middleware if you want to use [jwt.cookie auth:api] middleware.
+     * 
+     * @var array
+     */
+    protected $middlewarePriority = [
+        \App\Http\Middleware\CheckJwtFormCookie::class,
     ];
 }

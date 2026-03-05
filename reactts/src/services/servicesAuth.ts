@@ -17,17 +17,17 @@ export const Login = async (payload: object) => {
     }
 }
 
-export const CheckAuth = async (token: string) => {
+export const CheckAuth = async () => {
     try {
-        return await getRequest('/admin/profile', { "Authorization": `Bearer ${token}` })
+        return await getRequest('/admin/profile', { withCredentials: true });
     } catch (error) {
         throw error;
     }
 }
 
-export const UserProfile = async (token: string) => {
+export const UserProfile = async () => {
     try {
-        return await getRequest('/admin/profile', { "Authorization": `Bearer ${token}` })
+        return await getRequest('/admin/profile', { withCredentials: true });
     } catch (error) {
         throw error;
     }

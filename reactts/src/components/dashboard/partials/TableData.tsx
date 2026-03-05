@@ -1,12 +1,24 @@
 /* eslint-disable */
-import React, { useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 
-import { Button, Space, Tag } from "antd";
+/**
+ * Component
+ */
+import { Button} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { ProList, ProTable } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 
+type TableDataProps = {
+    actionRef: React.RefObject<any>,
+    formRef: React.RefObject<any>,
+    rowKey: string,
+    headerTitle: string,
+    columns: any,
+    searchConfig: any,
+    request: (params: any, sort: any, filter: any) => Promise<any>,
+}
 
-export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, searchConfig, request }) => {
+export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, searchConfig, request }: TableDataProps) => {
     const tablePropsConfig = useMemo(() => ({
         actionRef: actionRef,
         formRef: formRef,
@@ -22,7 +34,7 @@ export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, se
         search: {
             collapsed: false,
             collapseRender: false,
-            optionRender: (searchConfig, formProps, dom) => [
+            optionRender: (searchConfig: any, formProps: any, dom: any) => [
                 React.cloneElement(dom[0], { children: "Clear" }),
                 React.cloneElement(dom[1], { children: 'Search' }),
             ],

@@ -23,9 +23,8 @@ class CheckPermissionMiddleware {
 
         if (!$payload) {
             throw new AuthenticationException("User not authenticated");
-            }
-            
-        \Log::info($payload->get('permissions'));
+        }
+
         if (!in_array($permission, $payload->get('permissions'))) {
             throw new AuthorizationException("You do not have permission to access");
         }
