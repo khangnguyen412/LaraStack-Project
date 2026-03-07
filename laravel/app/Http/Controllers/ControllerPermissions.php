@@ -4,14 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ControllerPermission extends Controller
+use OpenApi\Attributes as OA;
+
+use App\Models\ModelsPermissions;
+
+#[OA\Tag(name: 'Permissions', description: 'Permission management')]
+class ControllerPermissions extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    #[OA\Get(
+        path: '/api/v1/admin/permissions',
+        summary: 'Get permission list',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        responses: [
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+        ]
+    )]
     public function index()
     {
-        //
+        
     }
 
     /**

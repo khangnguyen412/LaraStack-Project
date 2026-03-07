@@ -27,7 +27,7 @@ import { GetRolesListThunk } from '@/redux/features/roles';
 import "@/assets/scss/style.scss";
 import "@/assets/scss/page/userList.scss";
 
-const RoleList: React.FC = () => {
+const PermissionList: React.FC = () => {
     /**
      * Hook
      */
@@ -67,13 +67,13 @@ const RoleList: React.FC = () => {
      * Page Container Config
      */
     const PageContainerConfig = {
-        SideBarActiveKey: 'roles-list',
+        SideBarActiveKey: 'permissions-list',
         SideBarActiveOpenKey: ['access-control'],
         HeaderTitle: undefined,
         BreadcrumbItems: {
             items: [
                 { title: 'Access Control', path: '/admin' },
-                { title: 'Role List' },
+                { title: 'Permission List' },
             ],
         },
     };
@@ -125,7 +125,7 @@ const RoleList: React.FC = () => {
         actionRef: actionRef,
         formRef: formRef,
         rowKey: 'id',
-        headerTitle: 'Roles List',
+        headerTitle: 'Permissions List',
         columns: columnsConfig,
         searchConfig: {
             name: { label: 'Name', placeholder: 'Search by name...' },
@@ -147,10 +147,11 @@ const RoleList: React.FC = () => {
     const listPropsConfig = {
         formRef: formRef,
         actionRef: actionRef,
-        headerTitle: 'Roles List',
+        headerTitle: 'Permissions List',
         actions: {
             title: 'Action',
             key: 'action',
+            // responsive: ['md'],
             search: false,
             render: (_: any, record: { id: string }) => (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -168,7 +169,7 @@ const RoleList: React.FC = () => {
             title: {
                 title: 'Name',
                 dataIndex: 'name',
-                render: (text: string, record: { name: string, description: string }) => {
+                render: (text: string, record: { name: string, guard_name: string }) => {
                     return (
                         <React.Fragment>
                             <Typography style={{ fontWeight: "bold" }} >{record?.name}</Typography>
@@ -181,7 +182,7 @@ const RoleList: React.FC = () => {
                 render: (text: string, record: { name: string, description: string }) => {
                     return (
                         <React.Fragment>
-                            <Typography >Guard Name: {record?.description}</Typography>
+                            <Typography >Description: {record?.description}</Typography>
                         </React.Fragment>
                     )
                 },
@@ -219,4 +220,4 @@ const RoleList: React.FC = () => {
         </React.Fragment >
     );
 };
-export default RoleList;
+export default PermissionList;
