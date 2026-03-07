@@ -68,6 +68,26 @@
                 }
             }
         },
+        "/api/v1/admin/permissions": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Get permission list",
+                "description": "Display a listing of the resource.",
+                "operationId": "b4182452579c4e425259845595e4008c",
+                "responses": {
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/admin/roles": {
             "get": {
                 "tags": [
@@ -439,6 +459,10 @@
         {
             "name": "Auth",
             "description": "Operations about authentication"
+        },
+        {
+            "name": "Permissions",
+            "description": "Permission management"
         },
         {
             "name": "Roles",

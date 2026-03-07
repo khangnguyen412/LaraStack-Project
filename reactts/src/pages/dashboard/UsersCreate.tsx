@@ -22,7 +22,7 @@ import Footer from "@/components/dashboard/partials/Footer.js";
 
 
 const { Content } = Layout;
-const UserPage = () => {
+const UserCreate: React.FC = () => {
     const user = {
         name: 'Nguyen Duc',
         email: 'nguyenduc@example.com',
@@ -54,4 +54,4 @@ const UserPage = () => {
     )
 }
 
-export default UserPage;
+export default UserCreate;

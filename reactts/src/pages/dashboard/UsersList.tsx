@@ -49,7 +49,7 @@ const CardAction = (item: { key: string }, showModal: (id: string) => void) => [
     <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
 ]
 
-const UserList = () => {
+const UserList: React.FC = () => {
     /**
      * Hook
      */

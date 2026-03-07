@@ -93,7 +93,7 @@ export const menuItemsSidebar = (HandleLogout: () => void) => [
         key: "access-control",
         label: <Link to="">Access Control</Link>,
         icon: <LockOutlined />,
-        access: ['Admin', 'Manager'],
+        access: ['Admin'],
         children: [
             {
                 key: 'roles-list',

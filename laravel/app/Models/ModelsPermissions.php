@@ -11,7 +11,7 @@ class ModelsPermissions extends Model {
     protected $primaryKey = 'id';
     protected $fillable = [
         'name',
-        'guard_name',
+        'description',
     ];
 
     protected function casts(): array {

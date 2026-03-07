@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use OpenApi\Attributes as OA;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use OpenApi\Attributes as OA;
 
 use App\Models\ModelsUsers;
 use App\Http\Response\ApiResponse;

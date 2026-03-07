@@ -13,8 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as NotFoundHttp
 
 use App\Http\Response\ErrorResponse;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -29,13 +28,11 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    public function register(): void
-    {
+    public function register(): void {
         $this->reportable(function (Throwable $e) {});
     }
 
-    public function render($request, Throwable $e)
-    {
+    public function render($request, Throwable $e) {
         // Bad Request (400)
         if ($e instanceof ValidationException) {
             return ErrorResponse::getErrorResponse(400, "VALIDATION_ERROR", $e->getMessage());
@@ -72,5 +69,6 @@ class Handler extends ExceptionHandler
         }
 
         // Default (500)
+        return ErrorResponse::getErrorResponse(500, "SERVER_ERROR", $e->getMessage());
     }
 }

@@ -10,7 +10,7 @@ class ModelsRoles extends Model {
     protected $table = "roles";
     protected $fillable = [
         "name",
-        "guard_name",
+        "description",
     ];
     protected $hidden = [
         "created_at",
