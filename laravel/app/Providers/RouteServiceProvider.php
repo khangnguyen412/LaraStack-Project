@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
                 base_path('routes/v1/auth.php'),
                 base_path('routes/v1/users.php'),
                 base_path('routes/v1/roles.php'),
+                base_path('routes/v1/permissions.php'),
             ]);
 
             Route::middleware('web')->group(

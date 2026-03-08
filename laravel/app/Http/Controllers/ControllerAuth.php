@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -15,10 +16,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use OpenApi\Attributes as OA;
 
-use App\Models\ModelsPermissions;
-use App\Models\ModelsUsers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Response\ApiResponse;
+
+use App\Models\ModelsPermissions;
+use App\Models\ModelsUsers;
 
 #[OA\Tag(name: 'Auth', description: 'Operations about authentication')]
 class ControllerAuth extends Controller {
@@ -103,9 +105,24 @@ class ControllerAuth extends Controller {
                 throw new AuthenticationException("Invalid credentials");
             }
 
-            $profile = ModelsUsers::with("roles")->find(auth()->user()->uuid);
+            $profile = ModelsUsers::with("roles.permissions")->find(auth()->user()->uuid);
             /**
-             * Cookie (jwt, Expires, Path - Thời gian sống (phút), Domain, Secure (Bật true nếu dùng https), HttpOnly (QUAN TRỌNG: Chặn JavaScript truy cập), Raw, Samesite)
+             * Get user permissions
+             */
+            $permissions = $user->roles->permissions->pluck('name')->toArray();
+            $profile = $user->toArray();
+            /**
+             * Add user permissions to profile
+             */
+            $profile['permissions'] = $permissions;
+
+            /**
+             * Remove roles.permissions from profile
+             */
+            unset($profile['roles']['permissions']);
+
+            /**
+             * Set cookie (jwt, Expires, Path - Time to live (minute), Domain, Secure (Set true if using https), HttpOnly (important: block JavaScript access), Raw, Samesite)
              */
             $cookie = cookie("jwt", $token, config('jwt.ttl'), '/', null, false, true, false, 'Lax');
             return response()->json([
@@ -161,7 +178,24 @@ class ControllerAuth extends Controller {
     )]
     public function profile(Request $request) {
         try {
-            $profile = ModelsUsers::with("roles")->find($request->user()->uuid);
+            $profile = ModelsUsers::with("roles.permissions")->find($request->user()->uuid);
+
+            /**
+             * Get user permissions
+             */
+            $permissions = $profile->roles->permissions->pluck('name')->toArray();
+            $profile = $profile->toArray();
+
+            /**
+             * Add user permissions to profile
+             */
+            $profile['permissions'] = $permissions;
+
+            /**
+             * Remove roles.permissions from profile
+             */
+            unset($profile['roles']['permissions']);
+
             return response()->json([
                 "status"  => 200,
                 "profile" => $profile,

@@ -79,7 +79,7 @@ const RoleList: React.FC = () => {
     };
 
     /**
-     * Table Config
+     * Column Config
      */
     const columnsConfig: any = [
         {
@@ -111,7 +111,7 @@ const RoleList: React.FC = () => {
             responsive: ['md'],
             search: false,
             render: (_: any, record: { id: string }) => (
-                <Space size="middle">
+                <Space size="small">
                     <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
                     <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
                     <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
@@ -120,7 +120,9 @@ const RoleList: React.FC = () => {
         },
     ]
 
-
+    /**
+     * Table Config
+     */
     const tablePropsConfig = {
         actionRef: actionRef,
         formRef: formRef,
@@ -215,7 +217,7 @@ const RoleList: React.FC = () => {
                     </Col>
                 </Row>
             </AdminLayout>
-            {/* <UserProfileModal isOpen={open} onOk={handleOk} onCancel={handleCancel} userID={UserId}></UserProfileModal> */}
+            <UserProfileModal isOpen={open} onOk={handleOk} onCancel={handleCancel} userID={UserId}></UserProfileModal>
         </React.Fragment >
     );
 };

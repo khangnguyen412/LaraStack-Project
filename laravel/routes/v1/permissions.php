@@ -7,5 +7,5 @@ use App\Http\Controllers\ControllerPermissions;
 
 Route::prefix('/admin')->middleware(["jwt.cookie","auth:api"])->group(function () {
     /** Role */
-    // Route::middleware(['auth.permission:READ_PERMISSION'])->apiResource('/permissions', ControllerPermissions::class);
+    Route::middleware(['auth.permission:READ_PERMISSION'])->apiResource('/permissions', ControllerPermissions::class);
 });

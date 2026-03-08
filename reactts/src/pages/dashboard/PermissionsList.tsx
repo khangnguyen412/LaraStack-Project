@@ -19,7 +19,7 @@ import { ListData } from "@/components/dashboard/partials/ListData";
  */
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
-import { GetRolesListThunk } from '@/redux/features/roles';
+import { GetPermissionsListThunk } from '@/redux/features/permission';
 
 /**
  * Style
@@ -36,7 +36,6 @@ const PermissionList: React.FC = () => {
     const actionRef = useRef<any>(null);
     const formRef = useRef<any>(null);
     const dispatch = useDispatch<AppDispatch>();
-    const data = useSelector((state: any) => state.roles.data);
 
     /**
      * State
@@ -83,7 +82,7 @@ const PermissionList: React.FC = () => {
      */
     const columnsConfig: any = [
         {
-            title: 'id',
+            title: 'Id',
             hidden: true,
             search: false,
         },
@@ -111,7 +110,7 @@ const PermissionList: React.FC = () => {
             responsive: ['md'],
             search: false,
             render: (_: any, record: { id: string }) => (
-                <Space size="middle">
+                <Space size="small">
                     <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
                     <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
                     <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
@@ -132,9 +131,9 @@ const PermissionList: React.FC = () => {
             description: { label: 'Description', placeholder: 'Search by description...' },
         },
         request: async (params: any, sort: any, filter: any) => {
-            const response = await dispatch(GetRolesListThunk()).unwrap();
+            const response = await dispatch(GetPermissionsListThunk()).unwrap();
             return {
-                data: response?.data?.roles_list || [],
+                data: response?.data?.permissions_list || [],
                 // total: response?.total || 0,
                 success: true,
             }
@@ -190,9 +189,9 @@ const PermissionList: React.FC = () => {
             },
         },
         request: async (params: any) => {
-            const response = await dispatch(GetRolesListThunk()).unwrap();
+            const response = await dispatch(GetPermissionsListThunk()).unwrap();
             return {
-                data: response?.data?.roles_list || [],
+                data: response?.data?.permissions_list || [],
                 // total: response?.total || 0,
                 success: true,
             }
@@ -216,7 +215,7 @@ const PermissionList: React.FC = () => {
                     </Col>
                 </Row>
             </AdminLayout>
-            {/* <UserProfileModal isOpen={open} onOk={handleOk} onCancel={handleCancel} userID={UserId}></UserProfileModal> */}
+            <UserProfileModal isOpen={open} onOk={handleOk} onCancel={handleCancel} userID={UserId}></UserProfileModal>
         </React.Fragment >
     );
 };

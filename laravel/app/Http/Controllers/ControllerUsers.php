@@ -19,7 +19,7 @@ class ControllerUsers extends Auth {
      *  Get User
      */
     #[OA\Get(
-        path: '/api/v1/admin/user',
+        path: '/api/v1/admin/users',
         summary: 'Get user list',
         security: [['bearerAuth' => []]],
         tags: ['Users'],
@@ -55,7 +55,7 @@ class ControllerUsers extends Auth {
      * Display the specified resource.
      */
     #[OA\Get(
-        path: '/api/v1/admin/user/{id}',
+        path: '/api/v1/admin/users/{id}',
         summary: 'Get user by id',
         security: [['bearerAuth' => []]],
         tags: ['Users'],

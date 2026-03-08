@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Exception;
+
 use OpenApi\Attributes as OA;
 
-use App\Models\ModelsRoles;
 use App\Http\Response\ApiResponse;
+
+use App\Models\ModelsRoles;
 
 #[OA\Tag(name: 'Roles', description: 'Role management')]
 class ControllerRoles extends Controller {
@@ -22,12 +24,17 @@ class ControllerRoles extends Controller {
         tags: ['Roles'],
         responses: [
             new OA\Response(response: 200, ref: '#/components/responses/GetRolesList'),
-            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
         ]
     )]
     public function index() {
-        $roles_list = ModelsRoles::all();
-        return ApiResponse::sendResponse(["roles_list" => $roles_list], 200);
+        try {
+            $roles_list = ModelsRoles::all();
+            return ApiResponse::sendResponse(["roles_list" => $roles_list], 200);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**

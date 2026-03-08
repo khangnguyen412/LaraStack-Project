@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 /**
  * Ant Design
  */
-import { Tag, Space } from "antd";
+import { Tag, Space, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { Breakpoint } from 'antd/es/_util/responsiveObserver';
 import type { PresetColorType } from 'antd/es/_util/colors';
@@ -22,19 +22,20 @@ export const columns = (showModal: (key: string) => void) => [
         dataIndex: 'uuid',
         key: 'uuid',
         hidden: true,
-        render: (text: string, record: { uuid: string }) => <Link onClick={() => {showModal(record.uuid)}} to={``}>{text}</Link>,
+        search: false,
+        render: (text: string, record: { uuid: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{text}</Link>,
     },
     {
-        title: 'Display Name',
+        title: 'Name',
         dataIndex: 'display_name',
         key: 'display_name',
-        render: (text: string, record: { uuid: string }) => <Link onClick={() => {showModal(record.uuid)}} to={``}>{text}</Link>,
+        render: (text: string, record: { uuid: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{text}</Link>,
     },
     {
-        title: 'Username',
-        dataIndex: 'username',
-        key: 'username',
-        render: (text: string, record: { uuid: string }) => <Link onClick={() => {showModal(record.uuid)}} to={``}>{text}</Link>,
+        title: 'User Name',
+        dataIndex: 'user_name',
+        key: 'user_name',
+        render: (text: string, record: { uuid: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{text}</Link>,
     },
     {
         title: 'Email',
@@ -55,12 +56,14 @@ export const columns = (showModal: (key: string) => void) => [
     },
     {
         title: 'Action',
+        dataIndex: 'action',
         key: 'action',
         responsive: ['md'] as Breakpoint[], // Ép kiểu ở đây,
+        search: false,
         render: (_: any, record: { key: string }) => (
-            <Space size="middle">
-                <Link to={``}><EditOutlined key="edit" /></Link> {/* /admin/user/${record.key}/edit */}
-                <Link to={``}><DeleteOutlined key="delete" /></Link> {/* /admin/user/${record.key}/delete */}
+            <Space size="small">
+                <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
+                <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
             </Space>
         ),
     },

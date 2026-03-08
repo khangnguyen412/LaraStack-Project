@@ -77,34 +77,34 @@ http://localhost:8000/swagger/documentation
 ```
 Laravel-React-Project/
 ├── laravel/                # Laravel project
-│   ├── Dockerfile          # File cấu hình Docker cho Laravel
-│   └── .env                # Biến môi trường của Laravel
-├── mysql/                  # Thư mục chứa dữ liệu MySQL
+│   ├── Dockerfile          # Dockerfile for Laravel
+│   └── .env                # Environment variables for Laravel
+├── mysql/                  # MySQL data directory
 ├── nginx/
-│   └── default.conf        # Cấu hình Nginx
+│   └── default.conf        # Nginx configuration
 ├── php/
-│   └── php.ini             # Cấu hình PHP
+│   └── php.ini             # PHP configuration
 ├── react/                  # React project
-│   ├── Dockerfile          # File cấu hình Docker cho React
-│   ├── README-REACT.MD     # Hướng dẫn về React
-│   ├── public/             # Show giao diện lên web
-│   ├── src/                # Thư mục nguồn của React
-│   │    ├── assets         # Hình ảnh, font,...
-│   │    ├── components     # Các component tái sử dụng
+│   ├── Dockerfile          # Dockerfile for React
+│   ├── README-REACT.MD     # React guide
+│   ├── public/             # React application interface
+│   ├── src/                # React source directory
+│   │    ├── assets         # Images, fonts,...
+│   │    ├── components     # Reusable components
 │   │    ├── hooks          # Custom hooks
-│   │    ├── pages          # Các trang (page) ứng dụng
-│   │    ├── services       # API, fetch dữ liệu
+│   │    ├── pages          # Application pages
+│   │    ├── services       # API, data fetching
 │   │    ├── store          # Redux, context,...
-│   │    └── utils          # Hàm hỗ trợ chung
-│   ├── App.tsx             # Component gốc của React
-│   ├── main.tsx            # Điểm khởi đầu ứng dụng
+│   │    └── utils          # Common helper functions
+│   ├── App.tsx             # Root component of React
+│   ├── main.tsx            # Application entry point
 │   └── styles.css          # File CSS
-├── dockerignore            # Danh sách file không cần build Docker
-├── .env                    # Biến môi trường chung
-├── .gitignore              # Danh sách file không commit lên Git
-├── docker-compose.yml      # Tệp cấu hình Docker Compose
-├── start-project.bat       # Script bắt đầu dự án (Windows)
-└── start-project.sh        # Script bắt đầu dự án (Linux/Mac)
+├── dockerignore            # List of files to exclude from Docker build
+├── .env                    # Common environment variables
+├── .gitignore              # List of files to exclude from Git commit
+├── docker-compose.yml      # Docker Compose configuration file
+├── start-project.bat       # Script to start project (Windows)
+└── start-project.sh        # Script to start project (Linux/Mac)
 ```
 
 The source was set up by KhangNguyen — do not copy
