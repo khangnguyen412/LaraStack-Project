@@ -1,21 +1,22 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 /**
  * Ant Design
  */
 import type { ColumnsType } from 'antd/es/table';
-import { Breadcrumb, Layout, Grid, Table, Card, Row, Col, } from 'antd';
+// import { Breadcrumb, Layout, Grid, Table, Card, Row, Col, } from 'antd';
+import { Grid, Row, Col, Typography, Tag, Space, Button, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 /**
  * Component
 */
-import SideBar from "@/components/dashboard/partials/SideBar.js";
+import AdminLayout from "@/components/dashboard/layout/AdminLayout";
 import UserProfileModal from "@/components/dashboard/UsersProfileModal.js";
-import HeaderLayout from "@/components/dashboard/partials/Header.js";
-import FooterLayout from "@/components/dashboard/partials/Footer.js";
+import { TableData } from "@/components/dashboard/partials/TableData";
+import { ListData } from "@/components/dashboard/partials/ListData";
 import { Loading } from '@/components/Loading.js'
 
 /**
@@ -41,8 +42,6 @@ import "@/assets/scss/page/userList.scss";
  * type 
  */
 
-const { Content } = Layout;
-
 const CardAction = (item: { key: string }, showModal: (id: string) => void) => [
     <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
     <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
@@ -53,10 +52,11 @@ const UserList: React.FC = () => {
     /**
      * Hook
      */
+    const actionRef = useRef<any>(null);
+    const formRef = useRef<any>(null);
     const dispatch = useDispatch<AppDispatch>();
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
-    const userAdminList = useSelector((state: any) => state.user?.data?.users_list);
 
     /**
      * State
@@ -103,17 +103,116 @@ const UserList: React.FC = () => {
     }
 
     /**
+     * Page Container Config
+     */
+    const PageContainerConfig = {
+        SideBarActiveKey: 'users-list',
+        SideBarActiveOpenKey: ['access-control'],
+        HeaderTitle: undefined,
+        BreadcrumbItems: {
+            items: [
+                { title: 'Users ', path: '/admin' },
+                { title: 'Users List' },
+            ],
+        },
+    };
+
+    /**
      * Columns config
      */
     const columnsConfig: ColumnsType<{
         key: string;
         uuid: string;
         display_name: string;
-        username: string;
+        user_name: string;
         address: string;
         email: string;
-        role: string;
+        roles: string;
     }> = columns(showModal);
+
+    /**
+     * Table Props Config
+     */
+    const tablePropsConfig = {
+        actionRef: actionRef,
+        formRef: formRef,
+        rowKey: 'id',
+        headerTitle: 'Users List',
+        columns: columnsConfig,
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+            description: { label: 'Description', placeholder: 'Search by description...' },
+        },
+        request: async (params: any, sort: any, filter: any) => {
+            const response = await dispatch(GetUserListAdminThunk("")).unwrap();
+            return {
+                data: response?.data?.users_list || [],
+                // total: response?.total || 0,
+                success: true,
+            }
+        }
+    };
+
+    /**
+     * List Props Config
+     */
+    const listPropsConfig = {
+        formRef: formRef,
+        actionRef: actionRef,
+        headerTitle: 'Permissions List',
+        actions: {
+            title: 'Action',
+            key: 'action',
+            // responsive: ['md'],
+            search: false,
+            render: (_: any, record: { id: string }) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
+                    <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
+                    <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
+                </div>
+            ),
+        },
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+        },
+        metas: {
+            title: {
+                title: 'Name',
+                dataIndex: 'name',
+                render: (text: string, record: { display_name: string }) => {
+                    return (
+                        <React.Fragment>
+                            <Typography style={{ fontWeight: "bold" }} >{record?.display_name}</Typography>
+                        </React.Fragment>
+                    )
+                }
+            },
+            description: {
+                title: 'Info',
+                render: (text: string, record: { user_name: string, email: string, address: string, roles: { name: string } }) => {
+                    return (
+                        <React.Fragment>
+                            <Typography >Username: {record?.user_name}</Typography>
+                            <Typography >Email: {record?.email}</Typography>
+                            <Typography >Address: {record?.address}</Typography>
+                            <Typography >Role: {record?.roles?.name}</Typography>
+                        </React.Fragment>
+                    )
+                },
+                search: false,
+            },
+        },
+        request: async (params: any) => {
+            const response = await dispatch(GetUserListAdminThunk("")).unwrap();
+            return {
+                data: response?.data?.users_list || [],
+                // total: response?.total || 0,
+                success: true,
+            }
+        }
+    }
+
 
 
     useEffect(() => {
@@ -131,39 +230,21 @@ const UserList: React.FC = () => {
     return (
         <React.Fragment>
             <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
-            <Layout style={{ height: 'auto' }}>
-                <HeaderLayout></HeaderLayout>
-                <Layout className='layout-wrapper' >
-                    <SideBar activeKey={'users-list'} activeOpenKey={['users']}></SideBar>
-                    <Layout>
-                        <Content className='layout-wrapper--margin userlist-container' >
-                            <Breadcrumb className='container-wrapper userlist-breadcrumb' items={[{ title: 'User' }, { title: 'User List' }]} />
-                            <Row className='container-wrapper userlist-table'>
-                                <Col className='userlist-table-col' span={24}>
-                                    {screens.lg ? (
-                                        <React.Fragment>
-                                            <Table columns={columnsConfig} dataSource={userAdminList} pagination={false} loading={false} scroll={{ x: true, y: undefined }}  rowKey="uuid"/>
-                                        </React.Fragment>
-                                    ) : (
-                                        <React.Fragment>
-                                            {Array.isArray(userAdminList) && userAdminList?.map((item: any) => (
-                                                <Card key={item.key} style={{ marginBottom: 8 }} actions={CardAction(item, showModal)}>
-                                                    <p><b>Tên:</b> {item.display_name}</p>
-                                                    <p><b>Username:</b> {item.username}</p>
-                                                    <p><b>Email:</b> {item.email}</p>
-                                                    <p><b>Address:</b> {item.address}</p>
-                                                    <p><b>Role:</b> {item.roles.name}</p>
-                                                </Card>
-                                            ))}
-                                        </React.Fragment>
-                                    )}
-                                </Col>
-                            </Row>
-                        </Content>
-                        <FooterLayout></FooterLayout>
-                    </Layout>
-                </Layout>
-            </Layout>
+            <AdminLayout {...PageContainerConfig}>
+                <Row>
+                    <Col span={24}>
+                        {screens.lg ? (
+                            <React.Fragment>
+                                <TableData {...tablePropsConfig} />
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <ListData {...listPropsConfig} />
+                            </React.Fragment>
+                        )}
+                    </Col>
+                </Row>
+            </AdminLayout>
             <UserProfileModal isOpen={open} onOk={onOk} onCancel={onCancel} userID={UserId}></UserProfileModal>
         </React.Fragment>
     );

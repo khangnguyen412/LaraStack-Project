@@ -20,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ControllerPayment;
 Route::post('/stripe-checkout', [ControllerPayment::class, 'StripePaymentAPI']);
+Route::get('/test-log', function () {
+    \Log::channel('discord')->error('Đây là nội dung lỗi chính!');
+    return 'Đã chạy lệnh gửi log!';
+});

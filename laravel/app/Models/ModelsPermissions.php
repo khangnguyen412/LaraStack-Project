@@ -13,15 +13,12 @@ class ModelsPermissions extends Model {
         'name',
         'description',
     ];
+    protected $hidden = [
+        "created_at",
+        "updated_at",
+    ];
 
-    protected function casts(): array {
-        return [
-            'created_at' => 'datetime:Y-m-d H:i:s',
-            'updated_at' => 'datetime:Y-m-d H:i:s',
-        ];
-    }
-
-    public function roles(){
-        return $this->belongsToMany(ModelsRoles::class,"roles_has_permissions","permission_id","role_id");
+    public function roles() {
+        return $this->belongsToMany(ModelsRoles::class, "roles_has_permissions", "permission_id", "role_id");
     }
 }

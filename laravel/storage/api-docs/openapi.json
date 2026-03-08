@@ -2,6 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "CMS Project API",
+        "description": "    \n    ⚠️ Authorization Guide:\n    1. Use API **Login** to get Access Token.\n    2. Click on **[Authorize]** button.\n    3. Paste the token into the field.\n    4. If you receive **401**, it means you haven't logged in or the token has expired.\n    5. If you receive **403**, it means you don't have permission to access.\n\n    *Note: \n    - If you haven't logged in but the system still run the API (due to browser saving cookie), try again with anonymous.\n    - The System verify the token through cookie.\n    ",
         "version": "1.0.0"
     },
     "servers": [
@@ -77,8 +78,14 @@
                 "description": "Display a listing of the resource.",
                 "operationId": "b4182452579c4e425259845595e4008c",
                 "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GetPermissionsList"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
                     }
                 },
                 "security": [
@@ -102,6 +109,9 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
                     }
                 },
                 "security": [
@@ -111,14 +121,14 @@
                 ]
             }
         },
-        "/api/v1/admin/user": {
+        "/api/v1/admin/users": {
             "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Get user list",
                 "description": "Get User",
-                "operationId": "b9f927009448a15d17ac169a4ae9a433",
+                "operationId": "a148444ffccef37f5450d54fc6cfa160",
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/GetUsersList"
@@ -134,14 +144,14 @@
                 ]
             }
         },
-        "/api/v1/admin/user/{id}": {
+        "/api/v1/admin/users/{id}": {
             "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Get user by id",
                 "description": "Display the specified resource.",
-                "operationId": "824ebf978e087fbd514a6130ff20dda7",
+                "operationId": "5d140710b00042fc49fbbf4801dd9290",
                 "parameters": [
                     {
                         "name": "id",
@@ -199,6 +209,27 @@
                 },
                 "type": "object"
             },
+            "Permissions": {
+                "required": [
+                    "permission_name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "uniqueItems": true,
+                        "example": "admin"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "web"
+                    }
+                },
+                "type": "object"
+            },
             "Roles": {
                 "required": [
                     "role_name"
@@ -213,7 +244,7 @@
                         "uniqueItems": true,
                         "example": "admin"
                     },
-                    "guard_name": {
+                    "description": {
                         "type": "string",
                         "example": "web"
                     }
@@ -312,6 +343,24 @@
                     "application/json": {
                         "schema": {
                             "$ref": "#/components/schemas/Exception"
+                        }
+                    }
+                }
+            },
+            "GetPermissionsList": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "permissions_list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Permissions"
+                                    }
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 }
