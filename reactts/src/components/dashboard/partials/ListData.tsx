@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, } from "react";
 
 import { Button } from "antd";
 import { PlusOutlined, EditOutlined } from "@ant-design/icons";
@@ -9,10 +9,10 @@ import { ProList } from '@ant-design/pro-components';
  * Type
  */
 type ListDataProps = {
-    actionRef: any;
-    formRef: any;
-    headerTitle: any;
-    metas: any;
+    actionRef: React.RefObject<any>;
+    formRef: React.RefObject<any>;
+    headerTitle: string;
+    metas:  Record<string, any>;
     actions: any;
     searchConfig: any;
     request: any;
@@ -23,21 +23,6 @@ export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, sear
         formRef: formRef,
         actionRef: actionRef,
         headerTitle: headerTitle,
-        options: {
-            show: true,
-            density: false,
-            fullScreen: true,
-            setting: false,
-        },
-        pagination: {
-            showQuickJumper: true,
-            defaultCurrent: 1,
-            defaultPageSize: 10,
-            showTotal: (total: number, range: number[]) => `Total ${total} items`,
-            showLessItems: true,
-            size: "small" as "small",
-            align: "center" as "center",
-        },
         metas: {
             ...metas,
             actions: actions || {
@@ -58,13 +43,28 @@ export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, sear
             // ],
             ...(searchConfig || {})
         },
+        pagination: {
+            showQuickJumper: true,
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            showTotal: (total: number, range: number[]) => `Total ${total} items`,
+            showLessItems: true,
+            size: "small" as "small",
+            align: "center" as "center",
+        },
+        options: {
+            show: true,
+            density: false,
+            fullScreen: true,
+            setting: false,
+        },
         toolBarRender: () => [
             <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => { }}>
                 Add
             </Button>,
         ],
         request: request || {},
-    }), [])
+    }), [actionRef, formRef, headerTitle, metas, actions, searchConfig, request])
 
     return (
         <React.Fragment>

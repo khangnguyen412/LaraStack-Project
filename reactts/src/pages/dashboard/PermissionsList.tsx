@@ -13,13 +13,16 @@ import UserProfileModal from "@/components/dashboard/UsersProfileModal.jsx";
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
 import { TableData } from "@/components/dashboard/partials/TableData";
 import { ListData } from "@/components/dashboard/partials/ListData";
+import type { ProColumns } from '@ant-design/pro-table';
+
 
 /**
  * Redux
  */
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch } from '@/redux/store';
 import { GetPermissionsListThunk } from '@/redux/features/permission';
+import type { AppDispatch } from '@/redux/store';
+import type { PaginationAntType, PaginationRequestType, PaginationResponseType } from '@/types/common.type';
 
 /**
  * Style
@@ -80,7 +83,7 @@ const PermissionList: React.FC = () => {
     /**
      * Table Config
      */
-    const columnsConfig: any = [
+    const columnsConfig: ProColumns<any>[] = [
         {
             title: 'Id',
             hidden: true,
@@ -93,7 +96,7 @@ const PermissionList: React.FC = () => {
             search: true,
             formItemProps: { label: "Name" },
             fieldProps: { placeholder: "Search by name..." },
-            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
+            render: (dom) => <Typography.Text>{dom}</Typography.Text>,
         },
         {
             title: 'Description',
@@ -102,7 +105,7 @@ const PermissionList: React.FC = () => {
             search: true,
             formItemProps: { label: "Description" },
             fieldProps: { placeholder: "Search by description..." },
-            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
+            render: (dom) => <Typography.Text>{dom}</Typography.Text>,
         },
         {
             title: 'Action',
@@ -119,7 +122,6 @@ const PermissionList: React.FC = () => {
         },
     ]
 
-
     const tablePropsConfig = {
         actionRef: actionRef,
         formRef: formRef,
@@ -130,11 +132,11 @@ const PermissionList: React.FC = () => {
             name: { label: 'Name', placeholder: 'Search by name...' },
             description: { label: 'Description', placeholder: 'Search by description...' },
         },
-        request: async (params: any, sort: any, filter: any) => {
-            const response = await dispatch(GetPermissionsListThunk()).unwrap();
+        request: async (params: PaginationAntType, sort: any, filter: any) => {
+            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10, })).unwrap();
             return {
                 data: response?.data?.permissions_list || [],
-                // total: response?.total || 0,
+                total: response?.data?.total || 0,
                 success: true,
             }
         }
@@ -188,11 +190,11 @@ const PermissionList: React.FC = () => {
                 search: false,
             },
         },
-        request: async (params: any) => {
-            const response = await dispatch(GetPermissionsListThunk()).unwrap();
+        request: async (params: PaginationAntType) => {
+            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10 })).unwrap();
             return {
                 data: response?.data?.permissions_list || [],
-                // total: response?.total || 0,
+                total: response?.data?.total || 0,
                 success: true,
             }
         }

@@ -35,15 +35,18 @@ type AdminDashboardProps = {
     children: React.ReactNode;
 }
 
-
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ SideBarActiveKey, SideBarActiveOpenKey, HeaderTitle, BreadcrumbItems, children }) => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const PageContainerConfig = {
         title: HeaderTitle || '',
+        ghost: true,
         breadcrumb: {
             items: BreadcrumbItems?.items.map(({ path, title }) => ({
                 title: path ? <Link to={path}>{title}</Link> : title,
             })),
         },
+        childrenContentStyle: isMobile ? { paddingInline: 10, paddingBlock: 10, margin: 10 } : {}, // force style for div children
     };
 
     return (

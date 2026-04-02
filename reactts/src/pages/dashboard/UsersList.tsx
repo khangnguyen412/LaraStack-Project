@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 /**
  * Ant Design
  */
-import type { ColumnsType } from 'antd/es/table';
-// import { Breadcrumb, Layout, Grid, Table, Card, Row, Col, } from 'antd';
 import { Grid, Row, Col, Typography, Tag, Space, Button, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
@@ -18,6 +16,10 @@ import UserProfileModal from "@/components/dashboard/UsersProfileModal.js";
 import { TableData } from "@/components/dashboard/partials/TableData";
 import { ListData } from "@/components/dashboard/partials/ListData";
 import { Loading } from '@/components/Loading.js'
+import type { ProColumns } from '@ant-design/pro-table';
+import type { Breakpoint } from 'antd/es/_util/responsiveObserver';
+import type { PresetColorType } from 'antd/es/_util/colors';
+import type { LiteralUnion } from 'antd/es/_util/type';
 
 /**
  * Redux
@@ -29,7 +31,7 @@ import { GetUserListAdminThunk } from '@/redux/features/user';
 /**
  * Config
  */
-import { columns } from '@/config/columnTable.js';
+import { color } from '@/constants/tagProps.js';
 
 /**
  * Style
@@ -41,7 +43,6 @@ import "@/assets/scss/page/userList.scss";
 /**
  * type 
  */
-
 const CardAction = (item: { key: string }, showModal: (id: string) => void) => [
     <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
     <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
@@ -107,7 +108,7 @@ const UserList: React.FC = () => {
      */
     const PageContainerConfig = {
         SideBarActiveKey: 'users-list',
-        SideBarActiveOpenKey: ['access-control'],
+        SideBarActiveOpenKey: ['users'],
         HeaderTitle: undefined,
         BreadcrumbItems: {
             items: [
@@ -120,15 +121,58 @@ const UserList: React.FC = () => {
     /**
      * Columns config
      */
-    const columnsConfig: ColumnsType<{
-        key: string;
-        uuid: string;
-        display_name: string;
-        user_name: string;
-        address: string;
-        email: string;
-        roles: string;
-    }> = columns(showModal);
+    const columnsConfig: ProColumns<any>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'uuid',
+            key: 'uuid',
+            hidden: true,
+            search: false,
+            render: (_dom: any, record: { uuid: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.uuid}</Link>,
+        },
+        {
+            title: 'Name',
+            dataIndex: 'display_name',
+            key: 'display_name',
+            render: (_dom: any, record: { uuid: string; display_name: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.display_name}</Link>,
+        },
+        {
+            title: 'User Name',
+            dataIndex: 'user_name',
+            key: 'user_name',
+            render: (_dom: any, record: { uuid: string; user_name: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.user_name}</Link>,
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+            render: (_dom: any, record: { address: string }) => <span>{record.address}</span>,
+        },
+        {
+            title: 'Role',
+            dataIndex: 'roles',
+            key: 'roles',
+            render: (_dom: any, record: { roles: { id: number; name: string } }) => <Tag color={color({ roles: record.roles }) as LiteralUnion<PresetColorType, string>} key={record.roles?.id}> {record.roles.name} </Tag>,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+            key: 'action',
+            responsive: ['md'] as Breakpoint[], // Ép kiểu ở đây,
+            search: false,
+            render: (_dom: any) => (
+                <Space size="small">
+                    <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
+                    <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
+                </Space>
+            ),
+        },
+    ];
 
     /**
      * Table Props Config
@@ -147,7 +191,7 @@ const UserList: React.FC = () => {
             const response = await dispatch(GetUserListAdminThunk("")).unwrap();
             return {
                 data: response?.data?.users_list || [],
-                // total: response?.total || 0,
+                total: response?.data?.total || 0,
                 success: true,
             }
         }
@@ -213,8 +257,6 @@ const UserList: React.FC = () => {
         }
     }
 
-
-
     useEffect(() => {
         try {
             SetLoading(true);
@@ -225,7 +267,6 @@ const UserList: React.FC = () => {
             SetLoading(false)
         }
     }, []);
-
 
     return (
         <React.Fragment>
