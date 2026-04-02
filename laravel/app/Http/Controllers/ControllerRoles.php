@@ -10,10 +10,16 @@ use OpenApi\Attributes as OA;
 
 use App\Http\Response\ApiResponse;
 
-use App\Models\ModelsRoles;
+use App\Repositories\RolesRepository;
 
 #[OA\Tag(name: 'Roles', description: 'Role management')]
 class ControllerRoles extends Controller {
+    protected $rolesRepository;
+
+    public function __construct(RolesRepository $rolesRepository) {
+        $this->rolesRepository = $rolesRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +36,7 @@ class ControllerRoles extends Controller {
     )]
     public function index() {
         try {
-            $roles_list = ModelsRoles::all();
+            $roles_list = $this->rolesRepository->getRoleList();
             return ApiResponse::sendResponse(["roles_list" => $roles_list], 200);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

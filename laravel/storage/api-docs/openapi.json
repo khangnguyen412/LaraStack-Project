@@ -77,6 +77,28 @@
                 "summary": "Get permission list",
                 "description": "Display a listing of the resource.",
                 "operationId": "b4182452579c4e425259845595e4008c",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "currentPage",
+                        "in": "query",
+                        "description": "Current page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/GetPermissionsList"

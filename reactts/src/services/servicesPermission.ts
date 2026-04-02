@@ -1,9 +1,19 @@
 /* eslint-disable */
 import { postRequest, getRequest } from '@/api/axios';
 
-export const GetPermissionList = async () => {
+/**
+ * Type
+ */
+import type { PaginationRequestType } from '@/types/common.type';
+
+export const GetPermissionList = async (params: PaginationRequestType = {}) => {
     try {
-        return await getRequest('/admin/permissions', { withCredentials: true });
+        return await getRequest('/admin/permissions', {
+            withCredentials: true,
+            params: {
+                ...params,
+            }
+        });
     } catch (error) {
         throw error
     }

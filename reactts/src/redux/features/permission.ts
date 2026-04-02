@@ -7,6 +7,7 @@ import { GetPermissionList, GetPermissionByID } from "@/services/servicesPermiss
  * Type
  */
 import type { ErrorType } from "@/types/error.type";
+import type { PaginationRequestType } from "@/types/common.type";
 
 export type RoleState = {
     data: any;
@@ -14,11 +15,11 @@ export type RoleState = {
     error?: string | null;
 }
 
-export const GetPermissionsListThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
+export const GetPermissionsListThunk = createAsyncThunk<{ data: any }, PaginationRequestType, { rejectValue: ErrorType }>(
     'permissions/getPermissionsList',
-    async (_, { rejectWithValue }) => {
+    async (params, { rejectWithValue }) => {
         try {
-            const response = await GetPermissionList();
+            const response = await GetPermissionList(params);
             return { data: response };
         } catch (error: any) {
             const errorData: ErrorType = error || { errorMessage: error.message || "Get Permission List Failed" };

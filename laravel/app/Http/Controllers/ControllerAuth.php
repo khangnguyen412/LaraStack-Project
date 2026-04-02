@@ -21,9 +21,20 @@ use App\Http\Response\ApiResponse;
 
 use App\Models\ModelsPermissions;
 use App\Models\ModelsUsers;
+use App\Services\AuthService;
+use App\Services\UserService;
+
 
 #[OA\Tag(name: 'Auth', description: 'Operations about authentication')]
 class ControllerAuth extends Controller {
+    protected $authService;
+    protected $userService;
+
+    public function __construct(AuthService $authService, UserService $userService) {
+        $this->authService = $authService;
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -91,43 +102,24 @@ class ControllerAuth extends Controller {
                 $credentials["email"] = $request->email;
             }
 
-            $user = ModelsUsers::where("email", $request->email)->orWhere("user_name", $request->username)->first();
-            if (!$user) {
-                throw new AuthenticationException("Username not found");
-            }
-
-            if (!Hash::check($request->password, $user->password)) {
-                throw new AuthenticationException("Invalid password");
-            }
-
-            $token = auth()->attempt($credentials);
-            if (!$token) {
-                throw new AuthenticationException("Invalid credentials");
-            }
-
-            $profile = ModelsUsers::with("roles.permissions")->find(auth()->user()->uuid);
-            /**
-             * Get user permissions
-             */
-            $permissions = $user->roles->permissions->pluck('name')->toArray();
-            $profile = $user->toArray();
-            /**
-             * Add user permissions to profile
-             */
-            $profile['permissions'] = $permissions;
+            $result = $this->authService->login($credentials, $credentials['email'] ?? null, $credentials['user_name'] ?? null);
 
             /**
-             * Remove roles.permissions from profile
+             * Set cookie()
+             * @param string|null $name - Name of cookie
+             * @param string|null $value - Value of cookie
+             * @param int $minutes - Time to live of cookie (minute)
+             * @param string|null $path - Path of cookie
+             * @param string|null $domain - Domain of cookie
+             * @param bool|null $secure - Set true if using https
+             * @param bool $httpOnly - Set true if block JavaScript access
+             * @param bool $raw - Set true if raw cookie
+             * @param string|null $samesite - Sameamesite of cookie
              */
-            unset($profile['roles']['permissions']);
-
-            /**
-             * Set cookie (jwt, Expires, Path - Time to live (minute), Domain, Secure (Set true if using https), HttpOnly (important: block JavaScript access), Raw, Samesite)
-             */
-            $cookie = cookie("jwt", $token, config('jwt.ttl'), '/', null, false, true, false, 'Lax');
+            $cookie = cookie("jwt", $result['token'], config('jwt.ttl'), '/', null, false, true, false, 'Lax');
             return response()->json([
                 "status"  => 200,
-                "profile" => $profile,
+                "profile" => $result['profile'],
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)->withCookie($cookie);
         } catch (AuthenticationException $e) {
             throw new AuthenticationException($e->getMessage());
@@ -153,11 +145,11 @@ class ControllerAuth extends Controller {
     )]
     public function logout(Request $request) {
         try {
-            auth('api')->logout();
+            $this->authService->logout();
             return response()->json([
                 "status"  => 200,
                 "message" => "Logout Successfully"
-            ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)->withoutCookie('jwt'); // Xóa cookie khỏi trình duyệt;
+            ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)->withoutCookie('jwt'); // Remove cookie from browser
         } catch (Exception $e) {
             throw new AuthenticationException($e->getMessage());
         }
@@ -178,24 +170,8 @@ class ControllerAuth extends Controller {
     )]
     public function profile(Request $request) {
         try {
-            $profile = ModelsUsers::with("roles.permissions")->find($request->user()->uuid);
-
-            /**
-             * Get user permissions
-             */
-            $permissions = $profile->roles->permissions->pluck('name')->toArray();
-            $profile = $profile->toArray();
-
-            /**
-             * Add user permissions to profile
-             */
-            $profile['permissions'] = $permissions;
-
-            /**
-             * Remove roles.permissions from profile
-             */
-            unset($profile['roles']['permissions']);
-
+            $uid = $request->user()->uuid;
+            $profile = $this->userService->profile($uid);
             return response()->json([
                 "status"  => 200,
                 "profile" => $profile,
