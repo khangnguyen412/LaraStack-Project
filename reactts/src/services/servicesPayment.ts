@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { postRequest } from '@/api/axios.ts';
+import { postRequest } from '@/api/axios';
 
 export const Payment = async () => {
     try {

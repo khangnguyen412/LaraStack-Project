@@ -12,7 +12,7 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
  * Component
 */
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
-import UserProfileModal from "@/components/dashboard/UsersProfileModal.js";
+import UserProfileModal from "@/components/dashboard/UsersProfileModal";
 import { TableData } from "@/components/dashboard/partials/TableData";
 import { ListData } from "@/components/dashboard/partials/ListData";
 import { Loading } from '@/components/Loading.js'
@@ -31,7 +31,7 @@ import { GetUserListAdminThunk } from '@/redux/features/user';
 /**
  * Config
  */
-import { color } from '@/constants/tagProps.js';
+import { color } from '@/constants/tagProps';
 
 /**
  * Style

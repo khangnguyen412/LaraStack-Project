@@ -3,12 +3,12 @@ import { Suspense, lazy } from "react";
 import { ProtectedAdmin } from "./ProtectedRoute/protectedRoute";
 
 
-const Template = lazy(() => import('@/pages/Pages.tsx'))
-const Component = lazy(() => import('@/pages/Component.tsx'))
-const AdminDashboard = lazy(() => import('@/pages/dashboard/Dashboard.tsx'))
-const UsersList = lazy(() => import('@/pages/dashboard/UsersList.tsx'))
-const RolesList = lazy(() => import('@/pages/dashboard/RolesList.tsx'))
-const PermissionsList = lazy(() => import('@/pages/dashboard/PermissionsList.tsx'))
+const Template = lazy(() => import('@/pages/Pages'))
+const Component = lazy(() => import('@/pages/Component'))
+const AdminDashboard = lazy(() => import('@/pages/dashboard/Dashboard'))
+const UsersList = lazy(() => import('@/pages/dashboard/UsersList'))
+const RolesList = lazy(() => import('@/pages/dashboard/RolesList'))
+const PermissionsList = lazy(() => import('@/pages/dashboard/PermissionsList'))
 
 export const AdminRoute = [
     {

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { postRequest, getRequest } from '@/api/axios.ts';
+import { postRequest, getRequest } from '@/api/axios';
 
 export const Logout = async () => {
     try {

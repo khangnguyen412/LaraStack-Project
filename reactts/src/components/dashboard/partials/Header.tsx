@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 /**
  * Config
  */
-import { menuItems, menuItemsMobile } from '@/config/menuItem.tsx';
+import { menuItems, menuItemsMobile } from '@/config/menuItem';
 
 /**
  * Ant Design
@@ -16,9 +16,9 @@ import { MenuOutlined } from '@ant-design/icons';
 /**
  * Redux
  */
-import type { AppDispatch } from '@/redux/store.js';
+import type { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { LogoutThunk, GetProfileThunk } from '@/redux/features/auth.ts';
+import { LogoutThunk, GetProfileThunk } from '@/redux/features/auth';
 
 /**
  * Style
