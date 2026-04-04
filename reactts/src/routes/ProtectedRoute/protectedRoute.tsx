@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
  */
 import type { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from 'react-redux';
-import { CheckAuthThunk } from "@/redux/features/auth.ts";
+import { CheckAuthThunk } from "@/redux/features/auth";
 
 /**
  * Component

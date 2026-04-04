@@ -10,9 +10,9 @@ import { EditOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/i
 /**
  * Redux
  */
-import type { AppDispatch } from '@/redux/store.js';
+import type { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetUserIDAdminThunk } from '@/redux/features/user.ts';
+import { GetUserIDAdminThunk } from '@/redux/features/user';
 
 /**
  * Style
@@ -22,12 +22,12 @@ import '@/assets/scss/loading.scss';
 /**
  * Component
  */
-import { Loading } from '@/components/Loading.tsx';
+import { Loading } from '@/components/Loading';
 
 /**
  * Hook
  */
-import { HandleDateTime } from '@/hooks/dayTime.ts';
+import { HandleDateTime } from '@/hooks/dayTime';
 
 const CloseBtn: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
     return (

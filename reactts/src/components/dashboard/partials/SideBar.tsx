@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 /**
  * Redux
  */
-import type { AppDispatch } from '@/redux/store.ts';
+import type { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
-import { LogoutThunk } from '@/redux/features/auth.ts';
+import { LogoutThunk } from '@/redux/features/auth';
 
 /**
  * Ant Design
@@ -17,7 +17,7 @@ import { Layout, Menu, Grid } from 'antd';
 /**
  * Config
  */
-import { menuItemsSidebar } from '@/config/menuItem.tsx';
+import { menuItemsSidebar } from '@/config/menuItem';
 
 const { Sider } = Layout;
 

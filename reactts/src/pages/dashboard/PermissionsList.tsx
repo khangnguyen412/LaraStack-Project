@@ -9,7 +9,7 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 /**
  * Component
 */
-import UserProfileModal from "@/components/dashboard/UsersProfileModal.jsx";
+import UserProfileModal from "@/components/dashboard/UsersProfileModal";
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
 import { TableData } from "@/components/dashboard/partials/TableData";
 import { ListData } from "@/components/dashboard/partials/ListData";

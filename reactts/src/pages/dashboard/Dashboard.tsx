@@ -28,7 +28,7 @@ import '@/assets/scss/page/dashboard.scss'
  * Components
  */
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
-import { Loading } from '@/components/Loading.tsx'
+import { Loading } from '@/components/Loading'
 
 const onPanelChange = (value: dayjs.Dayjs, mode: string) => {
     console.log(value.format('YYYY-MM-DD'), mode);

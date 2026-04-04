@@ -17,7 +17,7 @@ import "@/assets/scss/page/login.scss";
 /**
  *  Component
  */
-import { Error } from '@/components/Error.tsx';
+import { Error } from '@/components/Error';
 
 export const ForgotPassBtn: React.FC<{ error: string | null }> = ({ error }) => {
 

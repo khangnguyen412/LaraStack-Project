@@ -16,8 +16,8 @@ import { ConfigProvider } from 'antd';
  */
 import en_US from 'antd/lib/locale/en_US';
 
-import { MainRoute } from '@/routes/routeMain.tsx';
-import { AdminRoute } from '@/routes/routeAdmin.tsx';
+import { MainRoute } from '@/routes/routeMain';
+import { AdminRoute } from '@/routes/routeAdmin';
 
 const routes = [
   ...MainRoute,

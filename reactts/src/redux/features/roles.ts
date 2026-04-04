@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { GetRoleList, GetRoleByID } from "@/services/servicesRole.ts";
+import { GetRoleList, GetRoleByID } from "@/services/servicesRole";
 
 /**
  * Type

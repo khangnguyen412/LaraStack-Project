@@ -18,9 +18,9 @@ import '@/assets/scss/page/dashboard.scss'
 /**
  * Components
  */
-import SideBar from "@/components/dashboard/partials/SideBar.jsx";
-import HeaderLayout from "@/components/dashboard/partials/Header.jsx";
-import FooterLayout from "@/components/dashboard/partials/Footer.jsx";
+import SideBar from "@/components/dashboard/partials/SideBar";
+import HeaderLayout from "@/components/dashboard/partials/Header";
+import FooterLayout from "@/components/dashboard/partials/Footer";
 
 /**
  * Type

@@ -1,9 +1,9 @@
 /* eslint-disable */
 import { Suspense, lazy } from "react";
 
-const AppDefault = lazy(() => import('@/pages/AppDefault.tsx'));
-const Login = lazy(() => import('@/pages/user/Login.tsx'));
-const PaymentTest = lazy(() => import('@/pages/user/PaymentTest.tsx'));
+const AppDefault = lazy(() => import('@/pages/AppDefault'));
+const Login = lazy(() => import('@/pages/user/Login'));
+const PaymentTest = lazy(() => import('@/pages/user/PaymentTest'));
 
 export const MainRoute = [
     {

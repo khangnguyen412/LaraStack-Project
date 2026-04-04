@@ -16,9 +16,9 @@ import '@/assets/scss/page/userCreation.scss';
 /**
  *  Component
  */
-import HeadersLayout from "@/components/dashboard/partials/Header.js";
-import SideBar from "@/components/dashboard/partials/SideBar.js";
-import Footer from "@/components/dashboard/partials/Footer.js";
+import HeadersLayout from "@/components/dashboard/partials/Header";
+import SideBar from "@/components/dashboard/partials/SideBar";
+import Footer from "@/components/dashboard/partials/Footer";
 
 
 const { Content } = Layout;
