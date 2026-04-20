@@ -20,5 +20,6 @@ final class UserSchema {
     #[OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true)]
     #[OA\Property(property: 'role_id', type: 'string', example: '1')]
     #[OA\Property(property: 'role', type: 'object', ref: '#/components/schemas/Roles')]
+    #[OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string'))]
     public array $dummy = [];
 }

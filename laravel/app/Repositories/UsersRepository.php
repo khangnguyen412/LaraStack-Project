@@ -1,14 +1,29 @@
 <?php
-
 namespace App\Repositories;
 
+/**
+ * Models
+ */
 use App\Models\ModelsUsers;
 
-class UsersRepository {
+/**
+ * Interface 
+ */
+use App\Repositories\interface\UserRepositoryInterface;
+
+class UsersRepository extends BasesRepository implements UserRepositoryInterface {
     protected $model;
 
     public function __construct(ModelsUsers $model) {
         $this->model = $model;
+    }
+
+    /**
+     * Get user list
+     * @return object|null
+     */
+    public function getUserList(): ?object {
+        return $this->model->get();
     }
 
     /**
@@ -29,4 +44,5 @@ class UsersRepository {
     public function getUserProfileWithRolesAndPermissions(string $uuid): ?object {
         return $this->model->with('roles.permissions')->find($uuid);
     }
+
 }

@@ -101,7 +101,7 @@ const UserProfileModal: React.FC<{ isOpen: boolean, onOk: () => void, onCancel: 
             SetUpdateAt(HandleDateTime(userData.updated_at, 'FullDate'))
         }
     }, [userData])
-
+    
     return (
         <React.Fragment>
             {userData && (

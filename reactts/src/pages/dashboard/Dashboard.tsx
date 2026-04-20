@@ -18,7 +18,7 @@ import { Row, Col, Calendar, Alert, Typography, Avatar, Button, } from 'antd';
 import { UserOutlined, EditOutlined } from '@ant-design/icons';
 
 /**
- * Style
+ * Assets
  */
 import '@/assets/scss/style.scss';
 import '@/assets/scss/button.scss';
@@ -43,7 +43,7 @@ const AdminDashboard: React.FC = () => {
      * Hook
      */
     const loading = useSelector((state: any) => state.auth?.loading);
-    const profile = useSelector((state: any) => state.auth?.data?.profile);
+    const profile = useSelector((state: any) => state.auth?.data);
 
     /**
      * State
@@ -66,7 +66,7 @@ const AdminDashboard: React.FC = () => {
     const PageContainerConfig = {
         SideBarActiveKey: 'dashboard',
         SideBarActiveOpenKey: ['dashboard'],
-        HeaderTitle: undefined,
+        HeaderTitle: 'Dashboard',
         BreadcrumbItems: {
             items: [
                 { title: 'Admin', path: '/admin' },

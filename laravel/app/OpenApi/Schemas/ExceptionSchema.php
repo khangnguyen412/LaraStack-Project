@@ -8,9 +8,9 @@ use OpenApi\Attributes as OA;
     type: 'object',
     required: ['errorCode', 'errorMessage', 'data'],
     properties: [
-        new OA\Property(property: 'errorCode', type: 'string', example: 'ERROR_CODE'),
-        new OA\Property(property: 'errorMessage', type: 'string', example: 'Error message.'),
-        new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object'), example: []),
+        new OA\Property(property: 'code', type: 'string', example: 'ERROR_CODE'),
+        new OA\Property(property: 'message', type: 'string', example: 'Error message.'),
+        new OA\Property(property: 'errors', type: 'array', items: new OA\Items(type: 'object'), example: []),
     ]
 )]
 final class ExceptionSchema {}

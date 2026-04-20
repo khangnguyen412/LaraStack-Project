@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
     description: 'OK',
     content: new OA\JsonContent(
         properties: [
-            new OA\Property(property: 'roles_list', type: 'array', items: new OA\Items(ref: '#/components/schemas/Roles'))
+            new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/Roles'))
         ]
     )
 )]

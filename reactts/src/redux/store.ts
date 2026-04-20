@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { configureStore } from '@reduxjs/toolkit';
 import AuthSlice from '@/redux/features/auth';
 import UserSlice from '@/redux/features/user';

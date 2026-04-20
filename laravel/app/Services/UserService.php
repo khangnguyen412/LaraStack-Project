@@ -23,18 +23,11 @@ class UserService {
      * @param string $uid - User uuid
      * @return array
      */
-    public function profile(string $uid): array {
+    public function currentUser(string $uid): object {
         $profile = $this->usersRepository->getUserProfileWithRolesAndPermissions($uid);
         if (!$profile) {
             throw new ModelNotFoundException("User not found");
         }
-
-        $permissions = $profile->roles->permissions->pluck('name')->toArray();
-        $profile = $profile->toArray();
-        $profile['permissions'] = $permissions;
-
-        // Delete roles.permissions from profile
-        unset($profile['roles']['permissions']);
         return $profile;
     }
 

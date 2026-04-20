@@ -34,9 +34,9 @@ export const LoginThunk = createAsyncThunk<{ data: any }, LoginType, { rejectVal
         try {
             let payload = IsEmail(username || "") ? { email: username || "", password: password || "" } : { username: username || "", password: password || "" };
             const response = await Login(payload);
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Login Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Login Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -53,9 +53,9 @@ export const LogoutThunk = createAsyncThunk<{ data: any }, void, { rejectValue: 
             } else {
                 throw { errorMessage: "Logout Failed" };
             }
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Logout Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Logout Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -66,13 +66,13 @@ export const CheckAuthThunk = createAsyncThunk<{ data: any }, void, { rejectValu
     async (_, { rejectWithValue }) => {
         try {
             const response = await CheckAuth();
-            if (response?.status !== 200) {
+            if (!response?.data) {
                 await Logout();
                 throw { errorMessage: "Token invalid" };
             }
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Check Auth Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Check Auth Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -84,12 +84,12 @@ export const GetProfileThunk = createAsyncThunk<{ data: any }, void, { rejectVal
     async (_, { rejectWithValue }) => {
         try {
             const response = await UserProfile();
-            if (response?.status !== 200) {
+            if (!response?.data) {
                 throw { errorMessage: "Coundn't take userprofile" };
             }
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Get Profile Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Get Profile Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -132,7 +132,7 @@ const AuthSlice = createSlice({
             state.data = null;
         })
         builder.addCase(LogoutThunk.rejected, (state, action) => {
-            state.error = action.payload?.errorMessage || "Logout Failed";
+            state.error = action.payload?.errors || "Logout Failed";
         })
         builder.addCase(LoginThunk.pending, (state) => {
             state.loading = true;
@@ -143,7 +143,7 @@ const AuthSlice = createSlice({
         })
         builder.addCase(LoginThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload?.errorMessage || "Login Failed";
+            state.error = action.payload?.errors || "Login Failed";
         });
     },
 });

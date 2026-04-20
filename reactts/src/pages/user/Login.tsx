@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -7,24 +7,23 @@ import { useNavigate } from "react-router-dom";
 */
 import { theme } from 'antd';
 import { LockOutlined, UserOutlined, } from '@ant-design/icons';
-import { LoginFormPage, ProFormCheckbox, ProFormText, } from '@ant-design/pro-components';
-
+import { Form, Input, Button, Checkbox, Card, Alert, Typography, Flex, Divider } from 'antd';
 
 /**
  *  Component
  */
-import { Description, ButtonViewSource, ForgotPassBtn } from "@/components/user/FormLogin";
-import { Loading } from '@/components/Loading'
+import { ForgotPassBtn } from "@/components/user/FormLogin";
 
 /**
- * Image
- */
-import BackgroundImage from "@/assets/images/login-background.png";
-
-/**
- * Style
+ * Assets
  */
 import '@/assets/scss/page/login.scss';
+import logo from '@/assets/images/screen-nobg1.png'
+
+/**
+ * Utils
+ */
+import { ErrorHandler, formatErrorMessage } from "@/utils/errorHandler";
 
 /**
  * Redux
@@ -49,10 +48,13 @@ const LoginPage = () => {
     const { token } = theme.useToken();
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const [form] = Form.useForm();
     const check = useSelector((state: any) => state.auth?.check);
     const data = useSelector((state: any) => state.auth?.data);
     const loading = useSelector((state: any) => state.auth?.loading);
     const error = useSelector((state: any) => state.auth?.error);
+
+    const { Text, Title } = Typography;
 
     const checkAuthHandle = async () => {
         try {
@@ -69,9 +71,17 @@ const LoginPage = () => {
      */
     const OnFinish = async (values: LoginType) => {
         try {
-            await dispatch(LoginThunk(values));
-        } catch (error) {
-            console.log(error);
+            await dispatch(LoginThunk(values)).unwrap();
+            // Success -> Redirect to Admin Dashboard
+        } catch (err) {
+            // Error -> Show Alert Message
+            const fieldErrors = ErrorHandler(err);
+
+            // if has error, set to form
+            if (Object.keys(fieldErrors).length > 0) {
+                const fields = Object.entries(fieldErrors).map(([name, errors]) => ({ name, errors: [errors], }));
+                form.setFields(fields);
+            }
         }
     }
 
@@ -83,33 +93,12 @@ const LoginPage = () => {
         autoFocus: true,
     };
 
-    /**
-     *  Login Form Props
-     */
-    const LoginFormProps = {
-        backgroundImageUrl: BackgroundImage,
-        backgroundVideoUrl: "https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr",
-        logo: "",
-        title: "Welcome to CMS System",
-        subTitle: "Sign In",
-        activityConfig: {
-            title: 'CMS System',
-            subTitle: <Description></Description>,
-            action: <ButtonViewSource></ButtonViewSource>,
-        },
-        submitter: {
-            searchConfig: {
-                submitText: 'Login',
-            },
-        },
-    }
-
     useEffect(() => {
         if (localStorage.getItem("profile")) {
             navigate("/admin");
         }
-        if (data?.profile) {
-            localStorage.setItem("profile", JSON.stringify(data?.profile));
+        if (data) {
+            localStorage.setItem("profile", JSON.stringify(data));
             navigate("/admin");
         }
     }, [data, navigate])
@@ -122,20 +111,65 @@ const LoginPage = () => {
 
     return (
         <React.Fragment>
-            <LoginFormPage {...LoginFormProps} onFinish={OnFinish} actions={<ForgotPassBtn error={error}></ForgotPassBtn>} style={{ minHeight: '100dvh' }}>
-                <React.Fragment>
-                    <ProFormText name="username" fieldProps={{ ...FieldProps, prefix: (<UserOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Username or Email'} rules={[{ required: true, message: 'Please input your username or email!', },]} />
-                    <ProFormText.Password name="password" fieldProps={{ ...FieldProps, prefix: (<LockOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Password'} rules={[{ required: true, message: 'Please input your password!', },]} />
-                </React.Fragment>
-                <div style={{ marginBlockEnd: 24, }} >
-                    <ProFormCheckbox noStyle name="autoLogin">
-                        Remember Password
-                    </ProFormCheckbox>
-                </div>
-            </LoginFormPage>
-            <Loading IsLoading={loading} FlexLoading={false}></Loading>
+            {/* Video Background */}
+            <video className="video-background" autoPlay loop muted playsInline src="https://videos.pexels.com/video-files/8201470/8201470-uhd_2560_1440_30fps.mp4" />
+            <div className="overlay" />
+
+            {/* Login Form */}
+            <div className="login-page">
+                <Card className="login-card">
+                    <div className="login-header">
+                        <div className="logo">
+                            <img src={logo} alt="Logo" />
+                        </div>
+                        <Title level={2} className="title" style={{ color: token.colorText }}>
+                            Welcome to CMS System
+                        </Title>
+                        <Text className="subtitle" style={{ color: token.colorTextSecondary }}>
+                            Sign In
+                        </Text>
+                    </div>
+
+                    <Form form={form} name="login" onFinish={OnFinish} layout="vertical" size="large" requiredMark={false} className="login-form">
+                        <Form.Item name="username" rules={[{ required: true, message: 'Please input your username or email!' }]} >
+                            <Input {...FieldProps} prefix={<UserOutlined style={{ color: token.colorTextSecondary }} />} placeholder="Username or Email" />
+                        </Form.Item>
+
+                        <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]} >
+                            <Input.Password {...FieldProps} prefix={<LockOutlined style={{ color: token.colorTextSecondary }} />} placeholder="Password" />
+                        </Form.Item>
+
+                        <Form.Item style={{ marginBottom: 0 }}>
+                            <Form.Item name="autoLogin" valuePropName="checked" noStyle>
+                                <Checkbox>Remember Password</Checkbox>
+                            </Form.Item>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block size="large" loading={loading}>
+                                Login
+                            </Button>
+                        </Form.Item>
+
+                        {error && (<Alert message="Login failed" description={formatErrorMessage(error)} type="error" showIcon />)}
+
+                        <Divider />
+
+                        <Flex justify="center">
+                            <ForgotPassBtn error={null} />
+                        </Flex>
+                    </Form>
+
+                    <div className="login-footer">
+                        <Text style={{ color: token.colorTextSecondary }}>
+                            © 2025 CMS System. All rights reserved.
+                        </Text>
+                    </div>
+                </Card>
+            </div>
         </React.Fragment>
-    )
+    );
+
 }
 
 export default LoginPage;

@@ -1,12 +1,12 @@
 /* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /**
  * Ant Design
  */
 import { Grid, Row, Col, Typography, Tag, Space, Button, } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 
 /**
  * Component
@@ -55,6 +55,7 @@ const UserList: React.FC = () => {
      */
     const actionRef = useRef<any>(null);
     const formRef = useRef<any>(null);
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
@@ -109,7 +110,7 @@ const UserList: React.FC = () => {
     const PageContainerConfig = {
         SideBarActiveKey: 'users-list',
         SideBarActiveOpenKey: ['users'],
-        HeaderTitle: undefined,
+        HeaderTitle: 'User List',
         BreadcrumbItems: {
             items: [
                 { title: 'Users ', path: '/admin' },
@@ -128,19 +129,18 @@ const UserList: React.FC = () => {
             key: 'uuid',
             hidden: true,
             search: false,
-            render: (_dom: any, record: { uuid: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.uuid}</Link>,
         },
         {
             title: 'Name',
             dataIndex: 'display_name',
             key: 'display_name',
-            render: (_dom: any, record: { uuid: string; display_name: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.display_name}</Link>,
+            render: (_dom: any, record: { id: string; display_name: string }) => <Link onClick={() => { showModal(record.id) }} to={``}>{record.display_name}</Link>,
         },
         {
             title: 'User Name',
             dataIndex: 'user_name',
             key: 'user_name',
-            render: (_dom: any, record: { uuid: string; user_name: string }) => <Link onClick={() => { showModal(record.uuid) }} to={``}>{record.user_name}</Link>,
+            render: (_dom: any, record: { id: string; user_name: string }) => <Link onClick={() => { showModal(record.id) }} to={``}>{record.user_name}</Link>,
         },
         {
             title: 'Email',
@@ -157,7 +157,7 @@ const UserList: React.FC = () => {
             title: 'Role',
             dataIndex: 'roles',
             key: 'roles',
-            render: (_dom: any, record: { roles: { id: number; name: string } }) => <Tag color={color({ roles: record.roles }) as LiteralUnion<PresetColorType, string>} key={record.roles?.id}> {record.roles.name} </Tag>,
+            render: (_dom: any, record: { roles: { id: number; name: string } }) => <Tag color={color({ roles: record.roles }) as LiteralUnion<PresetColorType, string>} key={record.roles?.id}> {record.roles?.name} </Tag>,
         },
         {
             title: 'Action',
@@ -187,10 +187,13 @@ const UserList: React.FC = () => {
             name: { label: 'Name', placeholder: 'Search by name...' },
             description: { label: 'Description', placeholder: 'Search by description...' },
         },
-        request: async (params: any, sort: any, filter: any) => {
+        toolBarRender: () => [
+            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/users-create') }} type="primary" > Add </Button>
+        ],
+        request: async (_: any) => {
             const response = await dispatch(GetUserListAdminThunk("")).unwrap();
             return {
-                data: response?.data?.users_list || [],
+                data: response?.data || [],
                 total: response?.data?.total || 0,
                 success: true,
             }
@@ -207,7 +210,6 @@ const UserList: React.FC = () => {
         actions: {
             title: 'Action',
             key: 'action',
-            // responsive: ['md'],
             search: false,
             render: (_: any, record: { id: string }) => (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -217,14 +219,11 @@ const UserList: React.FC = () => {
                 </div>
             ),
         },
-        searchConfig: {
-            name: { label: 'Name', placeholder: 'Search by name...' },
-        },
         metas: {
             title: {
                 title: 'Name',
                 dataIndex: 'name',
-                render: (text: string, record: { display_name: string }) => {
+                render: (_: string, record: { display_name: string }) => {
                     return (
                         <React.Fragment>
                             <Typography style={{ fontWeight: "bold" }} >{record?.display_name}</Typography>
@@ -234,7 +233,7 @@ const UserList: React.FC = () => {
             },
             description: {
                 title: 'Info',
-                render: (text: string, record: { user_name: string, email: string, address: string, roles: { name: string } }) => {
+                render: (_: string, record: { user_name: string, email: string, address: string, roles: { name: string } }) => {
                     return (
                         <React.Fragment>
                             <Typography >Username: {record?.user_name}</Typography>
@@ -247,10 +246,16 @@ const UserList: React.FC = () => {
                 search: false,
             },
         },
-        request: async (params: any) => {
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+        },
+        toolBarRender: () => [
+            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/users-create') }} type="primary" > Add </Button>
+        ],
+        request: async (_: any) => {
             const response = await dispatch(GetUserListAdminThunk("")).unwrap();
             return {
-                data: response?.data?.users_list || [],
+                data: response?.data || [],
                 // total: response?.total || 0,
                 success: true,
             }

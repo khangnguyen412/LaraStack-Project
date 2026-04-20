@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Exception;
 
-use Illuminate\Http\Request;
-
+/**
+ * Swagger
+ */
 use OpenApi\Attributes as OA;
 
-use App\Http\Response\ApiResponse;
-
+/**
+ * Repository
+ */
 use App\Repositories\PermissionsRepository;
+
+/**
+ * Resource
+ */
+use App\Http\Resources\PermissionsResource;
 
 #[OA\Tag(name: 'Permissions', description: 'Permission management')]
 class ControllerPermissions extends Controller {
@@ -53,12 +61,7 @@ class ControllerPermissions extends Controller {
     public function index(Request $request) {
         try {
             $permissions = $this->permissionsRepository->pagination($request->input('perPage', 10), ['*'], 'page', $request->input('currentPage', 1));
-            return ApiResponse::sendResponse([
-                'permissions_list' => $permissions->items(),
-                'current_page'     => $permissions->currentPage(),
-                'per_page'         => $permissions->perPage(),
-                'total'            => $permissions->total(),
-            ], 200);
+            return PermissionsResource::collection($permissions);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -105,4 +108,5 @@ class ControllerPermissions extends Controller {
     public function destroy(string $id) {
         //
     }
+
 }

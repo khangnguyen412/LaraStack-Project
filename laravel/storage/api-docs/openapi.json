@@ -12,14 +12,14 @@
         }
     ],
     "paths": {
-        "/api/v1/admin/login": {
+        "/api/v1/login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Login user",
                 "description": "Login user",
-                "operationId": "e07d43b3d475bce63ba55331adc2ea3d",
+                "operationId": "cba39ed8f23a8cde6b7228dd2e559187",
                 "requestBody": {
                     "$ref": "#/components/requestBodies/UserLogin"
                 },
@@ -33,14 +33,14 @@
                 }
             }
         },
-        "/api/v1/admin/logout": {
+        "/api/v1/logout": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Logout user",
                 "description": "Logout user",
-                "operationId": "5da355df3e2d4c48879a26994a06a7ea",
+                "operationId": "4cdd245e58e1b22a0119bd159fb8e5c1",
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/UserLogout"
@@ -51,14 +51,14 @@
                 }
             }
         },
-        "/api/v1/admin/profile": {
+        "/api/v1/admin/me": {
             "get": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Get user profile",
-                "description": "Get user profile",
-                "operationId": "64ffafc37406ecf85d0890a511e83f4a",
+                "summary": "Get current user",
+                "description": "Get current user",
+                "operationId": "faf8c23a3e9714860d50e779c0b8284d",
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/GetUserProfile"
@@ -213,15 +213,15 @@
                     "data"
                 ],
                 "properties": {
-                    "errorCode": {
+                    "code": {
                         "type": "string",
                         "example": "ERROR_CODE"
                     },
-                    "errorMessage": {
+                    "message": {
                         "type": "string",
                         "example": "Error message."
                     },
-                    "data": {
+                    "errors": {
                         "type": "array",
                         "items": {
                             "type": "object"
@@ -343,6 +343,12 @@
                     },
                     "role": {
                         "$ref": "#/components/schemas/Roles"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "type": "object"
@@ -354,7 +360,12 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/Exception"
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Exception"
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 }
@@ -364,7 +375,12 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "$ref": "#/components/schemas/Exception"
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Exception"
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 }
@@ -375,7 +391,7 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "permissions_list": {
+                                "data": {
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Permissions"
@@ -393,7 +409,7 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "roles_list": {
+                                "data": {
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Roles"
@@ -426,7 +442,7 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "users_list": {
+                                "data": {
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Users"
@@ -444,18 +460,8 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "token": {
-                                    "type": "string",
-                                    "example": "Bearer token"
-                                },
-                                "profile": {
+                                "data": {
                                     "$ref": "#/components/schemas/Users"
-                                },
-                                "permissions": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
                                 }
                             },
                             "type": "object"
@@ -464,20 +470,7 @@
                 }
             },
             "UserLogout": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "Logout Successfully"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
+                "description": "OK"
             },
             "GetUserProfile": {
                 "description": "OK",
@@ -485,7 +478,7 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "profile": {
+                                "data": {
                                     "$ref": "#/components/schemas/Users"
                                 }
                             },
@@ -497,15 +490,19 @@
         },
         "requestBodies": {
             "UserLogin": {
-                "description": "User login credentials",
+                "description": "User login credentials, email or username is required",
                 "required": true,
                 "content": {
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "username or email": {
+                                "email": {
                                     "type": "string",
-                                    "example": "admin | admin@example.com"
+                                    "example": "admin@example.com"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "example": "admin"
                                 },
                                 "password": {
                                     "type": "string",

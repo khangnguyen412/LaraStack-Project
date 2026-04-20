@@ -1,29 +1,28 @@
 /* eslint-disable */
-import React, { useMemo } from "react";
+import React, { useMemo, } from "react";
 
 /**
  * Component
  */
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { ProTable } from '@ant-design/pro-table';
 
 /**
  * TableDataProps
  */
-import type { ProColumns, ActionType} from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
 
-type TableDataProps  = {
+type TableDataProps = {
     actionRef: React.RefObject<any>,
     formRef: React.RefObject<any>,
     rowKey: string,
     headerTitle: string,
     columns: ProColumns[],
     searchConfig: any,
+    toolBarRender: () => React.ReactNode[],
     request: (params: any, sort: any, filter: any) => Promise<any>,
 }
 
-export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, searchConfig, request }: TableDataProps) => {
+export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, searchConfig, toolBarRender, request }: TableDataProps) => {
     const tablePropsConfig = useMemo(() => ({
         actionRef,
         formRef,
@@ -33,7 +32,7 @@ export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, se
         search: {
             collapsed: false,
             collapseRender: false,
-            optionRender: (searchConfig: any, formProps: any, dom: any) => [
+            optionRender: (_: any, __: any, dom: any) => [
                 React.cloneElement(dom[0], { children: "Clear" }),
                 React.cloneElement(dom[1], { children: 'Search' }),
             ],
@@ -50,13 +49,9 @@ export const TableData = ({ actionRef, formRef, rowKey, headerTitle, columns, se
             fullScreen: true,
             setting: false,
         },
-        toolBarRender: () => [
-            <Button key="button" icon={<PlusOutlined />} onClick={() => { }} type="primary" >
-                Add
-            </Button>
-        ],
+        toolBarRender: toolBarRender,
         request: request,
-    }), [actionRef, formRef, rowKey, headerTitle, columns, searchConfig, request])
+    }), [actionRef, formRef, rowKey, headerTitle, columns, searchConfig, toolBarRender, request])
     return (
         <React.Fragment>
             <ProTable {...tablePropsConfig} />

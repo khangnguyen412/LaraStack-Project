@@ -1,6 +1,5 @@
 /* eslint-disable */
-import { useEffect, useRef } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 /**
  * Redux
@@ -35,7 +34,7 @@ export const ProtectedAdmin = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (!authenticated) {
-        return <Navigate to="/login" replace />
+        // return <Navigate to="/login" replace />
     }
 
     return children

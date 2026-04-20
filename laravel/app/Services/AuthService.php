@@ -28,7 +28,7 @@ class AuthService {
         $user = $this->usersRepository->findByEmailOrUserName($email ?? null, $username ?? null);
 
         if (!$user) {
-            throw new ModelNotFoundException('User not found');
+            throw ValidationException::withMessages(['username' => ['User not found']]);
         }
 
         if (!Hash::check($credentials['password'], $user->password)) {
@@ -41,15 +41,7 @@ class AuthService {
         }
 
         $profile = $this->usersRepository->getUserProfileWithRolesAndPermissions(auth()->user()->uuid);
-
-        // Format array return
-        $permissions = $profile->roles->permissions->pluck('name')->unique()->toArray();
-        $profile = $profile->toArray();
-
-
-        // Delete roles.permissions from profile
-        $profile['permissions'] = $permissions;
-        unset($profile['roles']);
+        ;
 
         // Return array
         return [
@@ -65,4 +57,5 @@ class AuthService {
     public function logout(): void {
         auth('api')->logout();
     }
+
 }

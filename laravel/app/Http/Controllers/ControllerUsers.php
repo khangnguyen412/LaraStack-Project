@@ -5,12 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Exception
+ */
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Swagger
+ */
 use OpenApi\Attributes as OA;
 
+/**
+ * Models
+ */
 use App\Models\ModelsUsers;
-use App\Http\Response\ApiResponse;
+
+/**
+ * Resource
+ */
+use App\Http\Resources\UsersResource;
 
 #[OA\Tag(name: 'Users', description: 'User management')]
 class ControllerUsers extends Auth {
@@ -31,7 +44,8 @@ class ControllerUsers extends Auth {
     public function index() {
         try {
             $users_list = ModelsUsers::with('roles')->get();
-            return ApiResponse::sendResponse(["users_list" => $users_list], 200);
+            $collection = $users_list->map(fn($user) => new UsersResource($user, withPermissions: false));
+            return UsersResource::collection($collection);
         } catch (NotFoundHttpException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -76,7 +90,7 @@ class ControllerUsers extends Auth {
         if (!$users_with_id) {
             throw new NotFoundHttpException("Couldn't get user with id: $id");
         }
-        return ApiResponse::sendResponse(["data" => $users_with_id], 200);
+        return new UsersResource($users_with_id);
     }
 
     /**
@@ -99,4 +113,5 @@ class ControllerUsers extends Auth {
     public function destroy(string $id) {
         //
     }
+
 }

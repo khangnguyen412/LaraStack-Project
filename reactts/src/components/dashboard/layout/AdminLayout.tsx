@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from 'react-router-dom';
 
 /**
@@ -23,6 +22,11 @@ import HeaderLayout from "@/components/dashboard/partials/Header";
 import FooterLayout from "@/components/dashboard/partials/Footer";
 
 /**
+ * Hooks
+ */
+import { useDeviceType } from "@/hooks/useDeviceType";
+
+/**
  * Type
  */
 type AdminDashboardProps = {
@@ -36,7 +40,10 @@ type AdminDashboardProps = {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ SideBarActiveKey, SideBarActiveOpenKey, HeaderTitle, BreadcrumbItems, children }) => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    /**
+     * Hooks
+     */
+    const deviceInfo = useDeviceType();
 
     const PageContainerConfig = {
         title: HeaderTitle || '',
@@ -46,14 +53,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ SideBarActiveKey, SideB
                 title: path ? <Link to={path}>{title}</Link> : title,
             })),
         },
-        childrenContentStyle: isMobile ? { paddingInline: 10, paddingBlock: 10, margin: 10 } : {}, // force style for div children
+        childrenContentStyle: deviceInfo.isMobile ? { paddingInline: 0, paddingBlock: 0, margin: 10 } : {}, // force style for div children
     };
 
     return (
         <React.Fragment>
             <HeaderLayout></HeaderLayout>
             <Layout className="layout-wrapper">
-                <SideBar activeKey={SideBarActiveKey} activeOpenKey={SideBarActiveOpenKey}></SideBar>
+                <SideBar activeKey={SideBarActiveKey} activeOpenKey={!deviceInfo.isMobile ? SideBarActiveOpenKey : []} ></SideBar>
                 <Layout>
                     <PageContainer {...PageContainerConfig}>
                         {children}

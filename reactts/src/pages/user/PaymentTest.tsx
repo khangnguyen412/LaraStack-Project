@@ -63,7 +63,7 @@ const PaymentForm = () => {
 
     return (
         <div>
-            {/* Hiển thị Stripe Elements */}
+            {/* Display Stripe Elements */}
             {clientSecret && (
                 <Elements stripe={stripePromise}>
                     <CheckoutForm clientSecret={clientSecret} />

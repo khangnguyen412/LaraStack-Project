@@ -49,18 +49,18 @@ class ControllerPayment extends Controller
     }
 
     /**
-     *  Phương thức thanh toán
-     *  Test thanh toán: https://docs.stripe.com/testing
+     *  Payment Stripe Method
+     *  Test Stripe: https://docs.stripe.com/testing
      *  
-     *  Các Flow thanh toán:
-     *  1. Người dùng chọn sản phẩm
-     *  2. Cho vào giỏ hàng
-     *  3. Chọn phương thức thanh toán
-     *  4. Kiểm tra tồn kho trước khi thanh toán
-     *  5. Gửi Stripe tạo PaymentIntent hoặc Checkout Session
-     *  6. Frontend nhận client_secret và confirm thanh toán
-     *  7. Stripe trả về trạng thái thanh toán
-     *  8. Cập nhật DB sau khi thanh toán thành công
+     *  Payment Flow:
+     *  1. User choose product in cart
+     *  2. User click checkout button
+     *  3. User choose payment method in checkout
+     *  4. Check stock before payment
+     *  5. Stripe create PaymentIntent or Checkout Session
+     *  6. Frontend receive client_secret and confirm payment
+     *  7. Stripe return payment status to frontend
+     *  8. Update DB after payment success
      */
     public function StripePayment()
     {

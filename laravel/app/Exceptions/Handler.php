@@ -11,7 +11,7 @@ use Illuminate\Session\TokenMismatchException as TokenMismatchException;
 use Illuminate\Database\Eloquent\ModelNotFoundException as ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as NotFoundHttpException;
 
-use App\Http\Response\ErrorResponse;
+use App\Http\Resources\ErrorsResource;
 
 class Handler extends ExceptionHandler {
     /**
@@ -37,40 +37,73 @@ class Handler extends ExceptionHandler {
     public function render($request, Throwable $e) {
         // Bad Request (400)
         if ($e instanceof ValidationException) {
-            return ErrorResponse::getErrorResponse(400, "VALIDATION_ERROR", $e->getMessage());
+            return ErrorsResource::make([
+                'code'    => '400',
+                'message' => 'VALIDATION_ERROR',
+                'data'    => $e->errors(),
+            ])->response()->setStatusCode(400);
         }
 
         // Authentication (401)
         if ($e instanceof AuthenticationException) {
-            return ErrorResponse::getErrorResponse(401, "UNAUTHORIZED", $e->getMessage());
+            return ErrorsResource::make([
+                'code'    => '401',
+                'message' => 'UNAUTHORIZED',
+                'data'    => $e->getMessage(),
+            ])->response()->setStatusCode(401);
         }
 
         // Authorization (403)
         if ($e instanceof AuthorizationException) {
-            return ErrorResponse::getErrorResponse(403, "FORBIDDEN", "You do not have permission to access this resource.");
+            return ErrorsResource::make([
+                'code'    => '403',
+                'message' => 'FORBIDDEN',
+                'data'    => $e->getMessage(),
+            ])->response()->setStatusCode(403);
         }
 
         // Model Not Found (404)
         if ($e instanceof ModelNotFoundException) {
-            return ErrorResponse::getErrorResponse(404, "NOT_FOUND", $e->getMessage());
+            return ErrorsResource::make([
+                'code'    => '404',
+                'message' => 'NOT_FOUND',
+                'data'    => $e->getMessage(),
+            ])->response()->setStatusCode(404);
         }
 
         // Not Found (404)
         if ($e instanceof NotFoundHttpException) {
-            return ErrorResponse::getErrorResponse(404, "NOT_FOUND", $e->getMessage());
-        }
-
-        // Validation (422)
-        if ($e instanceof ValidationException) {
-            return ErrorResponse::getErrorResponse(422, "VALIDATION_ERROR", $e->getMessage());
+            return ErrorsResource::make([
+                'code'    => '404',
+                'message' => 'NOT_FOUND',
+                'data'    => $e->getMessage(),
+            ])->response()->setStatusCode(404);
         }
 
         // CSRF Token Mismatch (419)
         if ($e instanceof TokenMismatchException) {
-            return ErrorResponse::getErrorResponse(419, "TOKEN_MISMATCH", $e->getMessage());
+            return ErrorsResource::make([
+                'code'    => '419',
+                'message' => 'TOKEN_MISMATCH',
+                'data'    => $e->getMessage(),
+            ])->response()->setStatusCode(419);
+        }
+
+        // Validation (422)
+        if ($e instanceof ValidationException) {
+            return ErrorsResource::make([
+                'code'    => '422',
+                'message' => 'VALIDATION_ERROR',
+                'data'    => $e->errors(),
+            ])->response()->setStatusCode(422);
         }
 
         // Default (500)
-        return ErrorResponse::getErrorResponse(500, "SERVER_ERROR", $e->getMessage());
+        return ErrorsResource::make([
+            'code'    => '500',
+            'message' => 'SERVER_ERROR',
+            'data'    => $e->getMessage(),
+        ])->response()->setStatusCode(500);
     }
+
 }

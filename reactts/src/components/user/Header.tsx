@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 /**
  *  Redux
  */
-import { useDispatch,useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 /**
