@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Exception;
 
-use Illuminate\Http\Request;
-
+/**
+ * Swagger
+ */
 use OpenApi\Attributes as OA;
 
-use App\Http\Response\ApiResponse;
-
+/**
+ * Repository
+ */
 use App\Repositories\RolesRepository;
+
+/**
+ * Resource
+ */
+use App\Http\Resources\RolesResource;
 
 #[OA\Tag(name: 'Roles', description: 'Role management')]
 class ControllerRoles extends Controller {
@@ -37,7 +45,7 @@ class ControllerRoles extends Controller {
     public function index() {
         try {
             $roles_list = $this->rolesRepository->getRoleList();
-            return ApiResponse::sendResponse(["roles_list" => $roles_list], 200);
+            return RolesResource::collection($roles_list);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

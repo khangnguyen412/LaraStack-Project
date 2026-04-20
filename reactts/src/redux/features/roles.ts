@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { GetRoleList, GetRoleByID } from "@/services/servicesRole";
+import { GetRoleList } from "@/services/servicesRole";
 
 /**
  * Type
@@ -9,19 +9,19 @@ import { GetRoleList, GetRoleByID } from "@/services/servicesRole";
 import type { ErrorType } from "@/types/error.type";
 
 export type RoleState = {
-    data: any;
+    data?: any;
     loading: boolean;
-    error?: string | null;
+    error?: any;
 }
 
-export const GetRolesListThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
+export const GetRolesListThunk = createAsyncThunk<{ data: any, }, void, { rejectValue: ErrorType }>(
     'roles/getRolesList',
     async (_, { rejectWithValue }) => {
         try {
             const response = await GetRoleList();
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Get Role List Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Get Role List Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -54,11 +54,11 @@ const RolesSlice = createSlice({
             state.error = null;
         })
         builder.addCase(GetRolesListThunk.fulfilled, (state, action) => {
-            state.data = action.payload.data;
+            state.data = action?.payload?.data || null;
         })
         builder.addCase(GetRolesListThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action?.payload?.errorMessage;
+            state.error = action?.payload?.errors || "Get Role List Failed";
         })
         // .addCase(GetUserIDAdminThunk.pending, (state) => {
         //     state.loading = true;

@@ -2,7 +2,7 @@
 import React, { useMemo, } from "react";
 
 import { Button } from "antd";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { ProList } from '@ant-design/pro-components';
 
 /**
@@ -15,10 +15,11 @@ type ListDataProps = {
     metas:  Record<string, any>;
     actions: any;
     searchConfig: any;
+    toolBarRender: () => React.ReactNode[];
     request: any;
 }
 
-export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, searchConfig, request }: ListDataProps) => {
+export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, searchConfig, toolBarRender,  request }: ListDataProps) => {
     const proListPropsConfig = useMemo(() => ({
         formRef: formRef,
         actionRef: actionRef,
@@ -47,7 +48,7 @@ export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, sear
             showQuickJumper: true,
             defaultCurrent: 1,
             defaultPageSize: 10,
-            showTotal: (total: number, range: number[]) => `Total ${total} items`,
+            showTotal: (total: number) => `Total ${total} items`,
             showLessItems: true,
             size: "small" as "small",
             align: "center" as "center",
@@ -58,13 +59,9 @@ export const ListData = ({ actionRef, formRef, headerTitle, metas, actions, sear
             fullScreen: true,
             setting: false,
         },
-        toolBarRender: () => [
-            <Button key="add" type="primary" icon={<PlusOutlined />} onClick={() => { }}>
-                Add
-            </Button>,
-        ],
+        toolBarRender: toolBarRender,
         request: request || {},
-    }), [actionRef, formRef, headerTitle, metas, actions, searchConfig, request])
+    }), [actionRef, formRef, headerTitle, metas, actions, searchConfig, toolBarRender, request])
 
     return (
         <React.Fragment>

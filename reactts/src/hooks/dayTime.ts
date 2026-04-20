@@ -1,4 +1,3 @@
-/* eslint-disable */
 export const HandleDateTime = (DateString: string, OutputType: string) => {
     const date = new Date(DateString);
     const day = String(date.getDate()).padStart(2, '0');

@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export const Error: React.FC<{ Error: string | null }> = ({ Error }) => {
     if (Error) {

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { postRequest, getRequest } from '@/api/axios';
+import { getRequest } from '@/api/axios';
 
-export const GetRoleList = async () => {
+export const GetRoleList = async (): Promise<any> => {
     try {
         return await getRequest('/admin/roles', { withCredentials: true });
     } catch (error) {
@@ -9,7 +9,7 @@ export const GetRoleList = async () => {
     }
 }
 
-export const GetRoleByID = async (id?: number) => {
+export const GetRoleByID = async (id?: number): Promise<any> => {
     try {
         return await getRequest(`/admin/roles/${id}`, { withCredentials: true });
     } catch (error) {

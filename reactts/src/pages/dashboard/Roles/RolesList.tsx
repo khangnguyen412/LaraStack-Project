@@ -1,11 +1,12 @@
 /* eslint-disable */
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Ant Design
  */
-import { Grid, Row, Col, Typography, Tag, Space, Button, } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { Grid, Row, Col, Typography, Space, Button, } from 'antd';
+import { EditOutlined, DeleteOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 /**
  * Component
 */
@@ -13,16 +14,13 @@ import UserProfileModal from "@/components/dashboard/UsersProfileModal";
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
 import { TableData } from "@/components/dashboard/partials/TableData";
 import { ListData } from "@/components/dashboard/partials/ListData";
-import type { ProColumns } from '@ant-design/pro-table';
-
 
 /**
  * Redux
  */
-import { useDispatch, useSelector } from 'react-redux';
-import { GetPermissionsListThunk } from '@/redux/features/permission';
+import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
-import type { PaginationAntType, PaginationRequestType, PaginationResponseType } from '@/types/common.type';
+import { GetRolesListThunk } from '@/redux/features/roles';
 
 /**
  * Style
@@ -30,7 +28,11 @@ import type { PaginationAntType, PaginationRequestType, PaginationResponseType }
 import "@/assets/scss/style.scss";
 import "@/assets/scss/page/userList.scss";
 
-const PermissionList: React.FC = () => {
+/**
+ * Type
+ */
+
+const RoleList: React.FC = () => {
     /**
      * Hook
      */
@@ -38,6 +40,7 @@ const PermissionList: React.FC = () => {
     const screens = useBreakpoint();
     const actionRef = useRef<any>(null);
     const formRef = useRef<any>(null);
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     /**
@@ -69,23 +72,23 @@ const PermissionList: React.FC = () => {
      * Page Container Config
      */
     const PageContainerConfig = {
-        SideBarActiveKey: 'permissions-list',
+        SideBarActiveKey: 'roles-list',
         SideBarActiveOpenKey: ['access-control'],
-        HeaderTitle: undefined,
+        HeaderTitle: 'Role List',
         BreadcrumbItems: {
             items: [
                 { title: 'Access Control', path: '/admin' },
-                { title: 'Permission List' },
+                { title: 'Role List' },
             ],
         },
     };
 
     /**
-     * Table Config
+     * Column Config
      */
-    const columnsConfig: ProColumns<any>[] = [
+    const columnsConfig: any = [
         {
-            title: 'Id',
+            title: 'id',
             hidden: true,
             search: false,
         },
@@ -96,7 +99,7 @@ const PermissionList: React.FC = () => {
             search: true,
             formItemProps: { label: "Name" },
             fieldProps: { placeholder: "Search by name..." },
-            render: (dom) => <Typography.Text>{dom}</Typography.Text>,
+            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
         },
         {
             title: 'Description',
@@ -105,7 +108,7 @@ const PermissionList: React.FC = () => {
             search: true,
             formItemProps: { label: "Description" },
             fieldProps: { placeholder: "Search by description..." },
-            render: (dom) => <Typography.Text>{dom}</Typography.Text>,
+            render: (text: string) => <Typography.Text>{text}</Typography.Text>,
         },
         {
             title: 'Action',
@@ -122,21 +125,27 @@ const PermissionList: React.FC = () => {
         },
     ]
 
+    /**
+     * Table Config
+     */
     const tablePropsConfig = {
         actionRef: actionRef,
         formRef: formRef,
         rowKey: 'id',
-        headerTitle: 'Permissions List',
+        headerTitle: 'Roles List',
         columns: columnsConfig,
         searchConfig: {
             name: { label: 'Name', placeholder: 'Search by name...' },
             description: { label: 'Description', placeholder: 'Search by description...' },
         },
-        request: async (params: PaginationAntType, sort: any, filter: any) => {
-            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10, })).unwrap();
+        toolBarRender: () => [
+            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/roles-create') }} type="primary" > Add </Button>
+        ],
+        request: async (_: any) => {
+            const response = await dispatch(GetRolesListThunk()).unwrap();
             return {
-                data: response?.data?.permissions_list || [],
-                total: response?.data?.total || 0,
+                data: response?.data || [],
+                // total: response?.meta?.total || 0,
                 success: true,
             }
         }
@@ -148,11 +157,10 @@ const PermissionList: React.FC = () => {
     const listPropsConfig = {
         formRef: formRef,
         actionRef: actionRef,
-        headerTitle: 'Permissions List',
+        headerTitle: 'Roles List',
         actions: {
             title: 'Action',
             key: 'action',
-            // responsive: ['md'],
             search: false,
             render: (_: any, record: { id: string }) => (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -162,15 +170,11 @@ const PermissionList: React.FC = () => {
                 </div>
             ),
         },
-        searchConfig: {
-            name: { label: 'Name', placeholder: 'Search by name...' },
-            description: { label: 'Description', placeholder: 'Search by description...' },
-        },
         metas: {
             title: {
                 title: 'Name',
                 dataIndex: 'name',
-                render: (text: string, record: { name: string, guard_name: string }) => {
+                render: (_: string, record: { name: string, description: string }) => {
                     return (
                         <React.Fragment>
                             <Typography style={{ fontWeight: "bold" }} >{record?.name}</Typography>
@@ -180,21 +184,28 @@ const PermissionList: React.FC = () => {
             },
             description: {
                 title: 'Role Info',
-                render: (text: string, record: { name: string, description: string }) => {
+                render: (_: string, record: { name: string, description: string }) => {
                     return (
                         <React.Fragment>
-                            <Typography >Description: {record?.description}</Typography>
+                            <Typography >Guard Name: {record?.description}</Typography>
                         </React.Fragment>
                     )
                 },
                 search: false,
             },
         },
-        request: async (params: PaginationAntType) => {
-            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10 })).unwrap();
+        searchConfig: {
+            name: { label: 'Name', placeholder: 'Search by name...' },
+            description: { label: 'Description', placeholder: 'Search by description...' },
+        },
+        toolBarRender: () => [
+            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/roles-create') }} type="primary" > Add </Button>
+        ],
+        request: async (_: any) => {
+            const response = await dispatch(GetRolesListThunk()).unwrap();
             return {
-                data: response?.data?.permissions_list || [],
-                total: response?.data?.total || 0,
+                data: response?.data || [],
+                // total: response?.total || 0,
                 success: true,
             }
         }
@@ -221,4 +232,4 @@ const PermissionList: React.FC = () => {
         </React.Fragment >
     );
 };
-export default PermissionList;
+export default RoleList;

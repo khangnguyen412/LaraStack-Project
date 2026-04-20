@@ -25,7 +25,7 @@ API.interceptors.response.use(
         return response.data
     },
     (error) => {
-        if (error.response?.status === 401) { 
+        if (error.response?.status === 401 && !error.config.url.includes('/login')) {
             window.location.href = '/login';
             localStorage.removeItem('profile');
         }

@@ -16,13 +16,13 @@ class DatabaseSeederRoles extends Seeder
         $arr = [
             [
                 'name'              => "Administrator",
-                'guard_name'        => "admin",
+                'description'        => "admin",
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ],
             [
                 'name'              => "Manager",
-                'guard_name'        => "manager",
+                'description'        => "manager",
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ],

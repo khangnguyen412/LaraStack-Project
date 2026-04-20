@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { LoginType } from "@/types/login.type";
 
 class Login {
@@ -15,7 +14,7 @@ class Login {
     }
 
     /**
-     * Kiểm tra xem chuỗi có phải là email hay không
+     * check if username is email
      * @returns {boolean}
      */
     isEmail = () => {

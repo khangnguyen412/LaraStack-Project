@@ -14,7 +14,7 @@ type UserAdminListState = {
     data?: any;
     userData: any;
     loading: boolean;
-    error?: string | null;
+    error?: any;
 }
 
 export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, any, { rejectValue: ErrorType }>(
@@ -22,9 +22,9 @@ export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, any, { reje
     async (_, { rejectWithValue }) => {
         try {
             const response = await GetUserListAdmin();
-            return { data: response };
+            return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Get User List Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Get User List Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -37,7 +37,7 @@ export const GetUserIDAdminThunk = createAsyncThunk<{ data: any }, any, { reject
             const response = await GetUserIDAdmin(id);
             return response;
         } catch (error: any) {
-            const errorData: ErrorType = error || { errorMessage: error.message || "Get User ID Failed" };
+            const errorData: ErrorType = error?.data || { errors: "Get User ID Failed" };
             return rejectWithValue(errorData);
         }
     }
@@ -63,7 +63,7 @@ const UserSlice = createSlice({
         })
         builder.addCase(GetUserListAdminThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action?.payload?.errorMessage;
+            state.error = action?.payload?.errors || "Get User List Failed";
         })
         builder.addCase(GetUserIDAdminThunk.pending, (state) => {
             state.loading = true;
@@ -73,9 +73,8 @@ const UserSlice = createSlice({
             state.userData = action?.payload?.data;
         })
         builder.addCase(GetUserIDAdminThunk.rejected, (state, action) => {
-            console.log(action?.payload);
             state.loading = false;
-            state.error = action?.payload?.errorMessage;
+            state.error = action?.payload?.errors || "Get User ID Failed";
         })
     }
 })

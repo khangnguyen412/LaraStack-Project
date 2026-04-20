@@ -6,20 +6,15 @@ import { postRequest, getRequest } from '@/api/axios';
  */
 import type { PaginationRequestType } from '@/types/common.type';
 
-export const GetPermissionList = async (params: PaginationRequestType = {}) => {
+export const GetPermissionList = async (params: PaginationRequestType = {}): Promise<any> => {
     try {
-        return await getRequest('/admin/permissions', {
-            withCredentials: true,
-            params: {
-                ...params,
-            }
-        });
+        return await getRequest('/admin/permissions', { withCredentials: true, params: { ...params, } });
     } catch (error) {
         throw error
     }
 }
 
-export const GetPermissionByID = async (id?: number) => {
+export const GetPermissionByID = async (id?: number): Promise<any> => {
     try {
         return await getRequest(`/admin/permissions/${id}`, { withCredentials: true });
     } catch (error) {

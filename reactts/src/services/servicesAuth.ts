@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { postRequest, getRequest } from '@/api/axios';
 
-export const Logout = async () => {
+export const Logout = async (): Promise<any> => {
     try {
         return await postRequest('/logout', {}, { withCredentials: true });
     } catch (error) {
@@ -9,7 +9,7 @@ export const Logout = async () => {
     }
 }
 
-export const Login = async (payload: object) => {
+export const Login = async (payload: object): Promise<any> => {
     try {
         return await postRequest('/login', payload, { headers: { "Content-Type": "application/json" } });
     } catch (error) {
@@ -17,17 +17,17 @@ export const Login = async (payload: object) => {
     }
 }
 
-export const CheckAuth = async () => {
+export const CheckAuth = async (): Promise<any> => {
     try {
-        return await getRequest('/admin/profile', { withCredentials: true });
+        return await getRequest('/admin/me', { withCredentials: true });
     } catch (error) {
         throw error;
     }
 }
 
-export const UserProfile = async () => {
+export const UserProfile = async (): Promise<any> => {
     try {
-        return await getRequest('/admin/profile', { withCredentials: true });
+        return await getRequest('/admin/me', { withCredentials: true });
     } catch (error) {
         throw error;
     }

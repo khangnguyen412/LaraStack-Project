@@ -10,5 +10,5 @@ Route::middleware('jwt.cookie')->post('/logout', [ControllerAuth::class, 'logout
 
 Route::prefix('/admin')->middleware(["jwt.cookie", "auth:api"])->group(function () {
     Route::middleware(['auth.permission:UPDATE_USER'])->apiResource('/profile', ControllerAuth::class)->only(['update']);
-    Route::get('/profile', [ControllerAuth::class, 'profile']);
+    Route::get('/me', [ControllerAuth::class, 'currentUser']);
 });
