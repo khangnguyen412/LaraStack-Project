@@ -16,16 +16,21 @@ use OpenApi\Attributes as OA;
 use App\Repositories\PermissionsRepository;
 
 /**
+ * Service
+ */
+use App\Services\PermissionService;
+
+/**
  * Resource
  */
 use App\Http\Resources\PermissionsResource;
 
 #[OA\Tag(name: 'Permissions', description: 'Permission management')]
 class ControllerPermissions extends Controller {
-    protected $permissionsRepository;
+    protected $permissionService;
 
-    public function __construct(PermissionsRepository $permissionsRepository) {
-        $this->permissionsRepository = $permissionsRepository;
+    public function __construct(PermissionService $permissionService) {
+        $this->permissionService = $permissionService;
     }
 
     /**
@@ -60,7 +65,11 @@ class ControllerPermissions extends Controller {
     )]
     public function index(Request $request) {
         try {
-            $permissions = $this->permissionsRepository->pagination($request->input('perPage', 10), ['*'], 'page', $request->input('currentPage', 1));
+            $currentPage = $request->input('currentPage', 1);
+            $perPage = $request->input('perPage', 10);
+            $description = $request->input('description', null);
+            $name = $request->input('name', null);
+            $permissions = $this->permissionService->searchPermission($currentPage, $perPage, $description, $name);
             return PermissionsResource::collection($permissions);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

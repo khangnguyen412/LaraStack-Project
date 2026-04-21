@@ -24,7 +24,7 @@ import { LogoutThunk, GetProfileThunk } from '@/redux/features/auth';
  * Assets
  */
 import '@/assets/scss/layout/header.scss';
-import logo from '@/assets/images/logoicon-white.png'
+import logo from '@/assets/images/logo-icon-white.png'
 
 const { Header } = Layout;
 

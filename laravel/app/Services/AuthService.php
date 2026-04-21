@@ -25,7 +25,7 @@ class AuthService {
      * @return array
      */
     public function login(array $credentials, ?string $email, ?string $username): array {
-        $user = $this->usersRepository->findByEmailOrUserName($email ?? null, $username ?? null);
+        $user = $this->usersRepository->getUserByEmailOrUserName($email ?? null, $username ?? null);
 
         if (!$user) {
             throw ValidationException::withMessages(['username' => ['User not found']]);

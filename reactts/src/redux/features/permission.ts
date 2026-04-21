@@ -7,16 +7,16 @@ import { GetPermissionList } from "@/services/servicesPermission.ts";
  * Type
  */
 import type { ErrorType } from "@/types/error.type";
-import type { PaginationRequestType } from "@/types/common.type";
+import type { PermissionListRequest } from "@/types/admin/permissions.type";
 
-export type RoleState = {
+export type PermissionState = {
     data: any;
     total: number;
     loading: boolean;
     error?: any;
 }
 
-export const GetPermissionsListThunk = createAsyncThunk<{ data: any, meta: any }, PaginationRequestType, { rejectValue: ErrorType }>(
+export const GetPermissionsListThunk = createAsyncThunk<{ data: any, meta: any }, PermissionListRequest, { rejectValue: ErrorType }>(
     'permissions/getPermissionsList',
     async (params, { rejectWithValue }) => {
         try {
@@ -49,7 +49,7 @@ const PermissionsSlice = createSlice({
         total: 0,
         loading: false,
         error: null,
-    } as RoleState,
+    } as PermissionState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(GetPermissionsListThunk.pending, (state) => {

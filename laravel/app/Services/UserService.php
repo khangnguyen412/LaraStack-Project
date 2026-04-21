@@ -10,6 +10,8 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class UserService {
     protected $usersRepository;
@@ -29,6 +31,14 @@ class UserService {
             throw new ModelNotFoundException("User not found");
         }
         return $profile;
+    }
+
+    /**
+     * Create permission
+     * @param array $data
+     * @return object|null
+     */
+    public function createUser(array $data): ?object {
     }
 
 }

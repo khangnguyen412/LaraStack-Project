@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { postRequest, getRequest } from '@/api/axios';
+import { getRequest } from '@/api/axios';
 
 /**
  * Type

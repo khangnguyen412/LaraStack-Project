@@ -1,6 +1,8 @@
 <?php
 namespace App\Repositories;
 
+use Illuminate\Support\Str;
+
 /**
  * Models
  */
@@ -32,7 +34,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param string $username
      * @return object|null
      */
-    public function findByEmailOrUserName(?string $email, ?string $username): ?object {
+    public function getUserByEmailOrUserName(?string $email, ?string $username): ?object {
         return $this->model->where('email', $email)->orWhere('user_name', $username)->first();
     }
 
@@ -45,4 +47,11 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
         return $this->model->with('roles.permissions')->find($uuid);
     }
 
+    /**
+     * Create user
+     * @param array $data
+     * @return object|null
+     */
+    public function createUser(array $data): ?object {
+    }
 }

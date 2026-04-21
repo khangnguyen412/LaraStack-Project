@@ -25,8 +25,18 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * Get role list
      * @return object|null
      */
-    public function getPermissionList(int $currentPage, int $perPage): ?object {
-        return $this->model->paginate($perPage, ['*'], 'page', $currentPage);
+    public function getPermissionList(int $currentPage, int $perPage, ?string $description, ?string $name): ?object {
+        /**
+         * Create query instance
+         */
+        $query = $this->model->newQuery();
+        if ($name) {
+            $query->where('name', 'like', "%{$name}%");
+        }
+        if ($description) {
+            $query->where('description', 'like', "%{$description}%");
+        }
+        return $query->paginate($perPage, ['*'], 'page', $currentPage);
     }
 
 }
