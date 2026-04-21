@@ -164,6 +164,36 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create user",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "5e87308cd12959a76e1ad8b3e19966ec",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserCreation"
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/UserCreation"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/admin/users/{id}": {
@@ -355,6 +385,21 @@
             }
         },
         "responses": {
+            "Exception400": {
+                "description": "Bad Request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Exception"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "Exception401": {
                 "description": "Unauthorized",
                 "content": {
@@ -436,6 +481,24 @@
                     }
                 }
             },
+            "UserCreation": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "GetUsersList": {
                 "description": "OK",
                 "content": {
@@ -489,6 +552,53 @@
             }
         },
         "requestBodies": {
+            "UserCreation": {
+                "description": "User login credentials, email or username is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "user_name",
+                                "display_name",
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "user_name": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "display_name": {
+                                    "type": "string",
+                                    "example": "Admin"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "example": "example@example.com"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "example": "123 Main St"
+                                },
+                                "phone": {
+                                    "type": "string",
+                                    "example": "0987654321"
+                                },
+                                "role_id": {
+                                    "type": "integer",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "UserLogin": {
                 "description": "User login credentials, email or username is required",
                 "required": true,

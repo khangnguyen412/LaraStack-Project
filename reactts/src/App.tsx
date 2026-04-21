@@ -11,9 +11,21 @@ import { store } from '@/redux/store.ts';
 import { ConfigProvider } from 'antd';
 
 /**
+ * Helmet
+ */
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+
+/**
  * Language
  */
 import en_US from 'antd/lib/locale/en_US';
+
+/**
+ * Logo
+ */
+import logo from '@/assets/images/logo-icon-white.png';
+
+
 
 import { MainRoute } from '@/routes/routeMain';
 import { AdminRoute } from '@/routes/routeAdmin';
@@ -27,11 +39,20 @@ const router = createBrowserRouter(routes);
 const App: React.FC = () => {
   return (
     <React.Fragment>
-      <ConfigProvider locale={en_US}>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
-      </ConfigProvider>
+      <HelmetProvider>
+        <ConfigProvider locale={en_US}>
+          <Provider store={store}>
+            <Helmet>
+              <title>{import.meta.env.VITE_APP_NAME}</title>
+              <link rel="icon" href={logo} />
+              <meta property="og:image" content={window.location.origin + logo} />
+              <meta property="og:image:alt" content="Your Logo" />
+              <meta name="twitter:image" content={window.location.origin + logo} />
+            </Helmet>
+            <RouterProvider router={router} />
+          </Provider>
+        </ConfigProvider>
+      </HelmetProvider>
     </React.Fragment>
   );
 }

@@ -9,6 +9,11 @@ import { Grid, Row, Col, Typography, Space, Button, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 
 /**
+ * Helmet
+ */
+import { Helmet } from 'react-helmet-async';
+
+/**
  * Component
  */
 import UserProfileModal from "@/components/dashboard/UsersProfileModal";
@@ -23,13 +28,17 @@ import type { ProColumns } from '@ant-design/pro-table';
 import { useDispatch } from 'react-redux';
 import { GetPermissionsListThunk } from '@/redux/features/permission';
 import type { AppDispatch } from '@/redux/store';
-import type { PaginationAntType } from '@/types/common.type';
 
 /**
  * Style
-*/
+ */
 import "@/assets/scss/style.scss";
 import "@/assets/scss/page/userList.scss";
+
+/**
+ * Type
+ */
+import type { PermissionListRequest, PermissionListResponse } from '@/types/admin/permissions.type';
 
 const PermissionList: React.FC = () => {
     /**
@@ -37,7 +46,7 @@ const PermissionList: React.FC = () => {
      */
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
-    const actionRef = useRef<any>(null);
+    const actionRef = useRef<PermissionListRequest>(null);
     const formRef = useRef<any>(null);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -137,8 +146,14 @@ const PermissionList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PaginationAntType) => {
-            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10, })).unwrap();
+        request: async (params: PermissionListRequest) => {
+            const requestParams: PermissionListRequest = {
+                currentPage: params.currentPage || 1,
+                perPage: params.perPage || 10,
+                name: params.name,
+                description: params.description,
+            };
+            const response: PermissionListResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 total: response?.meta?.total || 0,
@@ -198,8 +213,14 @@ const PermissionList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PaginationAntType) => {
-            const response = await dispatch(GetPermissionsListThunk({ currentPage: params.current || 1, perPage: params.pageSize || 10 })).unwrap();
+        request: async (params: PermissionListRequest) => {
+            const requestParams: PermissionListRequest = {
+                currentPage: params.currentPage || 1,
+                perPage: params.perPage || 10,
+                name: params.name,
+                description: params.description,
+            };
+            const response: PermissionListResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 total: response?.meta?.total || 0,
@@ -210,6 +231,9 @@ const PermissionList: React.FC = () => {
 
     return (
         <React.Fragment>
+            <Helmet>
+                <title>LaraStack CMS - Permissions</title>
+            </Helmet>
             <AdminLayout {...PageContainerConfig}>
                 <Row>
                     <Col span={24}>

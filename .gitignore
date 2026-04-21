@@ -1,2 +1,5 @@
 .vscode
 /mysql
+schema.sql
+database.dbml
+dbml-error.log

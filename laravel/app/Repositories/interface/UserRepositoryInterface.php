@@ -14,7 +14,7 @@ interface UserRepositoryInterface {
      * @param string $username
      * @return object|null
      */
-    public function findByEmailOrUserName(?string $email, ?string $username): ?object;
+    public function getUserByEmailOrUserName(?string $email, ?string $username): ?object;
 
     /**
      * Get user profile with roles and permissions
@@ -22,4 +22,11 @@ interface UserRepositoryInterface {
      * @return object|null
      */
     public function getUserProfileWithRolesAndPermissions(string $uuid): ?object;
+
+    /**
+     * Create user
+     * @param array $data
+     * @return object|null
+     */
+    public function createUser(array $data): ?object;
 }

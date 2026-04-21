@@ -8,5 +8,5 @@ interface PermissionRepositoryInterface {
      * @param int $perPage
      * @return object|null
      */
-    public function getPermissionList(int $currentPage, int $perPage): ?object;
+    public function getPermissionList(int $currentPage, int $perPage, ?string $description, ?string $name): ?object;
 }
