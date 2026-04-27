@@ -23,15 +23,20 @@ import '@/assets/scss/page/userCreation.scss';
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
 
 
-
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
+
 const PermissionForm: React.FC = () => {
+    /**
+     * Hook
+     */
     const [form] = Form.useForm();
     const { token } = theme.useToken();
 
-    // Handle save permission
+    /** 
+     * Handle save permission 
+     */
     const handleSave = async () => {
         const values = await form.validateFields();
         // Simulate save operation
@@ -39,7 +44,9 @@ const PermissionForm: React.FC = () => {
         message.success('Lưu quyền hạn thành công!');
     };
 
-    // Handle temporary delete (reset form)
+    /** 
+     * Handle temporary delete (reset form) 
+     */
     const handleTempDelete = () => {
         form.resetFields();
     };
@@ -54,7 +61,7 @@ const PermissionForm: React.FC = () => {
         BreadcrumbItems: {
             items: [
                 { title: 'Access Control', path: '/admin' },
-                { title: 'Permission List' },
+                { title: 'Permission Create' },
             ],
         },
     };
@@ -66,37 +73,35 @@ const PermissionForm: React.FC = () => {
             </Helmet>
             <AdminLayout {...PageContainerConfig}>
                 <Row gutter={[24, 24]}>
-                    {/*  */}
                     <Col xs={24} lg={16}>
                         {/* Permission tip */}
-                        <Alert message="Mẹo nhỏ" description="Việc phân quyền chính xác giúp hệ thống bảo mật hơn. Kiểm tra kỹ mã quyền trước khi lưu." type="info" showIcon icon={<InfoCircleOutlined />} style={{ marginBottom: 24 }} />
+                        <Alert message="Permission Tip" description="Permission name must be unique and follow the format. Check before saving." type="info" showIcon icon={<InfoCircleOutlined />} style={{ marginBottom: 24 }} />
 
                         {/* Main form card */}
-                        <Card bordered={false} style={{ borderRadius: 12 }}>
-                            {/* Thông tin quyền hạn */}
+                        <Card style={{ borderRadius: 12 }}>
+                            {/* Permission Info */}
                             <Title level={4} style={{ marginBottom: 24 }}>
-                                Thông tin quyền hạn
+                                Permission Info
                             </Title>
 
                             <Form form={form} layout="vertical" initialValues={{ permissionName: '', description: '' }} >
-                                {/* Tên quyền (Stug) */}
+                                {/* Permission Name */}
+
                                 <Form.Item name="permissionName"
-                                    label={<React.Fragment> <span>Tên quyền </span> <Tag color="blue" style={{ fontSize: 12 }}>Bắt buộc</Tag> </React.Fragment>}
-                                    rules={[{ required: true, message: 'Vui lòng nhập tên quyền' }]}
+                                    label={<React.Fragment> <span>Permission Name </span> <Tag color="blue" style={{ fontSize: 12 }}>Required</Tag> </React.Fragment>}
+                                    rules={[{ required: true, message: 'Permission name is required' }]}
                                     extra={
                                         <Space direction="vertical" size={2}>
-                                            <Text type="secondary">Ví dụ: USER_MANAGE_CREATE</Text>
-                                            <Text type="secondary" style={{ fontSize: 12 }}>
-                                                ĐÍNH DẠNG GỢI Ý: MODULE_ACTION_OBJECT
-                                            </Text>
+                                            <Text type="secondary">Example: USER_MANAGE_CREATE</Text>
+                                            <Text type="secondary">Format: MODULE_ACTION_OBJECT</Text>
                                         </Space>
                                     } >
-                                    <Input placeholder="Nhập mã quyền (VD: USER_MANAGE_CREATE)" allowClear />
+                                    <Input placeholder="Permission Name (Example: USER_MANAGE_CREATE)" allowClear />
                                 </Form.Item>
 
-                                {/* Mô tả chi tiết */}
-                                <Form.Item name="description" label="Mô tả chi tiết" rules={[{ required: true, message: 'Vui lòng nhập mô tả chi tiết cho quyền' }]} >
-                                    <TextArea rows={4} placeholder="Quyền này cho phép người dùng có thể..." showCount maxLength={200} />
+                                {/* Permission Description */}
+                                <Form.Item name="description" label="Permission Description" rules={[{ required: true, message: 'Vui lòng nhập mô tả cho quyền' }]} >
+                                    <TextArea rows={4} placeholder="Permission can..." showCount maxLength={200} />
                                 </Form.Item>
                             </Form>
                         </Card>
@@ -106,54 +111,56 @@ const PermissionForm: React.FC = () => {
                     <Col xs={24} lg={8}>
 
                         <Card style={{ marginBottom: 12 }}>
-                            {/* THAO TÁC ĐĂNG KÝ 区块 */}
+                            {/* Action Buttons */}
                             <Title level={5} style={{ marginBottom: 16 }}>
-                                THAO TÁC ĐĂNG KÝ
+                                Action Buttons
                             </Title>
 
                             {/* Action buttons group */}
-                            <Row justify="end">
-                                <Space size="middle">
+                            <Row gutter={[8, 8]}>
+                                <Col>
                                     <Button danger icon={<DeleteOutlined />} onClick={handleTempDelete} >
-                                        Xóa quyền hạn
+                                        Delete Permission
                                     </Button>
+                                </Col>
+                                <Col>
                                     <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} style={{ minWidth: 120 }}>
-                                        Lưu quyền hạn
+                                        Save Permission
                                     </Button>
-                                </Space>
+                                </Col>
                             </Row>
                         </Card>
                         <Card >
-                            <Title level={5} style={{ marginTop: 0 }}> <InfoCircleOutlined style={{ marginRight: 8 }} /> Chi dẫn </Title>
-                            <ul style={{ paddingLeft: 20, marginBottom: 24 }}>
+                            <Title level={5} style={{ marginTop: 0 }}> <InfoCircleOutlined style={{ fontSize: 16, marginBottom: 8 }} /> Permission Tips </Title>
+                            <ul style={{ marginBottom: 24 }}>
                                 <li>
-                                    <Text>Không sử dụng các ký tự đặc biệt trong mã quyền.</Text>
+                                    <Text>Do not use special characters in the permission name.</Text>
                                 </li>
                                 <li>
-                                    <Text>Phải có tiền tố của Module tương ứng.</Text>
+                                    <Text>Module prefix must be used.</Text>
                                 </li>
                                 <li>
-                                    <Text>Độ dài tối đa của mã quyền là 50 ký tự.</Text>
+                                    <Text>Permission name length must be between 3 and 50 characters.</Text>
                                 </li>
                                 <li>
-                                    <Text>Định dạng khuyến nghị: MODULE_ACTION_OBJECT (ví dụ: USER_CREATE_ACCOUNT).</Text>
+                                    <Text>Recommended format : MODULE_ACTION_OBJECT</Text>
+                                </li>
+                                <li>
+                                    <Text>Example: USER_CREATE_ACCOUNT</Text>
                                 </li>
                             </ul>
 
                             <Divider style={{ margin: '16px 0' }} />
 
-                            <div style={{ background: token.colorBgContainer, padding: 16, borderRadius: 8, textAlign: 'center', }}>
-                                <QuestionCircleOutlined style={{ fontSize: 24, color: token.colorPrimary, marginBottom: 8 }} />
-                                <Title level={5} style={{ marginBottom: 4 }}>
-                                    CẦN HỖ TRỢ?
-                                </Title>
-                                <Paragraph type="secondary" style={{ marginBottom: 12 }}>
-                                    Liên hệ với quản trị viên để được giải đáp chi tiết về phân quyền.
-                                </Paragraph>
-                                <Button type="link" href="mailto:admin@example.com" style={{ padding: 0 }}>
-                                    LIÊN HỆ ADMIN →
-                                </Button>
-                            </div>
+                            <Title level={5} style={{ marginBottom: 4 }}>
+                                <QuestionCircleOutlined style={{ fontSize: 16, color: token.colorPrimary, marginBottom: 8 }} /> Need Help?
+                            </Title>
+                            <Paragraph type="secondary" style={{ marginBottom: 12 }}>
+                                Contact the administrator for more details about permission management.
+                            </Paragraph>
+                            <Button type="link" href="mailto:admin@example.com" style={{ padding: 0 }}>
+                                Contact Admin →
+                            </Button>
                         </Card>
                     </Col>
                 </Row>
