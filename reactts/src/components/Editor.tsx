@@ -54,7 +54,7 @@ export const EditorPlate = ({ value, onChange }: { value?: string; onChange?: (h
      */
     const convertToHtmlHandler = (nodes: Value): string => {
         return nodes.map((node: TElement | TText) => {
-            // Xử lý Text Node (Bold, Italic...)
+            // Process Text Node (Bold, Italic...)
             if (node.text !== undefined) {
                 let t = node.text;
                 if (node.bold) t = `<strong>${t}</strong>`;
@@ -109,7 +109,13 @@ export const EditorPlate = ({ value, onChange }: { value?: string; onChange?: (h
             let nodes: Value;
 
             try {
-                nodes = editor.api.html.deserialize({ element: safeValue }) as Value;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(safeValue, 'text/html');
+                nodes = editor.api.html.deserialize({ element: doc.body }) as Value;
+                // If deserialize failed (returns empty array), use default value
+                if (!nodes || nodes.length === 0) {
+                    nodes = [{ type: 'p', children: [{ text: '' }] }];
+                }
             } catch (error) {
                 console.error('Error deserializing HTML:', error);
                 nodes = [{ type: 'p', children: [{ text: '' }] }] as Value;
@@ -132,29 +138,27 @@ export const EditorPlate = ({ value, onChange }: { value?: string; onChange?: (h
                         <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">U</MarkToolbarButton>
                         <DropdownMenu.DropdownMenu>
                             <DropdownMenu.DropdownMenuTrigger>
-                                {/* <button className="flex items-center gap-1 px-2 py-1 text-sm border rounded hover:bg-gray-100"> */}
-                                Chỉnh kiểu chữ
-                                {/* </button> */}
+                                Format Text
                             </DropdownMenu.DropdownMenuTrigger>
                             <DropdownMenu.DropdownMenuPortal>
                                 <DropdownMenu.DropdownMenuContent className="bg-white p-1 shadow-md rounded border z-[50]" sideOffset={5}>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'p' }); }}>
-                                        Văn bản thường (P)
+                                        Paragraph (P)
                                     </DropdownMenu.DropdownMenuItem>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'h1' }); }}>
-                                        Tiêu đề 1 (H1)
+                                        Heading 1 (H1)
                                     </DropdownMenu.DropdownMenuItem>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'h2' }); }}>
-                                        Tiêu đề 2 (H2)
+                                        Heading 2 (H2)
                                     </DropdownMenu.DropdownMenuItem>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'h3' }); }}>
-                                        Tiêu đề 3 (H3)
+                                        Heading 3 (H3)
                                     </DropdownMenu.DropdownMenuItem>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'h4' }); }}>
-                                        Tiêu đề 4 (H4)
+                                        Heading 4 (H4)
                                     </DropdownMenu.DropdownMenuItem>
                                     <DropdownMenu.DropdownMenuItem onSelect={() => { editor.tf.setNodes({ type: 'h5' }); }}>
-                                        Tiêu đề 5 (H5)
+                                        Heading 5 (H5)
                                     </DropdownMenu.DropdownMenuItem>
                                 </DropdownMenu.DropdownMenuContent>
                             </DropdownMenu.DropdownMenuPortal>

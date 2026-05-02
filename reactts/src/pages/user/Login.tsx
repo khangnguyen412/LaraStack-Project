@@ -18,7 +18,7 @@ import { ForgotPassBtn } from "@/components/user/FormLogin";
  * Assets
  */
 import '@/assets/scss/page/login.scss';
-import logo from '@/assets/images/screen-nobg1.png'
+import logo from '@/assets/images/logo-icon.png'
 
 /**
  * Utils

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 
 /**
  * Ant Design
@@ -21,18 +22,31 @@ import '@/assets/scss/page/userCreation.scss';
  *  Component
  */
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
+import { EditorPlate } from "@/components/Editor";
 
+/** 
+ * Redux
+ */
+import { useDispatch } from "react-redux";
+import { GetPermissionByIDThunk } from "@/redux/features/permission";
+import type { AppDispatch } from "@/redux/store";
+
+/**
+ * Type
+ */
 
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 
-const PermissionForm: React.FC = () => {
+const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
     /**
      * Hook
      */
     const [form] = Form.useForm();
     const { token } = theme.useToken();
+    const { id } = useParams<{ id: string }>();
+    const dispatch = useDispatch<AppDispatch>();
 
     /** 
      * Handle save permission 
@@ -51,6 +65,7 @@ const PermissionForm: React.FC = () => {
         form.resetFields();
     };
 
+
     /**
      * Page Container Config
      */
@@ -65,6 +80,28 @@ const PermissionForm: React.FC = () => {
             ],
         },
     };
+
+    const fetchPermission = useCallback(async () => {
+        if (!isUpdate || !id) return;
+        try {
+            const response = await dispatch(GetPermissionByIDThunk(Number(id))).unwrap();
+            form.setFieldsValue({
+                name: response.data.name,
+                description: response.data.description,
+                description_editor: response.data.description_editor,
+            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                message.error(error.message);
+            } else {
+                message.error('Something went wrong');
+            }
+        }
+    }, [dispatch, id, isUpdate, form]);
+
+    useEffect(() => {
+        fetchPermission();
+    }, [fetchPermission]);
 
     return (
         <React.Fragment>
@@ -100,8 +137,11 @@ const PermissionForm: React.FC = () => {
                                 </Form.Item>
 
                                 {/* Permission Description */}
-                                <Form.Item name="description" label="Permission Description" rules={[{ required: true, message: 'Vui lòng nhập mô tả cho quyền' }]} >
+                                <Form.Item name="description" label="Permission Description" rules={[{ required: true, message: 'Permission description is required' }]} >
                                     <TextArea rows={4} placeholder="Permission can..." showCount maxLength={200} />
+                                </Form.Item>
+                                <Form.Item name="description_editor" label="Permission Description" rules={[{ required: true, message: 'Permission description is required' }]} >
+                                    <EditorPlate />
                                 </Form.Item>
                             </Form>
                         </Card>
@@ -169,4 +209,4 @@ const PermissionForm: React.FC = () => {
     );
 };
 
-export default PermissionForm;
+export default Permissions;

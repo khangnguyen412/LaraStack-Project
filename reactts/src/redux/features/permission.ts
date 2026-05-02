@@ -1,19 +1,19 @@
 /* eslint-disable */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { GetPermissionList } from "@/services/servicesPermission.ts";
+import { GetPermissionList, GetPermissionByID } from "@/services/servicesPermission.ts";
 
 /**
  * Type
  */
 import type { ErrorType } from "@/types/error.type";
-import type { PermissionListRequest } from "@/types/admin/permissions.type";
+import type { Permission, PermissionListRequest } from "@/types/admin/permissions.type";
 
 export type PermissionState = {
-    data: any;
+    data: Permission[] | Permission | null;
     total: number;
     loading: boolean;
-    error?: any;
+    error?: ErrorType['errors'] | null;
 }
 
 export const GetPermissionsListThunk = createAsyncThunk<{ data: any, meta: any }, PermissionListRequest, { rejectValue: ErrorType }>(
@@ -29,18 +29,18 @@ export const GetPermissionsListThunk = createAsyncThunk<{ data: any, meta: any }
     }
 )
 
-// export const GetUserIDAdminThunk = createAsyncThunk(
-//     'user/getUserIDAdmin',
-//     async (id, { rejectWithValue }) => {
-//         try {
-//             const token = localStorage.getItem("token");
-//             const response = await GetUserIDAdmin(token, id);
-//             return { data: response.data };
-//         } catch (err) {
-//             return rejectWithValue(err?.errorMessage || "Get User ID Failed")
-//         }
-//     }
-// )
+export const GetPermissionByIDThunk = createAsyncThunk<{ data: any }, number, { rejectValue: ErrorType }>(
+    'permission/getPermissionByID',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await GetPermissionByID(id);
+            return response;
+        } catch (error: any) {
+            const errorData: ErrorType = error?.data || { errors: "Get PermissionByID Failed" };
+            return rejectWithValue(errorData);
+        }
+    }
+)
 
 const PermissionsSlice = createSlice({
     name: 'permissions',
@@ -65,17 +65,17 @@ const PermissionsSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.errors;
         })
-        // .addCase(GetUserIDAdminThunk.pending, (state) => {
-        //     state.loading = true;
-        // })
-        // .addCase(GetUserIDAdminThunk.fulfilled, (state, action) => {
-        //     state.loading = false;
-        //     state.userAdminList = action.payload.data;
-        // })
-        // .addCase(GetUserIDAdminThunk.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload;
-        // })
+        .addCase(GetPermissionByIDThunk.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(GetPermissionByIDThunk.fulfilled, (state, action) => {
+            state.loading = false;
+            state.data = action.payload.data;
+        })
+        .addCase(GetPermissionByIDThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload?.errors;
+        })
     }
 })
 export default PermissionsSlice.reducer;
