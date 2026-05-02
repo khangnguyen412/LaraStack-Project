@@ -9,7 +9,7 @@ const AdminDashboard = lazy(() => import('@/pages/dashboard/Dashboard'))
 const UsersList = lazy(() => import('@/pages/dashboard/Users/UsersList'))
 const RolesList = lazy(() => import('@/pages/dashboard/Roles/RolesList'))
 const PermissionsList = lazy(() => import('@/pages/dashboard/Permissions/PermissionsList'))
-const PermissionsCreate = lazy(() => import('@/pages/dashboard/Permissions/PermissionsCreate'))
+const Permissions = lazy(() => import('@/pages/dashboard/Permissions/Permissions'))
 
 export const AdminRoute = [
     {
@@ -60,7 +60,15 @@ export const AdminRoute = [
         path: '/admin/permissions-create',
         element: (
             <ProtectedAdmin>
-                <PermissionsCreate />
+                <Permissions isUpdate={false} />
+            </ProtectedAdmin>
+        )
+    },
+    {
+        path: '/admin/permissions-update/:id',
+        element: (
+            <ProtectedAdmin>
+                <Permissions isUpdate={true} />
             </ProtectedAdmin>
         )
     },

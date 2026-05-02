@@ -17,9 +17,9 @@ import type { ErrorType } from "@/types/error.type";
  */
 
 type AuthState = {
-    data: any;
+    data: LoginType | null;
     loading: boolean;
-    error: any;
+    error?: ErrorType['errors'] |null;
     authenticated: boolean | undefined;
     checked: boolean;
 }
@@ -132,7 +132,7 @@ const AuthSlice = createSlice({
             state.data = null;
         })
         builder.addCase(LogoutThunk.rejected, (state, action) => {
-            state.error = action.payload?.errors || "Logout Failed";
+            state.error = action.payload?.errors;
         })
         builder.addCase(LoginThunk.pending, (state) => {
             state.loading = true;
@@ -143,7 +143,7 @@ const AuthSlice = createSlice({
         })
         builder.addCase(LoginThunk.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload?.errors || "Login Failed";
+            state.error = action.payload?.errors;
         });
     },
 });

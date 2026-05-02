@@ -7,11 +7,7 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { ChevronDown } from 'lucide-react';
 
-import {
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuSeparator,
-} from '@/components/editor/dropdown-menu';
+import { DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator, } from '@/components/editor/dropdown-menu';
 import { Separator } from '@/components/editor/separator';
 import { Tooltip, TooltipTrigger } from '@/components/editor/tooltip';
 import { cn } from '@/lib/utils';
@@ -304,27 +300,21 @@ function withTooltip<T extends React.ElementType>(Component: T) {
     tooltipTriggerProps,
     ...props
   }: TooltipProps<T>) {
-    const [mounted, setMounted] = React.useState(false);
+    const AnyComponent = Component as React.ElementType;
+    const component = <AnyComponent {...(props as Record<string, unknown>)} />;
 
-    React.useEffect(() => {
-      setMounted(true);
-    }, []);
-
-    const component = <Component {...(props as React.ComponentProps<T>)} />;
-
-    if (tooltip && mounted) {
-      return (
-        <Tooltip {...tooltipProps}>
-          <TooltipTrigger asChild {...tooltipTriggerProps}>
-            {component}
-          </TooltipTrigger>
-
-          <TooltipContent {...tooltipContentProps}>{tooltip}</TooltipContent>
-        </Tooltip>
-      );
+    if (!tooltip) {
+      return component;
     }
 
-    return component;
+    return (
+      <Tooltip {...tooltipProps}>
+        <TooltipTrigger asChild {...tooltipTriggerProps}>
+          <span style={{ display: 'contents' }}>{component}</span>
+        </TooltipTrigger>
+        <TooltipContent {...tooltipContentProps}>{tooltip}</TooltipContent>
+      </Tooltip>
+    );
   };
 }
 

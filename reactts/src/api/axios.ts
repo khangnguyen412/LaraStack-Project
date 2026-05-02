@@ -5,7 +5,7 @@ import { API_URL } from '../config/config.ts';
 axios.defaults.withCredentials = true;
 
 // Tạo instance riêng
-const API = axios.create({
+export const API = axios.create({
     baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",

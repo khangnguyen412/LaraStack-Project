@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 import type { PaginationResponseType, PaginationRequestType } from '@/types/common.type';
 
-interface Permission {
+export interface Permission {
     id: number;
     name: string;
     description?: string;
