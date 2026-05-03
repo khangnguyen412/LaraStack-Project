@@ -1,5 +1,5 @@
 ## Laravel - React Project 
-- Descripttion: Project Laravel + ReactTs for fullstack web.
+- Descripttion: Project CMS for fullstack web.
 - Purpose: Create CMS system
 
 ## Technology in project:
@@ -74,37 +74,73 @@ http://localhost:8000/swagger/documentation
 ```
 
 ## Project structure 
+- Laravel structure:
 ```
-Laravel-React-Project/
-├── laravel/                # Laravel project
-│   ├── Dockerfile          # Dockerfile for Laravel
-│   └── .env                # Environment variables for Laravel
-├── mysql/                  # MySQL data directory
-├── nginx/
-│   └── default.conf        # Nginx configuration
-├── php/
-│   └── php.ini             # PHP configuration
-├── react/                  # React project
-│   ├── Dockerfile          # Dockerfile for React
-│   ├── README-REACT.MD     # React guide
-│   ├── public/             # React application interface
-│   ├── src/                # React source directory
-│   │    ├── assets         # Images, fonts,...
-│   │    ├── components     # Reusable components
-│   │    ├── hooks          # Custom hooks
-│   │    ├── pages          # Application pages
-│   │    ├── services       # API, data fetching
-│   │    ├── store          # Redux, context,...
-│   │    └── utils          # Common helper functions
-│   ├── App.tsx             # Root component of React
-│   ├── main.tsx            # Application entry point
-│   └── styles.css          # File CSS
-├── dockerignore            # List of files to exclude from Docker build
-├── .env                    # Common environment variables
-├── .gitignore              # List of files to exclude from Git commit
-├── docker-compose.yml      # Docker Compose configuration file
-├── start-project.bat       # Script to start project (Windows)
-└── start-project.sh        # Script to start project (Linux/Mac)
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/     # Auth, Users, Roles, Permissions, Payment
+│   │   ├── Middleware/      # JWT, Auth, Permission check
+│   │   ├── Requests/        # Form validation
+│   │   └── Resources/       # API response transform
+│   ├── Models/              # Users, Roles, Permissions
+│   ├── Repositories/        # Repository pattern + interfaces
+│   ├── Services/            # Auth, User, Permission
+│   ├── OpenApi/             # Swagger docs
+│   └── Logging/             # Discord logger
+├── database/
+│   ├── migrations/          # Users, Roles, Permissions, Posts, Products…
+│   └── seeders/             # Roles, Permissions, Users
+├── routes/v1/               # auth, users, roles, permissions
+└── config/                  # jwt, cors, database, swagger…
+```
+
+- React structure:
+```
+frontend-admin/src/
+├── api/
+├── assets/
+│   └── scss/
+│       ├── layout/
+│       └── page/
+├── components/
+│   ├── dashboard/
+│   │   ├── layout/
+│   │   └── partials/
+│   ├── editor/
+│   │   └── plugins/
+│   └── user/
+├── config/
+├── constants/
+├── hooks/
+├── lib/
+├── mocks/
+│   └── permission/
+├── models/
+├── pages/
+│   ├── dashboard/
+│   │   ├── Permissions/
+│   │   ├── Roles/
+│   │   └── Users/
+│   └── user/
+├── redux/
+│   └── features/
+├── routes/
+│   └── ProtectedRoute/
+├── services/
+├── types/
+│   └── admin/
+└── utils/
+```
+
+- Next structure
+```
+frontend-client/src/app/
+├── layout.tsx
+├── page.tsx
+└── api/
+    ├── layout.tsx
+    └── page.tsx
 ```
 
 The source was set up by KhangNguyen — do not copy
