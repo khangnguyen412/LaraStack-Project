@@ -1,0 +1,16 @@
+<?php
+namespace App\OpenApi\Responses\Permissions;
+
+use OpenApi\Attributes as OA;
+
+#[OA\Response(
+    response: "PermissionsSearch",
+    description: 'OK',
+    content: new OA\JsonContent(
+        properties: [
+            new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/Permissions'))
+        ]
+    )
+)]
+final class PermissionsSearch {
+}

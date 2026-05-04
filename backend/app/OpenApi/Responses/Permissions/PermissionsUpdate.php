@@ -4,13 +4,13 @@ namespace App\OpenApi\Responses\Permissions;
 use OpenApi\Attributes as OA;
 
 #[OA\Response(
-    response: "GetPermissionsList",
+    response: "PermissionsUpdate",
     description: 'OK',
     content: new OA\JsonContent(
         properties: [
-            new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/Permissions'))
+            new OA\Property(property: 'data', type: 'object', ref: '#/components/schemas/Permissions'),
         ]
     )
 )]
-final class PermissionsList {
+final class PermissionsUpdate {
 }

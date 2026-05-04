@@ -4,7 +4,7 @@ namespace App\OpenApi\Responses\Users;
 use OpenApi\Attributes as OA;
 
 #[OA\Response(
-    response: 'UserCreation',
+    response: 'UsersCreate',
     description: 'OK',
     content: new OA\JsonContent(
         type: 'object',
@@ -13,5 +13,5 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class UserCreation {
+final class UsersCreate {
 }

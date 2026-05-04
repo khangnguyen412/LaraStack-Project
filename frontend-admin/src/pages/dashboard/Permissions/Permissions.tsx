@@ -22,7 +22,6 @@ import '@/assets/scss/page/userCreation.scss';
  *  Component
  */
 import AdminLayout from "@/components/dashboard/layout/AdminLayout";
-import { EditorPlate } from "@/components/Editor";
 
 /** 
  * Redux
@@ -137,11 +136,8 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
                                 </Form.Item>
 
                                 {/* Permission Description */}
-                                <Form.Item name="description" label="Permission Description" rules={[{ required: true, message: 'Permission description is required' }]} >
+                                <Form.Item name="description" label="Permission Description">
                                     <TextArea rows={4} placeholder="Permission can..." showCount maxLength={200} />
-                                </Form.Item>
-                                <Form.Item name="description_editor" label="Permission Description" rules={[{ required: true, message: 'Permission description is required' }]} >
-                                    <EditorPlate />
                                 </Form.Item>
                             </Form>
                         </Card>

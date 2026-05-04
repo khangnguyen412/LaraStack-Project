@@ -41,7 +41,6 @@ class AuthService {
         }
 
         $profile = $this->usersRepository->getUserProfileWithRolesAndPermissions(auth()->user()->uuid);
-        ;
 
         // Return array
         return [

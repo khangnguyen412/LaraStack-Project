@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Suspense, lazy } from "react";
 import { ProtectedAdmin } from "./ProtectedRoute/protectedRoute";
 
@@ -8,7 +7,7 @@ const Component = lazy(() => import('@/pages/Component'))
 const AdminDashboard = lazy(() => import('@/pages/dashboard/Dashboard'))
 const UsersList = lazy(() => import('@/pages/dashboard/Users/UsersList'))
 const RolesList = lazy(() => import('@/pages/dashboard/Roles/RolesList'))
-const PermissionsList = lazy(() => import('@/pages/dashboard/Permissions/PermissionsList'))
+const PermissionsList = lazy(() => import('@/pages/dashboard/Permissions/PermissionsSearch'))
 const Permissions = lazy(() => import('@/pages/dashboard/Permissions/Permissions'))
 
 export const AdminRoute = [

@@ -82,9 +82,9 @@ class ControllerAuth extends Controller {
         tags: ['Auth'],
         summary: 'Login user',
         description: 'Login user',
-        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/UserLogin'),
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/AuthsLogin'),
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/UserLogin'),
+            new OA\Response(response: 200, ref: '#/components/responses/AuthsLogin'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401')
         ]
     )]
@@ -132,7 +132,7 @@ class ControllerAuth extends Controller {
         summary: 'Logout user',
         description: 'Logout user',
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/UserLogout'),
+            new OA\Response(response: 200, ref: '#/components/responses/AuthsLogout'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401')
         ]
     )]
@@ -154,7 +154,7 @@ class ControllerAuth extends Controller {
         summary: 'Get current user',
         description: 'Get current user',
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/GetUserProfile'),
+            new OA\Response(response: 200, ref: '#/components/responses/AuthsMe'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401')
         ]
     )]

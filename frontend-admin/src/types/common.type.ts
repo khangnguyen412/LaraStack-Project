@@ -1,10 +1,9 @@
-/* eslint-disable */
 /**
  * Type
  */
 export type PaginationAntType = {
     current: number;
-    pageSize: number;
+    perPage: number;
     total?: number;
 }
 

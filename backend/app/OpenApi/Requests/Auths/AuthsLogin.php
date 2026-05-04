@@ -1,10 +1,10 @@
 <?php
-namespace App\OpenApi\Requests;
+namespace App\OpenApi\Requests\Auths;
 
 use OpenApi\Attributes as OA;
 
 #[OA\RequestBody(
-    request: 'UserLogin',
+    request: 'AuthsLogin',
     required: true,
     description: 'User login credentials, email or username is required',
     content: new OA\JsonContent(
@@ -16,5 +16,5 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class UserLogin {
+final class AuthsLogin {
 }

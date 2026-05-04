@@ -49,7 +49,7 @@ class ControllerUsers extends Auth {
         security: [['bearerAuth' => []]],
         tags: ['Users'],
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/GetUsersList'),
+            new OA\Response(response: 200, ref: '#/components/responses/UsersSearch'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401')
         ]
     )]
@@ -78,9 +78,9 @@ class ControllerUsers extends Auth {
         summary: 'Create user',
         security: [['bearerAuth' => []]],
         tags: ['Users'],
-        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/UserCreation'),
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/UsersCreate'),
         responses: [
-            new OA\Response(response: 201, ref: '#/components/responses/UserCreation'),
+            new OA\Response(response: 201, ref: '#/components/responses/UsersCreate'),
             new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
             new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
@@ -115,7 +115,7 @@ class ControllerUsers extends Auth {
             new OA\Parameter(name: 'id', in: 'path', description: 'User ID', required: true, schema: new OA\Schema(type: 'string')),
         ],
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/GetUserById'),
+            new OA\Response(response: 200, ref: '#/components/responses/UsersGetById'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
             new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
         ]
