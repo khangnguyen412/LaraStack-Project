@@ -21,11 +21,11 @@
                 "description": "Login user",
                 "operationId": "cba39ed8f23a8cde6b7228dd2e559187",
                 "requestBody": {
-                    "$ref": "#/components/requestBodies/UserLogin"
+                    "$ref": "#/components/requestBodies/AuthsLogin"
                 },
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/UserLogin"
+                        "$ref": "#/components/responses/AuthsLogin"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -43,7 +43,7 @@
                 "operationId": "4cdd245e58e1b22a0119bd159fb8e5c1",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/UserLogout"
+                        "$ref": "#/components/responses/AuthsLogout"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -61,7 +61,7 @@
                 "operationId": "faf8c23a3e9714860d50e779c0b8284d",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/GetUserProfile"
+                        "$ref": "#/components/responses/AuthsMe"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -101,13 +101,141 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/GetPermissionsList"
+                        "$ref": "#/components/responses/PermissionsSearch"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
                     },
                     "404": {
                         "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Create permission",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "79eae836852641979b35824ad81c61b1",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/PermissionsCreate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsCreate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/permissions/{id}": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Get permission by id",
+                "description": "Display the specified resource.",
+                "operationId": "6b1c14a2af1c3d76f54be0a4c8464097",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "123456"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsGetById"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Update permission",
+                "description": "Update the specified resource in storage.",
+                "operationId": "1fe296fe2b49effc7fb8aed97aed47b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "123456"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/PermissionsUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsUpdate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 },
                 "security": [
@@ -153,7 +281,7 @@
                 "operationId": "a148444ffccef37f5450d54fc6cfa160",
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/GetUsersList"
+                        "$ref": "#/components/responses/UsersSearch"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -173,11 +301,11 @@
                 "description": "Store a newly created resource in storage.",
                 "operationId": "5e87308cd12959a76e1ad8b3e19966ec",
                 "requestBody": {
-                    "$ref": "#/components/requestBodies/UserCreation"
+                    "$ref": "#/components/requestBodies/UsersCreate"
                 },
                 "responses": {
                     "201": {
-                        "$ref": "#/components/responses/UserCreation"
+                        "$ref": "#/components/responses/UsersCreate"
                     },
                     "400": {
                         "$ref": "#/components/responses/Exception400"
@@ -217,7 +345,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/GetUserById"
+                        "$ref": "#/components/responses/UsersGetById"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -278,6 +406,14 @@
                     "description": {
                         "type": "string",
                         "example": "web"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2023-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "2023-01-01 00:00:00"
                     }
                 },
                 "type": "object"
@@ -385,6 +521,39 @@
             }
         },
         "responses": {
+            "AuthsLogin": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Users"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "AuthsLogout": {
+                "description": "OK"
+            },
+            "AuthsMe": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Users"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "Exception400": {
                 "description": "Bad Request",
                 "content": {
@@ -430,7 +599,52 @@
                     }
                 }
             },
-            "GetPermissionsList": {
+            "Exception500": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Exception"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsCreate": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Permissions"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsGetById": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Permissions"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsSearch": {
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -441,6 +655,21 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Permissions"
                                     }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsUpdate": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Permissions"
                                 }
                             },
                             "type": "object"
@@ -466,22 +695,7 @@
                     }
                 }
             },
-            "GetUserById": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "data": {
-                                    "$ref": "#/components/schemas/Users"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "UserCreation": {
+            "UsersCreate": {
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -499,7 +713,22 @@
                     }
                 }
             },
-            "GetUsersList": {
+            "UsersGetById": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Users"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UsersSearch": {
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -510,39 +739,6 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Users"
                                     }
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "UserLogin": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "data": {
-                                    "$ref": "#/components/schemas/Users"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "UserLogout": {
-                "description": "OK"
-            },
-            "GetUserProfile": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "data": {
-                                    "$ref": "#/components/schemas/Users"
                                 }
                             },
                             "type": "object"
@@ -552,7 +748,82 @@
             }
         },
         "requestBodies": {
-            "UserCreation": {
+            "AuthsLogin": {
+                "description": "User login credentials, email or username is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "admin@example.com"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsCreate": {
+                "description": "Create permission",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "display_name"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "CREATE_PERMISSION"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "Create Permission"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PermissionsUpdate": {
+                "description": "Update permission",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "display_name"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "CREATE_PERMISSION"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "Create Permission"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UsersCreate": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
                 "content": {
@@ -592,31 +863,6 @@
                                 "role_id": {
                                     "type": "integer",
                                     "example": "1"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "UserLogin": {
-                "description": "User login credentials, email or username is required",
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "email": {
-                                    "type": "string",
-                                    "example": "admin@example.com"
-                                },
-                                "username": {
-                                    "type": "string",
-                                    "example": "admin"
-                                },
-                                "password": {
-                                    "type": "string",
-                                    "example": "123456"
                                 }
                             },
                             "type": "object"

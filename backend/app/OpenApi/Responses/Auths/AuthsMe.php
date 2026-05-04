@@ -1,10 +1,10 @@
 <?php
-namespace App\OpenApi\Responses\Users;
+namespace App\OpenApi\Responses\Auths;
 
 use OpenApi\Attributes as OA;
 
 #[OA\Response(
-    response: 'GetUserProfile',
+    response: 'AuthsMe',
     description: 'OK',
     content: new OA\JsonContent(
         type: 'object',
@@ -13,5 +13,5 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class UserProfile {
+final class AuthsMe {
 }

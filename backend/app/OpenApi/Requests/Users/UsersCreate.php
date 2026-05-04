@@ -1,10 +1,10 @@
 <?php
-namespace App\OpenApi\Requests;
+namespace App\OpenApi\Requests\Users;
 
 use OpenApi\Attributes as OA;
 
 #[OA\RequestBody(
-    request: 'UserCreation',
+    request: 'UsersCreate',
     required: true,
     description: 'User login credentials, email or username is required',
     content: new OA\JsonContent(
@@ -21,5 +21,5 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class UserCreation {
+final class UsersCreate {
 }

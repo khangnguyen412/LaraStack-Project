@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 
 /**
@@ -23,7 +28,8 @@ use App\Services\PermissionService;
 /**
  * Resource
  */
-use App\Http\Resources\PermissionsResource;
+use App\Http\Resources\Permissions\PermissionsSearch;
+use App\Http\Resources\Permissions\PermissionsCreate;
 
 #[OA\Tag(name: 'Permissions', description: 'Permission management')]
 class ControllerPermissions extends Controller {
@@ -42,25 +48,15 @@ class ControllerPermissions extends Controller {
         security: [['bearerAuth' => []]],
         tags: ['Permissions'],
         parameters: [
-            new OA\Parameter(
-                name: 'perPage',
-                in: 'query',
-                description: 'Number of items per page',
-                required: false,
-                schema: new OA\Schema(type: 'integer', example: 10)
-            ),
-            new OA\Parameter(
-                name: 'currentPage',
-                in: 'query',
-                description: 'Current page number',
-                required: false,
-                schema: new OA\Schema(type: 'integer', example: 1)
-            ),
+            new OA\Parameter(name: 'perPage', in: 'query', description: 'Number of items per page', required: false, schema: new OA\Schema(type: 'integer', example: 10)),
+            new OA\Parameter(name: 'currentPage', in: 'query', description: 'Current page number', required: false, schema: new OA\Schema(type: 'integer', example: 1)),
         ],
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/GetPermissionsList'),
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsSearch'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
             new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
         ]
     )]
     public function index(Request $request) {
@@ -70,7 +66,7 @@ class ControllerPermissions extends Controller {
             $description = $request->input('description', null);
             $name = $request->input('name', null);
             $permissions = $this->permissionService->searchPermission($currentPage, $perPage, $description, $name);
-            return PermissionsResource::collection($permissions);
+            return PermissionsSearch::collection($permissions);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -86,15 +82,70 @@ class ControllerPermissions extends Controller {
     /**
      * Store a newly created resource in storage.
      */
+    #[OA\Post(
+        path: '/api/v1/admin/permissions',
+        summary: 'Create permission',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/PermissionsCreate'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsCreate'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function store(Request $request) {
-        //
+        try {
+            $valid = Validator::make($request->all(), [
+                'name'        => 'required|string|max:255|unique:permissions,name',
+                'description' => 'nullable|string|max:255',
+            ]);
+            if ($valid->fails()) {
+                throw new ValidationException($valid);
+            }
+            $data = $request->all();
+            $permission = $this->permissionService->createPermission($data);
+            return PermissionsCreate::make($permission);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
+    #[OA\Get(
+        path: '/api/v1/admin/permissions/{id}',
+        summary: 'Get permission by id',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '123456')),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsGetById'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function show(string $id) {
-        //
+        try {
+            $permission = $this->permissionService->searchByIdPermission($id);
+            if (!$permission) {
+                throw new ModelNotFoundException('Permission not found');
+            }
+            return PermissionsCreate::make($permission);
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
@@ -107,8 +158,43 @@ class ControllerPermissions extends Controller {
     /**
      * Update the specified resource in storage.
      */
+    #[OA\Put(
+        path: '/api/v1/admin/permissions/{id}',
+        summary: 'Update permission',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '123456')),
+        ],
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/PermissionsUpdate'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsUpdate'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function update(Request $request, string $id) {
-        //
+        try {
+            if (!$id) {
+                throw new ModelNotFoundException('Permission not found');
+            }
+            $valid = Validator::make($request->all(), [
+                'name'        => 'sometimes|string|max:255|unique:permissions,name',
+                'description' => 'nullable|string|max:255',
+            ]);
+            if ($valid->fails()) {
+                throw new ValidationException($valid);
+            }
+            $data = $request->all();
+            $permission = $this->permissionService->updatePermission($id, $data);
+            return PermissionsCreate::make($permission);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**

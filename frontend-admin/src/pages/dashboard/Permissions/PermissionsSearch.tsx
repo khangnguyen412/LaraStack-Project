@@ -38,7 +38,7 @@ import "@/assets/scss/page/userList.scss";
 /**
  * Type
  */
-import type { PermissionListRequest, PermissionListResponse } from '@/types/admin/permissions.type';
+import type { PermissionListRequest, PermissionListResponse, PermissionDataDomType } from '@/types/admin/permissions.type';
 
 const PermissionList: React.FC = () => {
     /**
@@ -146,9 +146,9 @@ const PermissionList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PermissionListRequest) => {
+        request: async (params: PermissionDataDomType) => {
             const requestParams: PermissionListRequest = {
-                currentPage: params.currentPage || 1,
+                currentPage: params.current || 1,
                 perPage: params.perPage || 10,
                 name: params.name,
                 description: params.description,
@@ -213,9 +213,9 @@ const PermissionList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PermissionListRequest) => {
+        request: async (params: PermissionDataDomType) => {
             const requestParams: PermissionListRequest = {
-                currentPage: params.currentPage || 1,
+                currentPage: params.current || 1,
                 perPage: params.perPage || 10,
                 name: params.name,
                 description: params.description,

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+
 use App\Http\Controllers\ControllerPayment;
 
 require_once __DIR__ . '/v1/auth.php';
@@ -26,7 +27,3 @@ require_once __DIR__ . '/v1/roles.php';
 require_once __DIR__ . '/v1/permissions.php';
 
 Route::post('/stripe-checkout', [ControllerPayment::class, 'StripePaymentAPI']);
-Route::get('/test-log', function () {
-    \Log::channel('discord')->error('Đây là nội dung lỗi chính!');
-    return 'Đã chạy lệnh gửi log!';
-});

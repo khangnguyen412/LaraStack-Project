@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Permissions;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermissionsResource extends JsonResource {
+class PermissionsSearch extends JsonResource {
     /**
      * Transform the resource into an array.
      *
