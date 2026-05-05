@@ -68,4 +68,14 @@ class PermissionService {
         return $permission;
     }
 
+    /**
+     * Delete permission
+     * @param string id - Permission id
+     * @return bool
+     */
+    public function deletePermission(string $id): bool {
+        $this->permissionsRepository->deletePermission($id);
+        Cache::tags(['permissions'])->flush();
+        return true;
+    }
 }

@@ -30,6 +30,7 @@ use App\Services\PermissionService;
  */
 use App\Http\Resources\Permissions\PermissionsSearch;
 use App\Http\Resources\Permissions\PermissionsCreate;
+use App\Http\Resources\Permissions\PermissionsDelete;
 
 #[OA\Tag(name: 'Permissions', description: 'Permission management')]
 class ControllerPermissions extends Controller {
@@ -107,7 +108,7 @@ class ControllerPermissions extends Controller {
             }
             $data = $request->all();
             $permission = $this->permissionService->createPermission($data);
-            return PermissionsCreate::make($permission);
+            return new PermissionsCreate($permission);
         } catch (ValidationException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -140,7 +141,7 @@ class ControllerPermissions extends Controller {
             if (!$permission) {
                 throw new ModelNotFoundException('Permission not found');
             }
-            return PermissionsCreate::make($permission);
+            return PermissionsSearch::make($permission);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException($e->getMessage());
         } catch (Exception $e) {
@@ -181,7 +182,7 @@ class ControllerPermissions extends Controller {
                 throw new ModelNotFoundException('Permission not found');
             }
             $valid = Validator::make($request->all(), [
-                'name'        => 'sometimes|string|max:255|unique:permissions,name',
+                'name'        => 'sometimes|string|max:255',
                 'description' => 'nullable|string|max:255',
             ]);
             if ($valid->fails()) {
@@ -189,7 +190,7 @@ class ControllerPermissions extends Controller {
             }
             $data = $request->all();
             $permission = $this->permissionService->updatePermission($id, $data);
-            return PermissionsCreate::make($permission);
+            return PermissionsSearch::make($permission);
         } catch (ValidationException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -200,8 +201,31 @@ class ControllerPermissions extends Controller {
     /**
      * Remove the specified resource from storage.
      */
+    #[OA\Delete(
+        path: '/api/v1/admin/permissions/{id}',
+        summary: 'Delete permission',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '123456')),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsDelete'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function destroy(string $id) {
-        //
+        try {
+            $this->permissionService->deletePermission($id);
+            return new PermissionsDelete(null);
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
 }
