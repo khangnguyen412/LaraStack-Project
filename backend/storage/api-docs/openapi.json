@@ -243,6 +243,45 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Delete permission",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "ee6486510642517d73456adfed700f14",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "123456"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/admin/roles": {
@@ -621,7 +660,8 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "$ref": "#/components/schemas/Permissions"
+                                    "type": "string",
+                                    "example": "success"
                                 }
                             },
                             "type": "object"

@@ -12,13 +12,13 @@ class PermissionsCreate extends JsonResource {
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array {
-        return [];
+        return [
+            "id"          => $this["id"],
+            "name"        => $this["name"],
+            "description" => $this["description"],
+            "created_at"  => $this["created_at"],
+            "updated_at"  => $this["updated_at"],
+        ];
     }
 
-    /**
-     * Customize the response for this resource.
-     */
-    public function toResponse($request) {
-        return response()->json(['data' => 'success'], 203);
-    }
 }

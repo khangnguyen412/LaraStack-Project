@@ -5,7 +5,7 @@ namespace App\Http\Resources\Permissions;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermissionsCreate extends JsonResource {
+class PermissionsDelete extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -17,8 +17,11 @@ class PermissionsCreate extends JsonResource {
 
     /**
      * Customize the response for this resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function toResponse($request) {
-        return response()->json(['data' => 'success'], 203);
+        return response()->json(['data' => 'success']);
     }
 }

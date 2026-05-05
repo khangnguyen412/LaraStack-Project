@@ -87,6 +87,11 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * Delete permission
      */
     public function deletePermission(string $id): bool {
+        $permission = $this->searchByIdPermission($id);
+        if (!$permission) {
+            throw new ModelNotFoundException('Permission not found');
+        }
+        $permission->delete();
         return true;
     }
 

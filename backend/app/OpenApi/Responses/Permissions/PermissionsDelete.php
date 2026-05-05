@@ -4,7 +4,7 @@ namespace App\OpenApi\Responses\Permissions;
 use OpenApi\Attributes as OA;
 
 #[OA\Response(
-    response: "PermissionsCreate",
+    response: "PermissionsDelete",
     description: 'OK',
     content: new OA\JsonContent(
         properties: [
@@ -12,5 +12,5 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class PermissionsCreate {
+final class PermissionsDelete {
 }
