@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Roles;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Permissions\PermissionsSearch;
 
-class RolesResource extends JsonResource {
+class RolesSearch extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -18,6 +19,7 @@ class RolesResource extends JsonResource {
             'description' => $this["description"],
             'created_at'  => $this["created_at"],
             'updated_at'  => $this["updated_at"],
+            'permissions' => PermissionsSearch::collection($this->whenLoaded('permissions')),
         ];
     }
 

@@ -133,7 +133,7 @@
                     "$ref": "#/components/requestBodies/PermissionsCreate"
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "$ref": "#/components/responses/PermissionsCreate"
                     },
                     "400": {
@@ -172,7 +172,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "example": "123456"
+                            "example": "1"
                         }
                     }
                 ],
@@ -264,6 +264,9 @@
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsDelete"
+                    },
                     "400": {
                         "$ref": "#/components/responses/Exception400"
                     },
@@ -292,15 +295,207 @@
                 "summary": "Get role list",
                 "description": "Display a listing of the resource.",
                 "operationId": "fca5db0fa5666e4e2ebf340ec412bae3",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "currentPage",
+                        "in": "query",
+                        "description": "Current page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "$ref": "#/components/responses/GetRolesList"
+                        "$ref": "#/components/responses/RolesSearch"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
                     },
                     "404": {
                         "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Create role",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "79a5495fb98e2354b8f7f35f2bc7406d",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/RolesCreate"
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/components/responses/RolesCreate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get role profile",
+                "description": "Display the specified resource.",
+                "operationId": "d819a9dc97f88b7506ce5e43af1d555f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Role id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RolesGetById"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Update role",
+                "description": "Update the specified resource in storage.",
+                "operationId": "931ddbfde151a20baabdb08ec40c02b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Role id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/RolesUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RolesUpdate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Delete role",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "44d383756460ee44e06eb294dffc1fd0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Role id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RolesDelete"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 },
                 "security": [
@@ -474,6 +669,21 @@
                     "description": {
                         "type": "string",
                         "example": "web"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2023-01-01 00:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "example": "2023-01-01 00:00:00"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        },
+                        "example": []
                     }
                 },
                 "type": "object"
@@ -669,6 +879,22 @@
                     }
                 }
             },
+            "PermissionsDelete": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "string",
+                                    "example": "success"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "PermissionsGetById": {
                 "description": "OK",
                 "content": {
@@ -717,7 +943,54 @@
                     }
                 }
             },
-            "GetRolesList": {
+            "RolesCreate": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "string",
+                                    "example": "success"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesDelete": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "string",
+                                    "example": "success"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesGetById": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Roles"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesSearch": {
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -728,6 +1001,21 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Roles"
                                     }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesUpdate": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/components/schemas/Roles"
                                 }
                             },
                             "type": "object"
@@ -856,6 +1144,78 @@
                                 "description": {
                                     "type": "string",
                                     "example": "Create Permission"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesCreate": {
+                "description": "Create role",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "description"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "Admin role"
+                                },
+                                "permissions": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    },
+                                    "example": [
+                                        1,
+                                        2,
+                                        3
+                                    ]
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "RolesUpdate": {
+                "description": "Update role",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "name",
+                                "description"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "Admin role"
+                                },
+                                "permissions": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    },
+                                    "example": [
+                                        1,
+                                        2,
+                                        3
+                                    ]
                                 }
                             },
                             "type": "object"

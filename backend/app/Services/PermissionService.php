@@ -11,11 +11,22 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Model
+ */
 use App\Models\ModelsPermissions as ModelsPermissions;
 
+/**
+ * Repository
+ */
 use App\Repositories\PermissionsRepository;
 
-class PermissionService {
+/**
+ * Interface 
+ */
+use App\Services\interface\PermissionServiceInterface;
+
+class PermissionService implements PermissionServiceInterface {
     protected $permissionsRepository;
 
     public function __construct(PermissionsRepository $permissionsRepository) {
@@ -28,7 +39,7 @@ class PermissionService {
      * @param int perPage - Items per page number
      * @param string description - Permission description
      * @param string name - Permission name
-     * @return array
+     * @return LengthAwarePaginator
      */
     public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator {
         $cacheKey = "permissions_page{$currentPage}_per{$perPage}_desc{$description}_name{$name}";

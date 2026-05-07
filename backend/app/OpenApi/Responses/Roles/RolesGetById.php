@@ -4,13 +4,13 @@ namespace App\OpenApi\Responses\Roles;
 use OpenApi\Attributes as OA;
 
 #[OA\Response(
-    response: "GetRolesList",
+    response: "RolesGetById",
     description: 'OK',
     content: new OA\JsonContent(
         properties: [
-            new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/Roles'))
+            new OA\Property(property: 'data', type: 'object', ref: '#/components/schemas/Roles')
         ]
     )
 )]
-final class RolesList {
+final class RolesGetById {
 }

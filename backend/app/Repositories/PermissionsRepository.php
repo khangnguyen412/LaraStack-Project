@@ -5,7 +5,6 @@ namespace App\Repositories;
  * Illuminate
  */
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -17,8 +16,6 @@ use App\Models\ModelsPermissions;
  * Interface 
  */
 use App\Repositories\interface\PermissionRepositoryInterface;
-
-
 
 class PermissionsRepository extends BasesRepository implements PermissionRepositoryInterface {
     protected $model;
