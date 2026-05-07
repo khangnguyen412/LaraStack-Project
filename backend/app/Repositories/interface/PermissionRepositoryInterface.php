@@ -1,5 +1,15 @@
 <?php
-namespace App\Repositories\interface;
+namespace App\Repositories\Interface;
+
+/**
+ * Illuminate
+ */
+use Illuminate\Pagination\LengthAwarePaginator;
+
+/**
+ * Models
+ */
+use App\Models\ModelsPermissions;
 
 interface PermissionRepositoryInterface {
     /**
@@ -8,7 +18,7 @@ interface PermissionRepositoryInterface {
      * @param int $perPage
      * @return object|null
      */
-    public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): ?object;
+    public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): ?LengthAwarePaginator;
 
 
     /**
@@ -16,14 +26,14 @@ interface PermissionRepositoryInterface {
      * @param string $id
      * @return object|null
      */
-    public function searchByIdPermission(string $id): ?object;
+    public function searchByIdPermission(string $id): ?ModelsPermissions;
 
     /**
      * Create permission
      * @param array $data
      * @return bool
      */
-    public function createPermission(array $data): ?object;
+    public function createPermission(array $data): ?ModelsPermissions;
 
     /**
      * Update permission
@@ -31,7 +41,7 @@ interface PermissionRepositoryInterface {
      * @param array $data
      * @return bool
      */
-    public function updatePermission(string $id, array $data): ?object;
+    public function updatePermission(string $id, array $data): ?ModelsPermissions;
 
     /**
      * Delete permission

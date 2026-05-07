@@ -62,12 +62,21 @@ class ControllerPermissions extends Controller {
     )]
     public function index(Request $request) {
         try {
+            $validator = Validator::make($request->all(), [
+                'perPage'     => 'nullable|integer|min:1',
+                'currentPage' => 'nullable|integer|min:1',
+            ]);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
             $currentPage = $request->input('currentPage', 1);
             $perPage = $request->input('perPage', 10);
             $description = $request->input('description', null);
             $name = $request->input('name', null);
             $permissions = $this->permissionService->searchPermission($currentPage, $perPage, $description, $name);
             return PermissionsSearch::collection($permissions);
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -90,7 +99,7 @@ class ControllerPermissions extends Controller {
         tags: ['Permissions'],
         requestBody: new OA\RequestBody(ref: '#/components/requestBodies/PermissionsCreate'),
         responses: [
-            new OA\Response(response: 200, ref: '#/components/responses/PermissionsCreate'),
+            new OA\Response(response: 201, ref: '#/components/responses/PermissionsCreate'),
             new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
             new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
             new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
@@ -125,7 +134,7 @@ class ControllerPermissions extends Controller {
         security: [['bearerAuth' => []]],
         tags: ['Permissions'],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '123456')),
+            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '1')),
         ],
         responses: [
             new OA\Response(response: 200, ref: '#/components/responses/PermissionsGetById'),
