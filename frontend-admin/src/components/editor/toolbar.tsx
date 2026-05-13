@@ -7,9 +7,9 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { ChevronDown } from 'lucide-react';
 
-import { DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator, } from '@/components/editor/dropdown-menu';
-import { Separator } from '@/components/editor/separator';
-import { Tooltip, TooltipTrigger } from '@/components/editor/tooltip';
+import { DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator, } from '@/components/Editor/dropdown-menu';
+import { Separator } from '@/components/Editor/separator';
+import { Tooltip, TooltipTrigger } from '@/components/Editor/tooltip';
 import { cn } from '@/lib/utils';
 
 export function Toolbar({

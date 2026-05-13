@@ -7,7 +7,7 @@ import { TextAlignPlugin } from '@platejs/basic-styles/react';
 import { AlignCenterIcon, AlignJustifyIcon, AlignLeftIcon, AlignRightIcon, } from 'lucide-react';
 import { useEditorPlugin, useSelectionFragmentProp } from 'platejs/react';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger, } from '@/components/editor/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger, } from '@/components/Editor/dropdown-menu';
 
 import { ToolbarButton } from './toolbar';
 

@@ -4,6 +4,7 @@ namespace App\Services\interface;
 /**
  * Illuminate Package
  */
+use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -28,6 +29,13 @@ interface RoleServiceInterface {
      * @return object|null - Role profile or null
      */
     public function searchByIdRole(string $id): ?ModelsRoles;
+
+    /**
+     * Count user by role id
+     * @param string $roleId - Role id
+     * @return Collection
+     */
+    public function countUserByRoleId(string $roleId): Collection;
 
     /**
      * Create role

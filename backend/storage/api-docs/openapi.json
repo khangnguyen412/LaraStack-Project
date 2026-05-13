@@ -42,7 +42,7 @@
                 "description": "Logout user",
                 "operationId": "4cdd245e58e1b22a0119bd159fb8e5c1",
                 "responses": {
-                    "200": {
+                    "203": {
                         "$ref": "#/components/responses/AuthsLogout"
                     },
                     "401": {
@@ -62,6 +62,27 @@
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/AuthsMe"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                }
+            }
+        },
+        "/api/v1/password/forgot": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send reset password link to user",
+                "description": "Send reset password link to user",
+                "operationId": "e7d75b28b5a3a11fa528ac76f3035a03",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/AuthsResetPassword"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthsResetPassword"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
@@ -379,7 +400,7 @@
                 "tags": [
                     "Roles"
                 ],
-                "summary": "Get role profile",
+                "summary": "Get role by id",
                 "description": "Display the specified resource.",
                 "operationId": "d819a9dc97f88b7506ce5e43af1d555f",
                 "parameters": [
@@ -803,6 +824,22 @@
                     }
                 }
             },
+            "AuthsResetPassword": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "We have e-mailed your password reset link!"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "Exception400": {
                 "description": "Bad Request",
                 "content": {
@@ -1094,6 +1131,23 @@
                                 "password": {
                                     "type": "string",
                                     "example": "123456"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "AuthsResetPassword": {
+                "description": "User reset password credentials, email is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "admin@example.com"
                                 }
                             },
                             "type": "object"

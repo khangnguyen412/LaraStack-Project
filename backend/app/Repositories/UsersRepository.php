@@ -24,7 +24,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * Get user list
      * @return object|null
      */
-    public function getUserList(): ?object {
+    public function searchUser(): ?object {
         return $this->model->get();
     }
 
@@ -36,6 +36,15 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      */
     public function getUserByEmailOrUserName(?string $email, ?string $username): ?object {
         return $this->model->where('email', $email)->orWhere('user_name', $username)->first();
+    }
+
+    /**
+     * Find user by email or username
+     * @param string $email
+     * @return object|null
+     */
+    public function getUserByEmail(?string $email): ?object {
+        return $this->model->where('email', $email)->first();
     }
 
     /**
@@ -54,4 +63,22 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      */
     public function createUser(array $data): ?object {
     }
+
+    /**
+     * Update user
+     * @param string $uuid
+     * @param array $data
+     * @return object|null
+     */
+    public function updateUser(string $uuid, array $data): ?object {
+    }
+
+    /**
+     * Delete user
+     * @param string $uuid
+     * @return bool|null
+     */
+    public function deleteUser(string $uuid): ?bool {
+    }
+
 }

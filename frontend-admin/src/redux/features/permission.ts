@@ -57,7 +57,6 @@ const PermissionsSlice = createSlice({
             state.error = null;
         })
         builder.addCase(GetPermissionsListThunk.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.data = action.payload.data;
             state.total = action.payload.meta?.total || 0;
         })

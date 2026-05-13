@@ -8,10 +8,10 @@ import { BoldPlugin, ItalicPlugin, UnderlinePlugin, } from '@platejs/basic-nodes
 /**
  * Basic Blocks Kit
  */
-import { BlockquoteElement } from '@/components/editor/blockquote-node';
-import { H1Element, H2Element, H3Element, H4Element, H5Element, H6Element, } from '@/components/editor/heading-node';
-import { ParagraphElement } from '@/components/editor/paragraph-node';
-import { HrElement } from '@/components/editor/hr-node';
+import { BlockquoteElement } from '@/components/Editor/blockquote-node';
+import { H1Element, H2Element, H3Element, H4Element, H5Element, H6Element, } from '@/components/Editor/heading-node';
+import { ParagraphElement } from '@/components/Editor/paragraph-node';
+import { HrElement } from '@/components/Editor/hr-node';
 
 export const BasicBlocksKit = [
     ParagraphPlugin.withComponent(ParagraphElement),

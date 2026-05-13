@@ -34,6 +34,15 @@ class UserService {
     }
 
     /**
+     * Find user by email
+     * @param string $email - User email
+     * @return object|null
+     */
+    public function searchByEmailUser(string $email): ?object {
+        return $this->usersRepository->getUserByEmail($email);
+    }
+
+    /**
      * Create permission
      * @param array $data
      * @return object|null

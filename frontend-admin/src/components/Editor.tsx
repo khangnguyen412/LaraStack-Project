@@ -11,15 +11,15 @@ import type { TElement, TText } from '@udecode/plate-common';
 /**
  * Plugin
  */
-import { BasicBlocksKit } from '@/components/editor/plugins/basic-blocks-kit';
+import { BasicBlocksKit } from '@/components/Editor/plugins/basic-blocks-kit';
 
 /**
  * Editor
  */
-import { Editor, EditorContainer } from '@/components/editor/editor';
-import { FixedToolbar } from '@/components/editor/fixed-toolbar';
-import { MarkToolbarButton } from '@/components/editor/mark-toolbar-button';
-import * as DropdownMenu from '@/components/editor/dropdown-menu';
+import { Editor, EditorContainer } from '@/components/Editor/editor';
+import { FixedToolbar } from '@/components/Editor/fixed-toolbar';
+import { MarkToolbarButton } from '@/components/Editor/mark-toolbar-button';
+import * as DropdownMenu from '@/components/Editor/dropdown-menu';
 
 
 /**

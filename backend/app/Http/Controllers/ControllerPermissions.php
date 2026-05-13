@@ -108,15 +108,15 @@ class ControllerPermissions extends Controller {
     )]
     public function store(Request $request) {
         try {
-            $valid = Validator::make($request->all(), [
+            $inputs = $request->input('data', $request->all());
+            $validator = Validator::make($inputs, [
                 'name'        => 'required|string|max:255|unique:permissions,name',
                 'description' => 'nullable|string|max:255',
             ]);
-            if ($valid->fails()) {
-                throw new ValidationException($valid);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
             }
-            $data = $request->all();
-            $permission = $this->permissionService->createPermission($data);
+            $permission = $this->permissionService->createPermission($inputs);
             return new PermissionsCreate($permission);
         } catch (ValidationException $e) {
             throw $e;
@@ -187,18 +187,18 @@ class ControllerPermissions extends Controller {
     )]
     public function update(Request $request, string $id) {
         try {
+            $inputs = $request->input('data', $request->all());
             if (!$id) {
                 throw new ModelNotFoundException('Permission not found');
             }
-            $valid = Validator::make($request->all(), [
+            $validator = Validator::make($inputs, [
                 'name'        => 'sometimes|string|max:255',
                 'description' => 'nullable|string|max:255',
             ]);
-            if ($valid->fails()) {
-                throw new ValidationException($valid);
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
             }
-            $data = $request->all();
-            $permission = $this->permissionService->updatePermission($id, $data);
+            $permission = $this->permissionService->updatePermission($id, $inputs);
             return PermissionsSearch::make($permission);
         } catch (ValidationException $e) {
             throw $e;

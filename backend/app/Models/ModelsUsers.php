@@ -2,17 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+
+/**
+ * Queue
+ */
+use App\Notifications\ResetPasswordQueued;
+
+/**
+ * JWT
+ */
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use OpenApi\Attributes as OA;
-use Carbon\Carbon;
 
 class ModelsUsers extends Authenticatable implements JWTSubject {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -57,24 +62,6 @@ class ModelsUsers extends Authenticatable implements JWTSubject {
     }
 
     /**
-     * Summary of getCreatedAtAttribute
-     * @param mixed $value
-     * @return string
-     */
-    public function getCreatedAtAttribute($value) {
-        return Carbon::parse($value)->format('Y-m-d');
-    }
-
-    /**
-     * Summary of getUpdatedAtAttribute
-     * @param mixed $value
-     * @return string
-     */
-    public function getUpdatedAtAttribute($value) {
-        return Carbon::parse($value)->format('Y-m-d');
-    }
-
-    /**
      * Accessor for permissions attribute.
      * 
      * @return array
@@ -92,10 +79,26 @@ class ModelsUsers extends Authenticatable implements JWTSubject {
         return $this->uuid;
     }
 
+    /**
+     * Summary of getJWTCustomClaims
+     * 
+     * @return array
+     */
     public function getJWTCustomClaims() {
         return [
             'role_id'     => $this->roles()->pluck("id")->first(),
             'permissions' => $this->getPermissionsAttribute(),
         ];
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token) {
+        $this->notify(new ResetPasswordQueued());
+    }
+
 }
