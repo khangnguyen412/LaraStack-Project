@@ -6,7 +6,7 @@ interface UserRepositoryInterface {
      * Get user list
      * @return object|null
      */
-    public function getUserList(): ?object;
+    public function searchUser(): ?object;
 
     /**
      * Find user by email or username
@@ -29,4 +29,16 @@ interface UserRepositoryInterface {
      * @return object|null
      */
     public function createUser(array $data): ?object;
+
+    /**
+     * 
+     */
+    public function updateUser(string $uuid, array $data): ?object;
+
+    /**
+     * Delete user
+     * @param string $uuid
+     * @return bool|null
+     */
+    public function deleteUser(string $uuid): ?bool;
 }

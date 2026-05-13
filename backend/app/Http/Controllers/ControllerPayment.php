@@ -5,112 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Contract Payment
+ */
+use App\Contracts\PaymentGateway;
+
+
+/**
+ * Stripe Payment
+ */
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
-class ControllerPayment extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index() {}
+class ControllerPayment extends Controller {
+    protected PaymentGateway $gateway;
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id) {}
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    public function __construct(PaymentGateway $gateway) {
+        $this->gateway = $gateway;
     }
 
-    /**
-     *  Payment Stripe Method
-     *  Test Stripe: https://docs.stripe.com/testing
-     *  
-     *  Payment Flow:
-     *  1. User choose product in cart
-     *  2. User click checkout button
-     *  3. User choose payment method in checkout
-     *  4. Check stock before payment
-     *  5. Stripe create PaymentIntent or Checkout Session
-     *  6. Frontend receive client_secret and confirm payment
-     *  7. Stripe return payment status to frontend
-     *  8. Update DB after payment success
-     */
-    public function StripePayment()
-    {
+    public function StripePayment() {
         Stripe::setApiKey(config('services.stripe_payment.secret_key'));
         $session = Session::create([
-            'payment_method_types'  => ['card'],
-            'line_items' => [[
-                'price_data'        => [
-                    'currency'      => 'usd',
-                    'product_data'  => ['name' => 'Áo thun demo'],
-                    'unit_amount'   => 1000, // $10 USD (1$ = 100 cent)
-                ],
-                'quantity'          => 1,
-            ]],
-            'mode'                  => 'payment',
-            'success_url'           => route('payment.success'),
-            'cancel_url'            => route('payment.cancel'),
+            'payment_method_types' => ['card'],
+            'line_items'           => [
+                [
+                    'price_data' => [
+                        'currency'     => 'usd',
+                        'product_data' => ['name' => 'Áo thun demo'],
+                        'unit_amount'  => 1000, // $10 USD (1$ = 100 cent)
+                    ],
+                    'quantity'   => 1,
+                ]
+            ],
+            'mode'                 => 'payment',
+            'success_url'          => route('payment.success'),
+            'cancel_url'           => route('payment.cancel'),
         ]);
         return view('payment', ['session_id' => $session->id, 'publishable_key' => config('services.stripe_payment.public_key')]);
     }
 
     /**
-     *  - Thanh toán thành công
+     *  - Check payment status has success
      */
-    public function StripePaymentSuccess()
-    {
+    public function StripePaymentSuccess() {
         return "Thanh toán thành công";
     }
 
     /**
-     *  - Thanh toán bị hủy
+     *  - Check payment status has failed
      */
-    public function StripePaymentCancel()
-    {
+    public function StripePaymentCancel() {
         return "Bạn đã hủy thanh toán.";
     }
 
-    public function StripePaymentAPI()
-    {
+    public function StripePaymentAPI() {
         try {
             $stripe = new \Stripe\StripeClient(config('services.stripe_payment.secret_key'));
 
             $paymentIntent = $stripe->paymentIntents->create([
-                'amount' => 1000,
-                'currency' => 'usd',
+                'amount'               => 1000,
+                'currency'             => 'usd',
                 'payment_method_types' => ['card'],
             ]);
 
             return response()->json([
-                'status' => 'success',
+                'status'       => 'success',
                 'clientSecret' => $paymentIntent->client_secret,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $th) {
@@ -118,111 +78,40 @@ class ControllerPayment extends Controller
         }
     }
 
-    /**
-     *  Tạo PaymentIntent 
-     *  - PaymentIntent là một đối tượng được tạo ra để quản lý toàn bộ quá trình thanh toán , từ khi bắt đầu đến khi hoàn tất giao dịch.
-     *  Nó chứa:
-     *  + Số tiền cần thu 
-     *  + Loại tiền tệ
-     *  + Trạng thái (pending, succeeded, failed,...)
-     *  + Thông tin phương thức thanh toán (nếu đã có)
-     *  + Secret key để frontend confirm
-     *  Flow cơ bản: 
-     *  -> Khởi tạo PaymentIntent 
-     *  -> Frontend nhận client_secret 
-     *  -> Stripe SDK: gắn thẻ + confirm 
-     *  -> Webhook nhận trạng thái thành công/thất bại 
-     *  -> Cập nhật đơn hàng trong DB
-     */
-    public function StripePaymentFLow()
-    {
-        /**
-         *  Smock data
-         */
-        // $product = OBJECT;
-        
-        /** 
-         *  1. Người dùng chọn sản phẩm
-         */
-        // session()->push('cart', ['id' => '', 'name' => '', 'price' => '', 'quantity' => 1]);
-        
-        /**
-         *  2. Cho vào giỏ hàng
-         */
-        // $cart = session()->get('cart', []);
-        // $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
-        
-        /**
-         *  3. Chọn phương thức thanh toán
-         *  - Người dùng chọn hình thức thanh toán: thẻ, ví điện tử,...
-         *  - Trong trường hợp này: Stripe Checkout hoặc PaymentIntent
-         */
+    public function VNPayCreatePayment(Request $request) {
+        $orderId = $request->input('order_id');
+        $amount = $request->input('amount');
 
-        /**
-         *  4. Kiểm tra tồn kho trước khi thanh toán
-         */
-        // foreach ($cart as $item) {
-        //     $product = $product::find($item['id']);
-        //     if ($product && $product->stock < $item['quantity']) {
-        //         return redirect()->back()->with('error', 'Sản phẩm ' . $product->name . ' hết hàng');
-        //     }
-        // }
-        
-        /**
-         *  5. Gửi Stripe tạo PaymentIntent hoặc Checkout Session
-         */
-        // Stripe::setApiKey(config('services.stripe_payment.secret_key'));
-        // $lineItems = collect($cart)->map(function ($item) {
-        //     return [
-        //         'price_data' => [
-        //             'currency' => 'usd',
-        //             'product_data' => ['name' => $item['name']],
-        //             'unit_amount' => $item['price'] * 100, // từ $10 → 1000 cents
-        //         ],
-        //         'quantity' => $item['quantity'],
-        //     ];
-        // })->toArray();
-        // $session = Session::create([
-        //     'payment_method_types' => ['card'],
-        //     'line_items' => $lineItems,
-        //     'mode' => 'payment',
-        //     'success_url' => route('checkout.success'),
-        //     'cancel_url' => route('checkout.cancel'),
-        // ]);
-        // return view('payment.checkout', [
-        //     'session_id' => $session->id,
-        //     'publishable_key' => config('services.stripe.key')
-        // ]);
-        
-        /**
-         *  6. Frontend nhận client_secret và confirm thanh toán (laravel/resources/views/payment.blade.php)
-         *  7. Stripe trả về trạng thái thanh toán
-         *  8. Cập nhật DB sau khi thanh toán thành công
-         */
-        // function ($request) {
-        //     $order = OBJECT;
-        //     $product = OBJECT;
-        //     $payload = json_decode($request->getContent(), true);
-        //     if ($payload['type'] === 'checkout.session.completed') {
-        //         $session = $payload['data']['object'];
-        //         $paymentIntentId = $session['payment_intent'];
-        //         // Lấy thông tin payment intent
-        //         $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
-        //         if ($paymentIntent->status === 'succeeded') {
-        //             // Lưu order vào database
-        //             $order::create([
-        //                 'user_id' => auth()->id(),
-        //                 'total' => $session['amount_total'] / 100,
-        //                 'status' => 'paid'
-        //             ]);
-        //             // Giảm tồn kho
-        //             foreach (session('cart') as $item) {
-        //                 $product::find($item['id'])->decrement('stock', $item['quantity']);
-        //             }
-        //             session()->forget('cart');
-        //         }
-        //     }
-        //     return response()->json(['status' => 'ok']);
-        // };
+        $orderData = [
+            'order_id'    => $orderId,
+            'amount'      => $amount,
+            'description' => "Checkout order # {$orderId}",
+            'locale'      => 'vn',
+        ];
+
+        $url = $this->gateway->createPaymentUrl($orderData);
+        return redirect()->away($url);
     }
+
+    public function VNPayReturnUrlPayment(Request $request) {
+        $data = $request->all();
+        $verify = $this->gateway->verifyPayment($data);
+        if ($verify) {
+            $orderId = $data['vnp_TxnRef'] ?? $data['orderId'];
+            return response()->json(['status' => 'success', 'order_id' => $orderId]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Chữ ký không hợp lệ!']);
+        }
+    }
+
+    public function VNPayIpnPayment(Request $request) {
+        $data = $request->all();
+        $result = $this->gateway->processIPN($data);
+        if ($result) {
+            return response()->json(['code' => '00', 'message' => 'Confirm success']);
+        } else {
+            return response()->json(['code' => '99', 'message' => 'Confirm failed']);
+        }
+    }
+
 }

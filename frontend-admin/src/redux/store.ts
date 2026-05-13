@@ -3,6 +3,7 @@ import AuthSlice from '@/redux/features/auth';
 import UserSlice from '@/redux/features/user';
 import PaymentSlice from '@/redux/features/payment';
 import RolesSlice from '@/redux/features/roles';
+import PermissionsSlice from '@/redux/features/permission';
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         user: UserSlice,
         payment: PaymentSlice,
         roles: RolesSlice,
+        permissions: PermissionsSlice,
     },
 });
 

@@ -4,6 +4,7 @@ namespace App\Repositories\Interface;
 /**
  * Illuminate
  */
+use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -28,6 +29,11 @@ interface RoleRepositoryInterface extends BaseRepositoryInterface {
      * @return ModelsRoles|null
      */
     public function searchByIdRole(string $id): ?ModelsRoles;
+
+    /**
+     * Count user by role id
+     */
+    public function countUserByRoleId(string $roleId): Collection;
 
     /**
      * Function create role

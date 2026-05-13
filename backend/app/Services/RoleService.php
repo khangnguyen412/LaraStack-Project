@@ -7,6 +7,7 @@ use Exception;
 /**
  * Illuminate Package
  */
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
@@ -62,6 +63,15 @@ class RoleService implements RoleServiceInterface {
         $key = "role_search_by_id_{$id}";
         $cacheKey = 300;
         return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($this->rolesRepository->searchByIdRole($id)));
+    }
+
+    /**
+     * Count user by role id
+     * @param string $roleId - Role id
+     * @return Collection
+     */
+    public function countUserByRoleId(string $roleId): Collection {
+        return $this->rolesRepository->countUserByRoleId($roleId);
     }
 
     /**

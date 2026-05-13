@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\UsersRepository;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
@@ -11,7 +13,29 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AuthService {
+
+/**
+ * Carbon
+ */
+use Carbon\Carbon;
+
+/**
+ * Job
+ */
+use App\Jobs\SendResetPassJob;
+
+/**
+ * Interface
+ */
+use App\Services\interface\AuthServiceInterface;
+
+/**
+ * Service
+ */
+use App\Services\RoleService;
+
+
+class AuthService implements AuthServiceInterface {
     protected $usersRepository;
 
     public function __construct(UsersRepository $usersRepository) {
@@ -35,7 +59,8 @@ class AuthService {
             throw new AuthenticationException('Invalid password');
         }
 
-        $token = auth()->attempt($credentials);
+        $token = auth()->guard('api')->attempt($credentials);
+
         if (!$token) {
             throw new AuthenticationException('Invalid credentials');
         }
@@ -55,6 +80,28 @@ class AuthService {
      */
     public function logout(): void {
         auth('api')->logout();
+    }
+
+    /**
+     * Forgot password
+     */
+    public function forgotPassword(string $email): void {
+        $user = $this->usersRepository->getUserByEmail($email);
+        if (!$user) {
+            throw new ModelNotFoundException("User not found");
+        }
+        $token = Str::random(64);
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $email],
+            ['token' => bcrypt($token), 'created_at' => Carbon::now()]
+        );
+        SendResetPassJob::dispatch($user, $token);
+    }
+
+    /**
+     * Reset password
+     */
+    public function resetPassword(string $email, string $password): void {
     }
 
 }

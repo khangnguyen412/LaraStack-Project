@@ -5,6 +5,7 @@ namespace App\Repositories;
  * Illuminate
  */
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -48,6 +49,21 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
      */
     public function searchByIdRole(string $id): ?ModelsRoles {
         return $this->model->with('permissions')->find($id);
+    }
+
+    /**
+     * Count user by role id
+     */
+    public function countUserByRoleId(string $roleId): Collection {
+        $query = $this->model->select("roles.name as role_name", DB::raw("count(users.uuid) as total_user"))
+            ->leftJoin("users", "roles.id", "=", "users.role_id")
+            ->groupBy("roles.id", "roles.name")
+            ->orderByDesc("total_user");
+        if (filled($roleId)) {
+            $query->having("roles.id", "=", $roleId);
+        }
+        \Log::info($query->toSql());
+        return $query->get();
     }
 
     /**

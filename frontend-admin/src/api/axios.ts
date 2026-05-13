@@ -1,12 +1,13 @@
-/* eslint-disable */
 import axios from 'axios';
-import { API_URL } from '../config/config.ts';
+import { Config } from '../config/config.ts';
+
+Config.validateRequired();
 
 axios.defaults.withCredentials = true;
 
 // Tạo instance riêng
 export const API = axios.create({
-    baseURL: API_URL,
+    baseURL: Config.API_URL,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -34,18 +35,18 @@ API.interceptors.response.use(
 );
 
 export const postRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
-    return API.post(`${API_URL}${endpoint}`, payload, config);
+    return API.post(`${Config.API_URL}${endpoint}`, payload, config);
 };
 
 export const getRequest = (endpoint: string, config: object = {}) => {
-    return API.get(`${API_URL}${endpoint}`, config);
+    return API.get(`${Config.API_URL}${endpoint}`, config);
 };
 
 export const putRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
-    return API.put(`${API_URL}${endpoint}`, payload, config);
+    return API.put(`${Config.API_URL}${endpoint}`, payload, config);
 };
 
 export const deleteRequest = (endpoint: string, config: object = {}) => {
-    return API.delete(`${API_URL}${endpoint}`, config);
+    return API.delete(`${Config.API_URL}${endpoint}`, config);
 };
 

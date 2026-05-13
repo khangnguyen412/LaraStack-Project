@@ -19,7 +19,7 @@ import type { ErrorType } from "@/types/error.type";
 type AuthState = {
     data: LoginType | null;
     loading: boolean;
-    error?: ErrorType['errors'] |null;
+    error?: ErrorType['errors'] | null;
     authenticated: boolean | undefined;
     checked: boolean;
 }
@@ -47,12 +47,8 @@ export const LogoutThunk = createAsyncThunk<{ data: any }, void, { rejectValue: 
     async (_, { rejectWithValue }) => {
         try {
             const response = await Logout();
-            if (response?.status === 200) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("profile");
-            } else {
-                throw { errorMessage: "Logout Failed" };
-            }
+            localStorage.removeItem("token");
+            localStorage.removeItem("profile");
             return response;
         } catch (error: any) {
             const errorData: ErrorType = error?.data || { errors: "Logout Failed" };
@@ -77,7 +73,6 @@ export const CheckAuthThunk = createAsyncThunk<{ data: any }, void, { rejectValu
         }
     }
 )
-
 
 export const GetProfileThunk = createAsyncThunk<{ data: any }, void, { rejectValue: ErrorType }>(
     'auth/profile',

@@ -113,7 +113,8 @@ class ControllerRoles extends Controller {
     )]
     public function store(Request $request) {
         try {
-            $validator = Validator::make($request->all(), [
+            $inputs = $request->input('data', $request->all());
+            $validator = Validator::make($inputs, [
                 'name'        => 'required|string|max:255|unique:roles,name',
                 'description' => 'nullable|string|max:255',
                 'permissions' => 'nullable|array',
@@ -121,7 +122,7 @@ class ControllerRoles extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $role = $this->roleService->createRole($request->all());
+            $role = $this->roleService->createRole($inputs);
             return RolesSearch::make($role);
         } catch (ValidationException $e) {
             throw $e;
@@ -189,7 +190,8 @@ class ControllerRoles extends Controller {
     )]
     public function update(Request $request, string $id) {
         try {
-            $validator = Validator::make($request->all(), [
+            $inputs = $request->input('data', $request->all());
+            $validator = Validator::make($inputs, [
                 'name'          => 'sometimes|string|max:255',
                 'description'   => 'sometimes|string|max:255',
                 'permissions'   => 'nullable|array',
@@ -198,7 +200,7 @@ class ControllerRoles extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $role = $this->roleService->updateRole($id, $request->all());
+            $role = $this->roleService->updateRole($id, $inputs);
             return RolesSearch::make($role);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Role not found');
@@ -234,6 +236,18 @@ class ControllerRoles extends Controller {
             return RolesDelete::make(null);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException("Role not found");
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Count user by role id
+     */
+    public function countUserByRoleId(string $roleId) {
+        try {
+            $role = $this->roleService->countUserByRoleId($roleId);
+            return response()->json($role);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
