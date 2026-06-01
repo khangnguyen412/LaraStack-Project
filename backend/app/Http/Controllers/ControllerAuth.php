@@ -12,8 +12,9 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Swagger
@@ -30,6 +31,8 @@ use App\Services\UserService;
  * Resource
  */
 use App\Http\Resources\Auths\AuthsLogout;
+use App\Http\Resources\Auths\AuthsForgotPassword;
+use App\Http\Resources\Auths\AuthsResetPassword;
 use App\Http\Resources\UsersResource;
 
 
@@ -185,6 +188,38 @@ class ControllerAuth extends Controller {
         tags: ['Auth'],
         summary: 'Send reset password link to user',
         description: 'Send reset password link to user',
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/AuthsForgotPassword'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/AuthsForgotPassword'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500')
+        ]
+    )]
+    public function forgotPassword(Request $request) {
+        $valid = Validator::make($request->all(), ["email" => "required|email"]);
+        if ($valid->fails()) {
+            throw ValidationException::withMessages(['email' => ['email' => 'Invalid email']]);
+        }
+
+        $user = $this->userService->searchByEmailUser($request->input('email'));
+        if (!$user) {
+            throw new AuthenticationException('User not found');
+        }
+
+        $this->authService->forgotPassword($request->input('email'));
+        return AuthsForgotPassword::make(['message' => 'We have e-mailed your password reset link!']);
+    }
+
+    /**
+     * Reset password.
+     */
+    #[OA\Post(
+        path: '/api/v1/password/reset',
+        tags: ['Auth'],
+        summary: 'Reset password',
+        description: 'Reset password',
         requestBody: new OA\RequestBody(ref: '#/components/requestBodies/AuthsResetPassword'),
         responses: [
             new OA\Response(response: 200, ref: '#/components/responses/AuthsResetPassword'),
@@ -194,21 +229,25 @@ class ControllerAuth extends Controller {
             new OA\Response(response: 500, ref: '#/components/responses/Exception500')
         ]
     )]
-    public function forgotPassword(Request $request) {
+    public function resetPassword(Request $request) {
         $valid = Validator::make($request->all(), [
-            "email" => "required|email"
+            "email"                 => "required|email",
+            "password"              => "required|min:8|confirmed",
+            "password_confirmation" => "required|same:password",
+            "token"                 => "required|string",
         ]);
         if ($valid->fails()) {
-            throw ValidationException::withMessages(['email' => ['email' => 'Invalid email']]);
+            throw ValidationException::withMessages(['password' => ['required' => 'Password is required']]);
         }
 
-        $user = $this->userService->searchByEmailUser($request->input('email'));
-        if (!$user) {
-            throw new AuthenticationException('User not found');
-        }
-        $this->authService->forgotPassword($request->input('email'));
+        $status = $this->authService->resetPassword($request->input('token'), $request->input('email'), $request->input('password'));
 
-        return response()->json(['message' => 'We have e-mailed your password reset link!']);
+        return match ($status) {
+            Password::INVALID_TOKEN  => throw new AuthenticationException('Invalid token'),
+            Password::INVALID_USER   => throw new BadRequestHttpException('Invalid user'),
+            Password::PASSWORD_RESET => AuthsResetPassword::make(['message' => 'Password reset successfully']),
+            default                  => throw new Exception('Unknown error'),
+        };
     }
 
 }

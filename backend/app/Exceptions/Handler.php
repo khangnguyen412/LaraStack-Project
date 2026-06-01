@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException as AuthorizationException;
 use Illuminate\Validation\ValidationException as ValidationException;
 use Illuminate\Session\TokenMismatchException as TokenMismatchException;
 use Illuminate\Database\Eloquent\ModelNotFoundException as ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as NotFoundHttpException;
 
 use App\Http\Resources\ErrorsResource;
@@ -36,11 +37,11 @@ class Handler extends ExceptionHandler {
 
     public function render($request, Throwable $e) {
         // Bad Request (400)
-        if ($e instanceof ValidationException) {
+        if ($e instanceof BadRequestHttpException) {
             return ErrorsResource::make([
                 'code'    => '400',
-                'message' => 'VALIDATION_ERROR',
-                'data'    => $e->errors(),
+                'message' => 'BAD_REQUEST',
+                'data'    => $e->getMessage(),
             ])->response()->setStatusCode(400);
         }
 

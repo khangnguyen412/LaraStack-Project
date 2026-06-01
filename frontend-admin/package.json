@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.170",
+    "@ant-design/icons": "^6.2.3",
     "@ant-design/pro-components": "^2.7.17",
+    "@ant-design/pro-table": "^3.21.0",
     "@ariakit/react": "^0.4.26",
     "@emoji-mart/data": "^1.2.1",
     "@emotion/react": "^11.14.0",
@@ -94,6 +97,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
+    "dayjs": "^1.11.20",
     "dedent": "^1.0.0",
     "html2canvas-pro": "^2.0.2",
     "jquery": "^3.7.1",

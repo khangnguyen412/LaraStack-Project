@@ -116,8 +116,8 @@ class ControllerPermissions extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $permission = $this->permissionService->createPermission($inputs);
-            return new PermissionsCreate($permission);
+            $this->permissionService->createPermission($inputs);
+            return PermissionsCreate::make(['message' => 'success']);
         } catch (ValidationException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -229,7 +229,7 @@ class ControllerPermissions extends Controller {
     public function destroy(string $id) {
         try {
             $this->permissionService->deletePermission($id);
-            return new PermissionsDelete(null);
+            return PermissionsDelete::make(['message' => 'success']);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException($e->getMessage());
         } catch (Exception $e) {

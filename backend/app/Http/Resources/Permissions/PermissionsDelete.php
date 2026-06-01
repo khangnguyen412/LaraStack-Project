@@ -12,16 +12,6 @@ class PermissionsDelete extends JsonResource {
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array {
-        return [];
-    }
-
-    /**
-     * Customize the response for this resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function toResponse($request) {
-        return response()->json(['data' => 'success']);
+        return ['message' => $this['message']];
     }
 }

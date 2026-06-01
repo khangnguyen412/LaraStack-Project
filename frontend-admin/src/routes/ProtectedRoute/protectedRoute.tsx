@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 /**
  * Redux
  */
-import type { AppDispatch } from "@/redux/store";
+import type { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckAuthThunk } from "@/redux/features/auth";
 
@@ -27,9 +27,10 @@ type RequiredPermission = string | string[];
 type RequiredRole = string[];
 
 
-export const ProtectedAdmin = ({ children, requiredPermission, requiredRole }: { children: React.ReactNode, requiredPermission?: RequiredPermission, requiredRole?: RequiredRole }) => {
+export const ProtectedRoute = ({ children, requiredPermission, requiredRole }: { children: React.ReactNode, requiredPermission?: RequiredPermission, requiredRole?: RequiredRole }) => {
     const dispatch = useDispatch<AppDispatch>()
-    const { checked, authenticated } = useSelector((state: any) => state.auth)
+    const checked = useSelector((state: RootState) => state.auth.checked);
+    const authenticated = useSelector((state: RootState) => state.auth.authenticated);
     const { hasPermission } = usePermission()
     const { hasRole } = useRoles();
 

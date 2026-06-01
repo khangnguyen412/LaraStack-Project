@@ -122,8 +122,8 @@ class ControllerRoles extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $role = $this->roleService->createRole($inputs);
-            return RolesSearch::make($role);
+            $this->roleService->createRole($inputs);
+            return RolesCreate::make(['message' => 'success']);
         } catch (ValidationException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -233,24 +233,11 @@ class ControllerRoles extends Controller {
     public function destroy(string $id) {
         try {
             $this->roleService->deleteRole($id);
-            return RolesDelete::make(null);
+            return RolesDelete::make(['message' => 'success']);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException("Role not found");
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
-
-    /**
-     * Count user by role id
-     */
-    public function countUserByRoleId(string $roleId) {
-        try {
-            $role = $this->roleService->countUserByRoleId($roleId);
-            return response()->json($role);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
 }

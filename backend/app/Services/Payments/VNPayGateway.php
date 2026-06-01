@@ -17,7 +17,7 @@ class VNPayGateway implements PaymentGateway {
     /**
      * Create payment
      */
-    public function createPaymentUrl(array $orderData): string {
+    public function createUrl(array $orderData): string {
         $vnpayUrl = $this->config['url'];
         $vnp_TmnCode = $this->config['tmn_code'];
         $vnp_HashSecret = $this->config['hash_secret'];
@@ -75,7 +75,7 @@ class VNPayGateway implements PaymentGateway {
     /**
      * Get payment status
      */
-    public function verifyPayment(array $requestData): bool {
+    public function verify(array $requestData): bool {
         $vnp_HashSecret = $this->config['hash_secret'];
         $vnp_SecureHash = $requestData['vnp_SecureHash'] ?? '';
         unset($requestData['vnp_SecureHash'], $requestData['vnp_SecureHashType']); // Remove secure hash and secure hash type from array to check
@@ -103,7 +103,7 @@ class VNPayGateway implements PaymentGateway {
     public function processIPN(array $requestData): array {
         // VNPay send IPN by GET method to IPN URL.
         // Check signature
-        if (!$this->verifyPayment($requestData)) {
+        if (!$this->verify($requestData)) {
             \Log::warning('VNPay IPN: Invalid signature', $requestData);
             return ['status' => 'error', 'message' => 'Invalid signature'];
         }

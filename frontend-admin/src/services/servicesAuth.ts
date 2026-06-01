@@ -32,3 +32,19 @@ export const UserProfile = async (): Promise<any> => {
         throw error;
     }
 }
+
+export const ForgotPassword = async (payload: object): Promise<any> => {
+    try {
+        return await postRequest('/password/forgot', payload, { headers: { "Content-Type": "application/json" } });
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const ResetPassword = async (payload: object): Promise<any> => {
+    try {
+        return await postRequest('/password/reset', payload, { headers: { "Content-Type": "application/json" } });
+    } catch (error) {
+        throw error;
+    }
+} 

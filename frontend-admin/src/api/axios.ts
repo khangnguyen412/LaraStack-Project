@@ -26,7 +26,10 @@ API.interceptors.response.use(
         return response.data
     },
     (error) => {
-        if (error.response?.status === 401 && !error.config.url.includes('/login')) {
+        const PUBLIC_ROUTES = ['/password/reset', '/password/forgot', '/register', '/login'];
+        const isPublicRoute = PUBLIC_ROUTES.some(route => error.config.url.includes(route));
+
+        if (error.response?.status === 401 && !isPublicRoute) {
             window.location.href = '/login';
             localStorage.removeItem('profile');
         }

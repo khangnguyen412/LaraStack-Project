@@ -76,7 +76,37 @@
                 ],
                 "summary": "Send reset password link to user",
                 "description": "Send reset password link to user",
-                "operationId": "e7d75b28b5a3a11fa528ac76f3035a03",
+                "operationId": "4fdd79859330e3cc5080fd57b91e7dfb",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/AuthsForgotPassword"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthsForgotPassword"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                }
+            }
+        },
+        "/api/v1/password/reset": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset password",
+                "description": "Reset password",
+                "operationId": "911590cd94386d62e8177dc93a9cf336",
                 "requestBody": {
                     "$ref": "#/components/requestBodies/AuthsResetPassword"
                 },
@@ -84,8 +114,17 @@
                     "200": {
                         "$ref": "#/components/responses/AuthsResetPassword"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 }
             }
@@ -615,6 +654,155 @@
                     }
                 ]
             }
+        },
+        "/api/v1/payment/vnpay/ipn": {
+            "get": {
+                "tags": [
+                    "VnPay Payment"
+                ],
+                "summary": "Process IPN from VnPay",
+                "description": "Summary of VNPayProcessIpn",
+                "operationId": "d7e393ccc1787f9ed094cde98a0fb28f",
+                "parameters": [
+                    {
+                        "name": "vnp_Amount",
+                        "in": "query",
+                        "description": "Amount",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "vnp_BankCode",
+                        "in": "query",
+                        "description": "Bank Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "ABC"
+                        }
+                    },
+                    {
+                        "name": "vnp_BankTranNo",
+                        "in": "query",
+                        "description": "Bank Transaction Number",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    },
+                    {
+                        "name": "vnp_CardType",
+                        "in": "query",
+                        "description": "Card Type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "VISA"
+                        }
+                    },
+                    {
+                        "name": "vnp_OrderInfo",
+                        "in": "query",
+                        "description": "Order Information",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Checkout order %23 TEST123"
+                        }
+                    },
+                    {
+                        "name": "vnp_PayDate",
+                        "in": "query",
+                        "description": "Payment Date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "20220514123500"
+                        }
+                    },
+                    {
+                        "name": "vnp_ResponseCode",
+                        "in": "query",
+                        "description": "Response Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "00"
+                        }
+                    },
+                    {
+                        "name": "vnp_TmnCode",
+                        "in": "query",
+                        "description": "Merchant Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "CH1Y2QXG"
+                        }
+                    },
+                    {
+                        "name": "vnp_TransactionNo",
+                        "in": "query",
+                        "description": "Transaction Reference",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    },
+                    {
+                        "name": "vnp_TransactionStatus",
+                        "in": "query",
+                        "description": "Transaction Status",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "00"
+                        }
+                    },
+                    {
+                        "name": "vnp_TxnRef",
+                        "in": "query",
+                        "description": "Transaction Reference",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "TEST123"
+                        }
+                    },
+                    {
+                        "name": "vnp_SecureHash",
+                        "in": "query",
+                        "description": "Secure Hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/VnPaysIPN"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -791,6 +979,27 @@
             }
         },
         "responses": {
+            "AuthsForgotPassword": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "We have e-mailed your password reset link!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "AuthsLogin": {
                 "description": "OK",
                 "content": {
@@ -830,9 +1039,14 @@
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "We have e-mailed your password reset link!"
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -900,6 +1114,31 @@
                     }
                 }
             },
+            "VnPaysIPN": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "00"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "PermissionsCreate": {
                 "description": "OK",
                 "content": {
@@ -907,8 +1146,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -923,8 +1167,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -987,8 +1236,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1003,8 +1257,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1113,6 +1372,23 @@
             }
         },
         "requestBodies": {
+            "AuthsForgotPassword": {
+                "description": "User forgot password credentials, email is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "admin@example.com"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
             "AuthsLogin": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
@@ -1148,6 +1424,18 @@
                                 "email": {
                                     "type": "string",
                                     "example": "admin@example.com"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "password_confirmation": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "example": "123456"
                                 }
                             },
                             "type": "object"
@@ -1349,6 +1637,10 @@
         {
             "name": "Users",
             "description": "User management"
+        },
+        {
+            "name": "VnPay Payment",
+            "description": "VnPay Payment"
         }
     ]
 }

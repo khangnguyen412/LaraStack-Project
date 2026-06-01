@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Roles;
+namespace App\Http\Resources\Auths;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RolesDelete extends JsonResource {
+class AuthsForgotPassword extends JsonResource {
     /**
      * Transform the resource into an array.
      *
