@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class ModelsUsers extends Authenticatable implements JWTSubject {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, CanResetPassword;
     protected $table = "users";
     protected $primaryKey = "uuid";
     protected $keyType = 'string';
@@ -94,7 +95,7 @@ class ModelsUsers extends Authenticatable implements JWTSubject {
     /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param mixed $token
      * @return void
      */
     public function sendPasswordResetNotification($token) {

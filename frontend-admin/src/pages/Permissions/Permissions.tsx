@@ -21,7 +21,15 @@ import '@/assets/scss/page/userCreation.scss';
 /**
  *  Component
  */
+<<<<<<< HEAD
 import AdminLayout from "@/components/Layout/AdminLayout";
+=======
+<<<<<<< HEAD:frontend-admin/src/pages/dashboard/Permissions/Permissions.tsx
+import AdminLayout from "@/components/dashboard/layout/AdminLayout";
+=======
+import AdminLayout from "@/components/Layout/AdminLayout";
+>>>>>>> origin/develop:frontend-admin/src/pages/Permissions/Permissions.tsx
+>>>>>>> 3e71039 (merge from dev branch)
 
 /** 
  * Redux

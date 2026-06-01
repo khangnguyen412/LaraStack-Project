@@ -51,7 +51,11 @@ class RoleService implements RoleServiceInterface {
     public function searchRole(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
         $key = "role_search_{$currentPage}_{$perPage}_{$name}_{$description}";
         $cacheKey = 300;
-        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($this->rolesRepository->searchRole($currentPage, $perPage, $name, $description)));
+        $roles = $this->rolesRepository->searchRole($currentPage, $perPage, $name, $description);
+        $roles->each(function ($role) {
+            $role->userCount = $this->countUserByRoleId($role->id)->count();
+        });
+        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($roles));
     }
 
     /**

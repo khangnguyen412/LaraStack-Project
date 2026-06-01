@@ -25,5 +25,5 @@ interface AuthServiceInterface {
     /**
      * Reset password
      */
-    public function resetPassword(string $email, string $password): void;
+    public function resetPassword(string $token, string $password, string $email): string;
 }

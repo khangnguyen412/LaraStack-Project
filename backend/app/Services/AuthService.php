@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\UsersRepository;
-
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
 
 /**
  * Carbon
@@ -23,6 +21,11 @@ use Carbon\Carbon;
  * Job
  */
 use App\Jobs\SendResetPassJob;
+
+/**
+ * Repository
+ */
+use App\Repositories\UsersRepository;
 
 /**
  * Interface
@@ -91,7 +94,7 @@ class AuthService implements AuthServiceInterface {
             throw new ModelNotFoundException("User not found");
         }
         $token = Str::random(64);
-        DB::table('password_resets')->updateOrInsert(
+        DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $email],
             ['token' => bcrypt($token), 'created_at' => Carbon::now()]
         );
@@ -101,7 +104,15 @@ class AuthService implements AuthServiceInterface {
     /**
      * Reset password
      */
-    public function resetPassword(string $email, string $password): void {
+    public function resetPassword(string $token, string $email, string $password): string {
+        $status = Password::reset([
+            'token'    => $token,
+            'email'    => $email,
+            'password' => $password,
+        ], function ($user, $plainPassword) {
+            $this->usersRepository->updatePassword($user->email, Hash::make($plainPassword));
+        });
+        return $status;
     }
 
 }

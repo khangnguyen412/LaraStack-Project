@@ -2,6 +2,9 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+
 
 /**
  * Models
@@ -71,6 +74,29 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @return object|null
      */
     public function updateUser(string $uuid, array $data): ?object {
+    }
+
+    /**
+     * Update user password
+     * @param string $email
+     * @param string $password
+     * @return bool|null
+     */
+    public function updatePassword(string $email, string $password): ?int {
+        $user = $this->model->where('email', $email)->firstOrFail();
+        $data = [
+            'password'            => $password,
+            'password_changed_at' => now(),
+        ];
+
+        /**
+         * if user table has remember_token column, then set remember_token to null
+         */
+        if (Schema::hasColumn($user->getTable(), 'remember_token')) {
+            $data['remember_token'] = null;
+        }
+        $user->forceFill($data);
+        return $user->save() ? 1 : 0;
     }
 
     /**

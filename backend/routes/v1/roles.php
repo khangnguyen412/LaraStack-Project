@@ -12,5 +12,4 @@ Route::prefix('/admin')->middleware(["jwt.cookie","auth:api"])->group(function (
     Route::middleware(['auth.permission:CREATE_ROLE'])->post('/roles', [ControllerRoles::class, 'store']);
     Route::middleware(['auth.permission:UPDATE_ROLE'])->put('/roles/{id}', [ControllerRoles::class, 'update']);
     Route::middleware(['auth.permission:DELETE_ROLE'])->delete('/roles/{id}', [ControllerRoles::class, 'destroy']);
-    Route::middleware(['auth.permission:READ_ROLE'])->get('/roles/{roleId}/count', [ControllerRoles::class, 'countUserByRoleId']);
 });

@@ -19,6 +19,7 @@ class RolesSearch extends JsonResource {
             'description' => $this["description"],
             'created_at'  => $this["created_at"],
             'updated_at'  => $this["updated_at"],
+            'user_count'  => $this["userCount"],
             'permissions' => PermissionsSearch::collection($this->whenLoaded('permissions')),
         ];
     }

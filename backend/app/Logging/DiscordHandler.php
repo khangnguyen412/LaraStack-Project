@@ -28,6 +28,6 @@ class DiscordHandler extends AbstractProcessingHandler {
             $message = $record->formatted;
         }
 
-        Http::post($this->url, ['content' => "🚀 [{$levelName}]: " . substr($message, 0, 1900)]); // Limit 2000 characters
+        Http::post($this->url, ['content' => "🚀 [{$levelName}]: " . substr( $record->message, 0, 1900)]); // Limit 2000 characters
     }
 }

@@ -1,17 +1,22 @@
 import { Suspense, lazy } from "react";
-import { ProtectedAdmin } from "./ProtectedRoute/protectedRoute";
+import { ProtectedRoute } from "./ProtectedRoute/protectedRoute";
 
 /**
  * Constants
  */
 // import { PERMISSIONS } from "@/constants/permissions";
 
-
 const Template = lazy(() => import('@/pages/Pages'))
 const Component = lazy(() => import('@/pages/Component'))
 const AppDefault = lazy(() => import('@/pages/AppDefault'));
-const Login = lazy(() => import('@/pages/Auths/Login'));
 const PaymentTest = lazy(() => import('@/pages/Payments/PaymentTest'));
+
+/**
+ * Auths
+ */
+const Login = lazy(() => import('@/pages/Auths/Login'));
+const ForgotPassword = lazy(() => import('@/pages/Auths/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/Auths/ResetPassword'));
 
 /**
  * Dashboard
@@ -42,12 +47,32 @@ export const AdminRoute = [
             <AppDefault />
         )
     },
+
+    /**
+     * Auths
+     */
     {
         path: '/login',
         element: (
             <Login />
         )
     },
+    {
+        path: '/password/forgot',
+        element: (
+            <ForgotPassword />
+        )
+    },
+    {   
+        path: '/password/reset',
+        element: (
+            <ResetPassword />
+        )
+    },
+
+    /**
+     * Common
+     */
     {
         path: '/payment-test',
         element: (
@@ -66,68 +91,28 @@ export const AdminRoute = [
             <Component />
         )
     },
+
+    /**
+     * Dashboard
+     */
     {
         path: '/admin',
         element: (
-            <ProtectedAdmin >
+            <ProtectedRoute >
                 <AdminDashboard />
-            </ProtectedAdmin>
+            </ProtectedRoute>
         )
     },
+
+    /**
+     * Users
+     */
     {
         path: '/admin/users',
         element: (
-            <ProtectedAdmin>
+            <ProtectedRoute>
                 <UsersList />
-            </ProtectedAdmin>
-        )
-    },
-    {
-        path: '/admin/roles',
-        element: (
-            <ProtectedAdmin requiredRole={['Administrator']}>
-                <RolesSearch />
-            </ProtectedAdmin>
-        ),
-    },
-    {
-        path: '/admin/roles/create',
-        element: (
-            <ProtectedAdmin>
-                <Roles isUpdate={false} />
-            </ProtectedAdmin>
-        )
-    },
-    {
-        path: '/admin/roles/update/:id',
-        element: (
-            <ProtectedAdmin>
-                <Roles isUpdate={true} />
-            </ProtectedAdmin>
-        )
-    },
-    {
-        path: '/admin/permissions',
-        element: (
-            <ProtectedAdmin>
-                <PermissionsSearch />
-            </ProtectedAdmin>
-        )
-    },
-    {
-        path: '/admin/permissions-create',
-        element: (
-            <ProtectedAdmin>
-                <Permissions isUpdate={false} />
-            </ProtectedAdmin>
-        )
-    },
-    {
-        path: '/admin/permissions-update/:id',
-        element: (
-            <ProtectedAdmin>
-                <Permissions isUpdate={true} />
-            </ProtectedAdmin>
+            </ProtectedRoute>
         )
     },
     {
@@ -136,6 +121,63 @@ export const AdminRoute = [
             <Suspense></Suspense>
         )
     },
+
+    /**
+     * Roles
+     */
+    {
+        path: '/admin/roles',
+        element: (
+            <ProtectedRoute requiredRole={['Administrator']}>
+                <RolesSearch />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/admin/roles/create',
+        element: (
+            <ProtectedRoute>
+                <Roles isUpdate={false} />
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/admin/roles/update/:id',
+        element: (
+            <ProtectedRoute>
+                <Roles isUpdate={true} />
+            </ProtectedRoute>
+        )
+    },
+
+    /**
+     * Permissions
+     */
+    {
+        path: '/admin/permissions',
+        element: (
+            <ProtectedRoute>
+                <PermissionsSearch />
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/admin/permissions-create',
+        element: (
+            <ProtectedRoute>
+                <Permissions isUpdate={false} />
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/admin/permissions-update/:id',
+        element: (
+            <ProtectedRoute>
+                <Permissions isUpdate={true} />
+            </ProtectedRoute>
+        )
+    },
+
     {
         path: '',
         element: (

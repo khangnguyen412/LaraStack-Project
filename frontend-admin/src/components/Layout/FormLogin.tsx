@@ -17,7 +17,7 @@ export const ForgotPassBtn: React.FC<{ error: string | null }> = ({ error }) => 
         <React.Fragment>
             <Error Error={error}></Error>
             <div className="forgot-pass-btn">
-                <a href="/forgot-password">Forgot Password?</a>
+                <a href="/password/forgot">Forgot Password?</a>
             </div>
         </React.Fragment>
     )

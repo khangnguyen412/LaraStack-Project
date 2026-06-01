@@ -1,18 +1,15 @@
-/* eslint-disable */
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 /**
  *  Ant Design
 */
 import { theme } from 'antd';
-import { LockOutlined, UserOutlined, } from '@ant-design/icons';
-import { Form, Input, Button, Checkbox, Card, Alert, Typography, Flex, Divider } from 'antd';
+import { UserOutlined, } from '@ant-design/icons';
+import { Form, Input, Button, Card, Alert, Typography, Divider } from 'antd';
 
 /**
  *  Component
  */
-import { ForgotPassBtn } from "@/components/Layout/FormLogin";
 
 /**
  * Assets
@@ -29,60 +26,44 @@ import { ErrorHandler, formatErrorMessage } from "@/utils/errorHandler";
  * Redux
  */
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginThunk, CheckAuthThunk } from "@/redux/features/auth";
+import type { RootState } from '@/redux/store';
+import { ForgotPasswordThunk } from "@/redux/features/auth";
 
 /**
  * Type
 */
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import type { AppDispatch } from "@/redux/store";
-import type { LoginType } from "@/types/login.type";
 
 /**
  * Login Page
  */
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
     /**
      * Hook
      */
     const { token } = theme.useToken();
-    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [form] = Form.useForm();
-    const loading = useSelector((state: any) => state.auth?.loading);
-    const error = useSelector((state: any) => state.auth?.error);
+    const message = useSelector((state: RootState) => state.auth?.message);
+    const loading = useSelector((state: RootState) => state.auth?.loading);
+    const error = useSelector((state: RootState) => state.auth?.error);
 
     const { Text, Title } = Typography;
-
-    const checkAuthHandle = async () => {
-        try {
-            const response = await dispatch(CheckAuthThunk()).unwrap();
-            if (response.data) {
-                localStorage.setItem("profile", JSON.stringify(response.data));
-                navigate("/admin");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     /**
      * On Finish Login Form
      * 
      * @param values 
      */
-    const OnFinish = async (values: LoginType) => {
+    const OnFinish = async (values: {email: string}) => {
         try {
-            const response = await dispatch(LoginThunk(values)).unwrap();
-            if (response.data) {
-                localStorage.setItem("profile", JSON.stringify(response.data));
-                navigate("/admin");
-            }
+            await dispatch(ForgotPasswordThunk(values)).unwrap();
         } catch (err) {
             // Error -> Show Alert Message
             const fieldErrors = ErrorHandler(err);
 
-            // if has error, set to form
+            // If has error, set to form
             if (Object.keys(fieldErrors).length > 0) {
                 const fields = Object.entries(fieldErrors).map(([name, errors]) => ({ name, errors: [errors], }));
                 form.setFields(fields);
@@ -97,12 +78,6 @@ const LoginPage = () => {
         size: 'large',
         autoFocus: true,
     };
-
-    useEffect(() => {
-        if (localStorage.getItem("profile")) {
-            checkAuthHandle()
-        }
-    }, [])
 
     return (
         <React.Fragment>
@@ -121,38 +96,24 @@ const LoginPage = () => {
                             Welcome to CMS System
                         </Title>
                         <Text className="subtitle" style={{ color: token.colorTextSecondary }}>
-                            Sign In
+                            Forgot Password
                         </Text>
                     </div>
 
                     <Form form={form} name="login" onFinish={OnFinish} layout="vertical" size="large" requiredMark={false} className="login-form">
-                        <Form.Item name="username" rules={[{ required: true, message: 'Please input your username or email!' }]} >
-                            <Input {...FieldProps} prefix={<UserOutlined style={{ color: token.colorTextSecondary }} />} placeholder="Username or Email" />
-                        </Form.Item>
-
-                        <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]} >
-                            <Input.Password {...FieldProps} prefix={<LockOutlined style={{ color: token.colorTextSecondary }} />} placeholder="Password" />
-                        </Form.Item>
-
-                        <Form.Item style={{ marginBottom: 0 }}>
-                            <Form.Item name="autoLogin" valuePropName="checked" noStyle>
-                                <Checkbox>Remember Password</Checkbox>
-                            </Form.Item>
+                        <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]} >
+                            <Input {...FieldProps} prefix={<UserOutlined style={{ color: token.colorTextSecondary }} />} placeholder="Email" />
                         </Form.Item>
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" block size="large" loading={loading}>
-                                Login
+                                Forgot Password
                             </Button>
                         </Form.Item>
 
-                        {error && (<Alert message="Login failed" description={formatErrorMessage(error)} type="error" showIcon />)}
-
+                        {message && (<Alert message="Forgot password" description={message} type="success" showIcon />)}
+                        {error && (<Alert message="Failed" description={formatErrorMessage(error)} type="error" showIcon />)}
                         <Divider />
-
-                        <Flex justify="center">
-                            <ForgotPassBtn error={null} />
-                        </Flex>
                     </Form>
 
                     <div className="login-footer">
@@ -167,4 +128,4 @@ const LoginPage = () => {
 
 }
 
-export default LoginPage;
+export default ForgotPasswordPage;

@@ -42,7 +42,15 @@
                 "description": "Logout user",
                 "operationId": "4cdd245e58e1b22a0119bd159fb8e5c1",
                 "responses": {
+<<<<<<< HEAD
                     "203": {
+=======
+<<<<<<< HEAD
+                    "200": {
+=======
+                    "203": {
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                         "$ref": "#/components/responses/AuthsLogout"
                     },
                     "401": {
@@ -76,7 +84,37 @@
                 ],
                 "summary": "Send reset password link to user",
                 "description": "Send reset password link to user",
-                "operationId": "e7d75b28b5a3a11fa528ac76f3035a03",
+                "operationId": "4fdd79859330e3cc5080fd57b91e7dfb",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/AuthsForgotPassword"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/AuthsForgotPassword"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                }
+            }
+        },
+        "/api/v1/password/reset": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset password",
+                "description": "Reset password",
+                "operationId": "911590cd94386d62e8177dc93a9cf336",
                 "requestBody": {
                     "$ref": "#/components/requestBodies/AuthsResetPassword"
                 },
@@ -84,8 +122,17 @@
                     "200": {
                         "$ref": "#/components/responses/AuthsResetPassword"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 }
             }
@@ -154,7 +201,15 @@
                     "$ref": "#/components/requestBodies/PermissionsCreate"
                 },
                 "responses": {
+<<<<<<< HEAD
                     "201": {
+=======
+<<<<<<< HEAD
+                    "200": {
+=======
+                    "201": {
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                         "$ref": "#/components/responses/PermissionsCreate"
                     },
                     "400": {
@@ -193,7 +248,15 @@
                         "required": true,
                         "schema": {
                             "type": "string",
+<<<<<<< HEAD
                             "example": "1"
+=======
+<<<<<<< HEAD
+                            "example": "123456"
+=======
+                            "example": "1"
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                         }
                     }
                 ],
@@ -285,9 +348,18 @@
                     }
                 ],
                 "responses": {
+<<<<<<< HEAD
                     "200": {
                         "$ref": "#/components/responses/PermissionsDelete"
                     },
+=======
+<<<<<<< HEAD
+=======
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsDelete"
+                    },
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                     "400": {
                         "$ref": "#/components/responses/Exception400"
                     },
@@ -615,6 +687,155 @@
                     }
                 ]
             }
+        },
+        "/api/v1/payment/vnpay/ipn": {
+            "get": {
+                "tags": [
+                    "VnPay Payment"
+                ],
+                "summary": "Process IPN from VnPay",
+                "description": "Summary of VNPayProcessIpn",
+                "operationId": "d7e393ccc1787f9ed094cde98a0fb28f",
+                "parameters": [
+                    {
+                        "name": "vnp_Amount",
+                        "in": "query",
+                        "description": "Amount",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "vnp_BankCode",
+                        "in": "query",
+                        "description": "Bank Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "ABC"
+                        }
+                    },
+                    {
+                        "name": "vnp_BankTranNo",
+                        "in": "query",
+                        "description": "Bank Transaction Number",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    },
+                    {
+                        "name": "vnp_CardType",
+                        "in": "query",
+                        "description": "Card Type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "VISA"
+                        }
+                    },
+                    {
+                        "name": "vnp_OrderInfo",
+                        "in": "query",
+                        "description": "Order Information",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Checkout order %23 TEST123"
+                        }
+                    },
+                    {
+                        "name": "vnp_PayDate",
+                        "in": "query",
+                        "description": "Payment Date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "20220514123500"
+                        }
+                    },
+                    {
+                        "name": "vnp_ResponseCode",
+                        "in": "query",
+                        "description": "Response Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "00"
+                        }
+                    },
+                    {
+                        "name": "vnp_TmnCode",
+                        "in": "query",
+                        "description": "Merchant Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "CH1Y2QXG"
+                        }
+                    },
+                    {
+                        "name": "vnp_TransactionNo",
+                        "in": "query",
+                        "description": "Transaction Reference",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    },
+                    {
+                        "name": "vnp_TransactionStatus",
+                        "in": "query",
+                        "description": "Transaction Status",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "00"
+                        }
+                    },
+                    {
+                        "name": "vnp_TxnRef",
+                        "in": "query",
+                        "description": "Transaction Reference",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "TEST123"
+                        }
+                    },
+                    {
+                        "name": "vnp_SecureHash",
+                        "in": "query",
+                        "description": "Secure Hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1234567890"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/VnPaysIPN"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -791,6 +1012,36 @@
             }
         },
         "responses": {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
+            "AuthsForgotPassword": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "We have e-mailed your password reset link!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "AuthsLogin": {
                 "description": "OK",
                 "content": {
@@ -824,15 +1075,25 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
             "AuthsResetPassword": {
                 "description": "OK",
                 "content": {
                     "application/json": {
                         "schema": {
                             "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "We have e-mailed your password reset link!"
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -840,6 +1101,10 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "Exception400": {
                 "description": "Bad Request",
                 "content": {
@@ -900,6 +1165,40 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
+            "VnPaysIPN": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "00"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "PermissionsCreate": {
                 "description": "OK",
                 "content": {
@@ -907,8 +1206,20 @@
                         "schema": {
                             "properties": {
                                 "data": {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
                                     "type": "string",
                                     "example": "success"
+=======
+>>>>>>> 3e71039 (merge from dev branch)
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -923,8 +1234,17 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                                 }
                             },
                             "type": "object"
@@ -980,6 +1300,12 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            "GetRolesList": {
+=======
+>>>>>>> 3e71039 (merge from dev branch)
             "RolesCreate": {
                 "description": "OK",
                 "content": {
@@ -987,8 +1313,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1003,8 +1334,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "string",
-                                    "example": "success"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1028,6 +1364,10 @@
                 }
             },
             "RolesSearch": {
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -1045,6 +1385,11 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
             "RolesUpdate": {
                 "description": "OK",
                 "content": {
@@ -1060,6 +1405,10 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "UsersCreate": {
                 "description": "OK",
                 "content": {
@@ -1113,6 +1462,32 @@
             }
         },
         "requestBodies": {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
+            "AuthsForgotPassword": {
+                "description": "User forgot password credentials, email is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "example": "admin@example.com"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "AuthsLogin": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
@@ -1138,6 +1513,11 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
             "AuthsResetPassword": {
                 "description": "User reset password credentials, email is required",
                 "required": true,
@@ -1148,6 +1528,18 @@
                                 "email": {
                                     "type": "string",
                                     "example": "admin@example.com"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "password_confirmation": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "example": "123456"
                                 }
                             },
                             "type": "object"
@@ -1155,6 +1547,10 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "PermissionsCreate": {
                 "description": "Create permission",
                 "required": true,
@@ -1205,6 +1601,11 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 3e71039 (merge from dev branch)
             "RolesCreate": {
                 "description": "Create role",
                 "required": true,
@@ -1277,6 +1678,10 @@
                     }
                 }
             },
+<<<<<<< HEAD
+=======
+>>>>>>> origin/develop
+>>>>>>> 3e71039 (merge from dev branch)
             "UsersCreate": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
@@ -1349,6 +1754,10 @@
         {
             "name": "Users",
             "description": "User management"
+        },
+        {
+            "name": "VnPay Payment",
+            "description": "VnPay Payment"
         }
     ]
 }

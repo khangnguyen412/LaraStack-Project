@@ -8,7 +8,9 @@ use OpenApi\Attributes as OA;
     description: 'OK',
     content: new OA\JsonContent(
         properties: [
-            new OA\Property(property: 'data', type: 'string', example: 'success'),
+            new OA\Property(property: 'data', type: 'object', properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'success'),
+            ]),
         ]
     )
 )]
