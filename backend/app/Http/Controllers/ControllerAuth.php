@@ -24,7 +24,7 @@ use OpenApi\Attributes as OA;
 /**
  * Service
  */
-use App\Services\AuthService;
+use App\Services\Interface\AuthServiceInterface;
 use App\Services\UserService;
 
 /**
@@ -42,7 +42,7 @@ class ControllerAuth extends Controller {
     protected $authService;
     protected $userService;
 
-    public function __construct(AuthService $authService, UserService $userService) {
+    public function __construct(AuthServiceInterface $authService, UserService $userService) {
         $this->authService = $authService;
         $this->userService = $userService;
     }
@@ -173,7 +173,7 @@ class ControllerAuth extends Controller {
     public function currentUser(Request $request) {
         try {
             $uid = $request->user()->uuid;
-            $currentUser = $this->userService->currentUser($uid);
+            $currentUser = $this->userService->current($uid);
             return new UsersResource($currentUser, true);
         } catch (Exception $e) {
             throw new AuthenticationException($e->getMessage());
@@ -203,7 +203,7 @@ class ControllerAuth extends Controller {
             throw ValidationException::withMessages(['email' => ['email' => 'Invalid email']]);
         }
 
-        $user = $this->userService->searchByEmailUser($request->input('email'));
+        $user = $this->userService->searchByEmail($request->input('email'));
         if (!$user) {
             throw new AuthenticationException('User not found');
         }

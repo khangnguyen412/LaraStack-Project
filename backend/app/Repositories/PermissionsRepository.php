@@ -15,7 +15,7 @@ use App\Models\ModelsPermissions;
 /**
  * Interface 
  */
-use App\Repositories\interface\PermissionRepositoryInterface;
+use App\Repositories\Interface\PermissionRepositoryInterface;
 
 class PermissionsRepository extends BasesRepository implements PermissionRepositoryInterface {
     protected $model;
@@ -31,7 +31,7 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * Get role list
      * @return object|null
      */
-    public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): ?LengthAwarePaginator {
+    public function search(int $currentPage, int $perPage, ?string $description, ?string $name): ?LengthAwarePaginator {
         /**
          * Create query instance
          */
@@ -50,7 +50,7 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @param string $id
      * @return object|null
      */
-    public function searchByIdPermission(string $id): ?ModelsPermissions {
+    public function searchById(string $id): ?ModelsPermissions {
         return $this->model->find($id);
     }
 
@@ -59,7 +59,7 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @param array $data
      * @return bool
      */
-    public function createPermission(array $data): ?ModelsPermissions {
+    public function create(array $data): ?ModelsPermissions {
         $result = $this->model->create($data);
         return $result ?? null;
 
@@ -71,8 +71,8 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @param array $data
      * @return bool
      */
-    public function updatePermission(string $id, array $data): ?ModelsPermissions {
-        $permission = $this->searchByIdPermission($id);
+    public function update(string $id, array $data): ?ModelsPermissions {
+        $permission = $this->searchById($id);
         if (!$permission) {
             throw new ModelNotFoundException('Permission not found');
         }
@@ -83,8 +83,8 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
     /**
      * Delete permission
      */
-    public function deletePermission(string $id): bool {
-        $permission = $this->searchByIdPermission($id);
+    public function delete(string $id): bool {
+        $permission = $this->searchById($id);
         if (!$permission) {
             throw new ModelNotFoundException('Permission not found');
         }

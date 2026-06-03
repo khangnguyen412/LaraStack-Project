@@ -27,7 +27,7 @@ use App\Repositories\RolesRepository;
 /**
  * Service
  */
-use App\Services\RoleService;
+use App\Services\Interface\RoleServiceInterface;
 
 /**
  * Resource
@@ -41,7 +41,7 @@ use App\Http\Resources\Roles\RolesCreate;
 class ControllerRoles extends Controller {
     protected $roleService;
 
-    public function __construct(RoleService $roleService) {
+    public function __construct(RoleServiceInterface $roleService) {
         $this->roleService = $roleService;
     }
 
@@ -78,7 +78,7 @@ class ControllerRoles extends Controller {
             $currentPage = $request->input('currentPage', 1);
             $name = $request->input('name', null);
             $description = $request->input('description', null);
-            $roles = $this->roleService->searchRole($currentPage, $perPage, $name, $description);
+            $roles = $this->roleService->search($currentPage, $perPage, $name, $description);
             return RolesSearch::collection($roles);
         } catch (ValidationException $e) {
             throw $e;
@@ -122,7 +122,7 @@ class ControllerRoles extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $this->roleService->createRole($inputs);
+            $this->roleService->create($inputs);
             return RolesCreate::make(['message' => 'success']);
         } catch (ValidationException $e) {
             throw $e;
@@ -152,7 +152,7 @@ class ControllerRoles extends Controller {
     )]
     public function show(string $id) {
         try {
-            $role = $this->roleService->searchByIdRole($id);
+            $role = $this->roleService->searchById($id);
             return RolesSearch::make($role);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException("Role not found");
@@ -200,7 +200,7 @@ class ControllerRoles extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $role = $this->roleService->updateRole($id, $inputs);
+            $role = $this->roleService->update($id, $inputs);
             return RolesSearch::make($role);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Role not found');
@@ -232,7 +232,7 @@ class ControllerRoles extends Controller {
     )]
     public function destroy(string $id) {
         try {
-            $this->roleService->deleteRole($id);
+            $this->roleService->delete($id);
             return RolesDelete::make(['message' => 'success']);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException("Role not found");

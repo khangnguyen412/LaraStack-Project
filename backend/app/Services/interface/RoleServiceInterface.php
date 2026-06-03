@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\interface;
+namespace App\Services\Interface;
 
 /**
  * Illuminate Package
@@ -21,28 +21,28 @@ interface RoleServiceInterface {
      * @param string|null $description - Role description
      * @return LengthAwarePaginator
      */
-    public function searchRole(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator;
+    public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator;
 
     /**
      * Get role by id
      * @param string $id - Role id
      * @return object|null - Role profile or null
      */
-    public function searchByIdRole(string $id): ?ModelsRoles;
+    public function searchById(string $id): ?ModelsRoles;
 
     /**
      * Count user by role id
      * @param string $roleId - Role id
      * @return Collection
      */
-    public function countUserByRoleId(string $roleId): Collection;
+    public function countUserById(string $roleId): Collection;
 
     /**
      * Create role
      * @param array $data - Role data
      * @return object|null - Role profile or null
      */
-    public function createRole(array $data): ?object;
+    public function create(array $data): ?object;
 
     /**
      * Update role
@@ -50,12 +50,12 @@ interface RoleServiceInterface {
      * @param array $data - Role data
      * @return object|null - Role profile or null
      */
-    public function updateRole(string $id, array $data): ?object;
+    public function update(string $id, array $data): ?object;
 
     /**
      * Delete role
      * @param string $id - Role id
      * @return bool
      */
-    public function deleteRole(string $id): bool;
+    public function delete(string $id): bool;
 }

@@ -30,7 +30,7 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
      * Get role list
      * @return object|null
      */
-    public function searchRole(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
+    public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
         /**
          * Create query instance
          */
@@ -47,14 +47,14 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
     /**
      * Get role by id
      */
-    public function searchByIdRole(string $id): ?ModelsRoles {
+    public function searchById(string $id): ?ModelsRoles {
         return $this->model->with('permissions')->find($id);
     }
 
     /**
      * Count user by role id
      */
-    public function countUserByRoleId(string $roleId): Collection {
+    public function countUserById(string $roleId): Collection {
         $query = $this->model->select("roles.name as role_name", DB::raw("count(users.uuid) as total_user"))
             ->leftJoin("users", "roles.id", "=", "users.role_id")
             ->groupBy("roles.id", "roles.name")
@@ -69,7 +69,7 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
     /**
      * Create role
      */
-    public function createRole(string $name, string $description, array $permissions): ?ModelsRoles {
+    public function create(string $name, string $description, array $permissions): ?ModelsRoles {
         return DB::transaction(function () use ($name, $description, $permissions) {
             $role = $this->model->create([
                 'name'        => $name,
@@ -83,7 +83,7 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
     /**
      * Update role
      */
-    public function updateRole(string $id, string $name, string $description, array $permissions): ?ModelsRoles {
+    public function update(string $id, string $name, string $description, array $permissions): ?ModelsRoles {
         return DB::transaction(function () use ($id, $name, $description, $permissions) {
             $role = $this->model->findOrFail($id);
             $role->update([
@@ -100,7 +100,7 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
     /**
      * Delete role
      */
-    public function deleteRole(string $id): bool {
+    public function delete(string $id): bool {
         return DB::transaction(
             fn() => ($this->model->findOrFail($id)->delete())
         );

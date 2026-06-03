@@ -16,14 +16,9 @@ use Exception;
 use OpenApi\Attributes as OA;
 
 /**
- * Repository
- */
-use App\Repositories\PermissionsRepository;
-
-/**
  * Service
  */
-use App\Services\PermissionService;
+use App\Services\Interface\PermissionServiceInterface;
 
 /**
  * Resource
@@ -36,7 +31,7 @@ use App\Http\Resources\Permissions\PermissionsDelete;
 class ControllerPermissions extends Controller {
     protected $permissionService;
 
-    public function __construct(PermissionService $permissionService) {
+    public function __construct(PermissionServiceInterface $permissionService) {
         $this->permissionService = $permissionService;
     }
 
@@ -73,7 +68,7 @@ class ControllerPermissions extends Controller {
             $perPage = $request->input('perPage', 10);
             $description = $request->input('description', null);
             $name = $request->input('name', null);
-            $permissions = $this->permissionService->searchPermission($currentPage, $perPage, $description, $name);
+            $permissions = $this->permissionService->search($currentPage, $perPage, $description, $name);
             return PermissionsSearch::collection($permissions);
         } catch (ValidationException $e) {
             throw $e;
@@ -116,7 +111,7 @@ class ControllerPermissions extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $this->permissionService->createPermission($inputs);
+            $this->permissionService->create($inputs);
             return PermissionsCreate::make(['message' => 'success']);
         } catch (ValidationException $e) {
             throw $e;
@@ -146,7 +141,7 @@ class ControllerPermissions extends Controller {
     )]
     public function show(string $id) {
         try {
-            $permission = $this->permissionService->searchByIdPermission($id);
+            $permission = $this->permissionService->searchById($id);
             if (!$permission) {
                 throw new ModelNotFoundException('Permission not found');
             }
@@ -198,7 +193,7 @@ class ControllerPermissions extends Controller {
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-            $permission = $this->permissionService->updatePermission($id, $inputs);
+            $permission = $this->permissionService->update($id, $inputs);
             return PermissionsSearch::make($permission);
         } catch (ValidationException $e) {
             throw $e;
@@ -228,7 +223,7 @@ class ControllerPermissions extends Controller {
     )]
     public function destroy(string $id) {
         try {
-            $this->permissionService->deletePermission($id);
+            $this->permissionService->delete($id);
             return PermissionsDelete::make(['message' => 'success']);
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException($e->getMessage());

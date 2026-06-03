@@ -24,7 +24,7 @@ use App\Models\ModelsUsers;
 /**
  * Services
  */
-use App\Services\UserService;
+use App\Services\Interface\UserServiceInterface;
 
 /**
  * Resource
@@ -33,12 +33,11 @@ use App\Http\Resources\UsersResource;
 
 #[OA\Tag(name: 'Users', description: 'User management')]
 class ControllerUsers extends Auth {
-    protected UserService $userService;
+    protected $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(UserServiceInterface $userService) {
         $this->userService = $userService;
     }
-
 
     /**
      *  Get User

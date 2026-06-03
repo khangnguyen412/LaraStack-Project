@@ -14,7 +14,7 @@ use App\Models\ModelsUsers;
 /**
  * Interface 
  */
-use App\Repositories\interface\UserRepositoryInterface;
+use App\Repositories\Interface\UserRepositoryInterface;
 
 class UsersRepository extends BasesRepository implements UserRepositoryInterface {
     protected $model;
@@ -27,7 +27,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * Get user list
      * @return object|null
      */
-    public function searchUser(): ?object {
+    public function search(): ?object {
         return $this->model->get();
     }
 
@@ -37,7 +37,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param string $username
      * @return object|null
      */
-    public function getUserByEmailOrUserName(?string $email, ?string $username): ?object {
+    public function getByEmailOrUserName(?string $email, ?string $username): ?object {
         return $this->model->where('email', $email)->orWhere('user_name', $username)->first();
     }
 
@@ -46,7 +46,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param string $email
      * @return object|null
      */
-    public function getUserByEmail(?string $email): ?object {
+    public function getByEmail(string $email): ?object {
         return $this->model->where('email', $email)->first();
     }
 
@@ -55,7 +55,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param string $uuid
      * @return object|null
      */
-    public function getUserProfileWithRolesAndPermissions(string $uuid): ?object {
+    public function getProfileWithRolesAndPermissions(string $uuid): ?object {
         return $this->model->with('roles.permissions')->find($uuid);
     }
 
@@ -64,7 +64,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param array $data
      * @return object|null
      */
-    public function createUser(array $data): ?object {
+    public function create(array $data): ?object {
     }
 
     /**
@@ -73,7 +73,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param array $data
      * @return object|null
      */
-    public function updateUser(string $uuid, array $data): ?object {
+    public function update(string $uuid, array $data): ?object {
     }
 
     /**
@@ -104,7 +104,7 @@ class UsersRepository extends BasesRepository implements UserRepositoryInterface
      * @param string $uuid
      * @return bool|null
      */
-    public function deleteUser(string $uuid): ?bool {
+    public function delete(string $uuid): ?bool {
     }
 
 }

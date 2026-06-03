@@ -25,12 +25,12 @@ use App\Jobs\SendResetPassJob;
 /**
  * Repository
  */
-use App\Repositories\UsersRepository;
+use App\Repositories\Interface\UserRepositoryInterface;
 
 /**
  * Interface
  */
-use App\Services\interface\AuthServiceInterface;
+use App\Services\Interface\AuthServiceInterface;
 
 /**
  * Service
@@ -41,7 +41,7 @@ use App\Services\RoleService;
 class AuthService implements AuthServiceInterface {
     protected $usersRepository;
 
-    public function __construct(UsersRepository $usersRepository) {
+    public function __construct(UserRepositoryInterface $usersRepository) {
         $this->usersRepository = $usersRepository;
     }
 
@@ -52,7 +52,7 @@ class AuthService implements AuthServiceInterface {
      * @return array
      */
     public function login(array $credentials, ?string $email, ?string $username): array {
-        $user = $this->usersRepository->getUserByEmailOrUserName($email ?? null, $username ?? null);
+        $user = $this->usersRepository->getByEmailOrUserName($email ?? null, $username ?? null);
 
         if (!$user) {
             throw ValidationException::withMessages(['username' => ['User not found']]);
@@ -68,7 +68,7 @@ class AuthService implements AuthServiceInterface {
             throw new AuthenticationException('Invalid credentials');
         }
 
-        $profile = $this->usersRepository->getUserProfileWithRolesAndPermissions(auth()->user()->uuid);
+        $profile = $this->usersRepository->getProfileWithRolesAndPermissions(auth()->user()->uuid);
 
         // Return array
         return [
@@ -89,7 +89,7 @@ class AuthService implements AuthServiceInterface {
      * Forgot password
      */
     public function forgotPassword(string $email): void {
-        $user = $this->usersRepository->getUserByEmail($email);
+        $user = $this->usersRepository->getByEmail($email);
         if (!$user) {
             throw new ModelNotFoundException("User not found");
         }

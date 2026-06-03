@@ -19,17 +19,17 @@ use App\Models\ModelsPermissions as ModelsPermissions;
 /**
  * Repository
  */
-use App\Repositories\PermissionsRepository;
+use App\Repositories\Interface\PermissionRepositoryInterface;
 
 /**
  * Interface 
  */
-use App\Services\interface\PermissionServiceInterface;
+use App\Services\Interface\PermissionServiceInterface;
 
 class PermissionService implements PermissionServiceInterface {
     protected $permissionsRepository;
 
-    public function __construct(PermissionsRepository $permissionsRepository) {
+    public function __construct(PermissionRepositoryInterface $permissionsRepository) {
         $this->permissionsRepository = $permissionsRepository;
     }
 
@@ -41,9 +41,9 @@ class PermissionService implements PermissionServiceInterface {
      * @param string name - Permission name
      * @return LengthAwarePaginator
      */
-    public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator {
+    public function search(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator {
         $cacheKey = "permissions_page{$currentPage}_per{$perPage}_desc{$description}_name{$name}";
-        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->searchPermission($currentPage, $perPage, $description, $name));
+        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->search($currentPage, $perPage, $description, $name));
     }
 
     /**
@@ -51,9 +51,9 @@ class PermissionService implements PermissionServiceInterface {
      * @param string id - Permission id
      * @return object|null
      */
-    public function searchByIdPermission(string $id): ?ModelsPermissions {
+    public function searchById(string $id): ?ModelsPermissions {
         $cacheKey = "permission_id_{$id}";
-        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->searchByIdPermission($id));
+        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->searchById($id));
     }
 
     /**
@@ -61,8 +61,8 @@ class PermissionService implements PermissionServiceInterface {
      * @param array data - Permission data
      * @return bool
      */
-    public function createPermission(array $data): ?ModelsPermissions {
-        $permission = $this->permissionsRepository->createPermission($data);
+    public function create(array $data): ?ModelsPermissions {
+        $permission = $this->permissionsRepository->create($data);
         Cache::tags(['permissions'])->flush();
         return $permission;
     }
@@ -73,8 +73,8 @@ class PermissionService implements PermissionServiceInterface {
      * @param array data - Permission data
      * @return bool
      */
-    public function updatePermission(string $id, array $data): ?ModelsPermissions {
-        $permission = $this->permissionsRepository->updatePermission($id, $data);
+    public function update(string $id, array $data): ?ModelsPermissions {
+        $permission = $this->permissionsRepository->update($id, $data);
         Cache::tags(['permissions'])->flush();
         return $permission;
     }
@@ -84,8 +84,8 @@ class PermissionService implements PermissionServiceInterface {
      * @param string id - Permission id
      * @return bool
      */
-    public function deletePermission(string $id): bool {
-        $this->permissionsRepository->deletePermission($id);
+    public function delete(string $id): bool {
+        $this->permissionsRepository->delete($id);
         Cache::tags(['permissions'])->flush();
         return true;
     }

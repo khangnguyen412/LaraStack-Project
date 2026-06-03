@@ -26,17 +26,17 @@ use App\Models\ModelsRoles;
 /**
  * Repository
  */
-use App\Repositories\RolesRepository;
+use App\Repositories\Interface\RoleRepositoryInterface;
 
 /**
  * Interface
  */
-use App\Services\interface\RoleServiceInterface;
+use App\Services\Interface\RoleServiceInterface;
 
 class RoleService implements RoleServiceInterface {
     protected $rolesRepository;
 
-    public function __construct(RolesRepository $rolesRepository) {
+    public function __construct(RoleRepositoryInterface $rolesRepository) {
         $this->rolesRepository = $rolesRepository;
     }
 
@@ -48,12 +48,12 @@ class RoleService implements RoleServiceInterface {
      * @param string|null $description - Role description
      * @return LengthAwarePaginator
      */
-    public function searchRole(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
+    public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
         $key = "role_search_{$currentPage}_{$perPage}_{$name}_{$description}";
         $cacheKey = 300;
-        $roles = $this->rolesRepository->searchRole($currentPage, $perPage, $name, $description);
+        $roles = $this->rolesRepository->search($currentPage, $perPage, $name, $description);
         $roles->each(function ($role) {
-            $role->userCount = $this->countUserByRoleId($role->id)->count();
+            $role->userCount = $this->countUserById($role->id)->count();
         });
         return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($roles));
     }
@@ -63,10 +63,10 @@ class RoleService implements RoleServiceInterface {
      * @param string $id - Role id
      * @return ModelsRoles|null - Role profile or null
      */
-    public function searchByIdRole(string $id): ?ModelsRoles {
+    public function searchById(string $id): ?ModelsRoles {
         $key = "role_search_by_id_{$id}";
         $cacheKey = 300;
-        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($this->rolesRepository->searchByIdRole($id)));
+        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($this->rolesRepository->searchById($id)));
     }
 
     /**
@@ -74,8 +74,8 @@ class RoleService implements RoleServiceInterface {
      * @param string $roleId - Role id
      * @return Collection
      */
-    public function countUserByRoleId(string $roleId): Collection {
-        return $this->rolesRepository->countUserByRoleId($roleId);
+    public function countUserById(string $roleId): Collection {
+        return $this->rolesRepository->countUserById($roleId);
     }
 
     /**
@@ -83,8 +83,8 @@ class RoleService implements RoleServiceInterface {
      * @param array $data - Role data
      * @return object|null - Role profile or null
      */
-    public function createRole(array $data): ?object {
-        $role = $this->rolesRepository->createRole($data['name'], $data['description'], $data['permissions']);
+    public function create(array $data): ?object {
+        $role = $this->rolesRepository->create($data['name'], $data['description'], $data['permissions']);
         Cache::tags('roles')->flush();
         return $role;
     }
@@ -95,8 +95,8 @@ class RoleService implements RoleServiceInterface {
      * @param array $data - Role data
      * @return object|null - Role profile or null
      */
-    public function updateRole(string $id, array $data): ?object {
-        $role = $this->rolesRepository->updateRole($id, $data['name'], $data['description'], $data['permissions']);
+    public function update(string $id, array $data): ?object {
+        $role = $this->rolesRepository->update($id, $data['name'], $data['description'], $data['permissions']);
         Cache::tags('roles')->flush();
         return $role;
     }
@@ -106,8 +106,8 @@ class RoleService implements RoleServiceInterface {
      * @param string $id - Role id
      * @return bool
      */
-    public function deleteRole(string $id): bool {
-        $this->rolesRepository->deleteRole($id);
+    public function delete(string $id): bool {
+        $this->rolesRepository->delete($id);
         Cache::tags('roles')->flush();
         return true;
     }

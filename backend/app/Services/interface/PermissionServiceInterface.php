@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\interface;
+namespace App\Services\Interface;
 
 /**
  * Illuminate Package
@@ -16,21 +16,21 @@ interface PermissionServiceInterface {
      * @param string name - Permission name
      * @return array
      */
-    public function searchPermission(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator;
+    public function search(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator;
 
     /**
      * Get permission by id
      * @param string id - Permission id
      * @return object|null
      */
-    public function searchByIdPermission(string $id): ?object;
+    public function searchById(string $id): ?object;
 
     /**
      * Create permission
      * @param array data - Permission data
      * @return bool
      */
-    public function createPermission(array $data): ?object;
+    public function create(array $data): ?object;
 
     /**
      * Update permission
@@ -38,12 +38,12 @@ interface PermissionServiceInterface {
      * @param array data - Permission data
      * @return bool
      */
-    public function updatePermission(string $id, array $data): ?object;
+    public function update(string $id, array $data): ?object;
 
     /**
      * Delete permission
      * @param string id - Permission id
      * @return bool
      */
-    public function deletePermission(string $id): bool;
+    public function delete(string $id): bool;
 }

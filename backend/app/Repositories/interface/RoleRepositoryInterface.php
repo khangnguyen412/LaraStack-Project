@@ -21,19 +21,19 @@ interface RoleRepositoryInterface extends BaseRepositoryInterface {
      * @param string|null $description
      * @return object
      */
-    public function searchRole(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator;
+    public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator;
 
     /**
      * Function get role by id
      * @param string $id - Role id
      * @return ModelsRoles|null
      */
-    public function searchByIdRole(string $id): ?ModelsRoles;
+    public function searchById(string $id): ?ModelsRoles;
 
     /**
      * Count user by role id
      */
-    public function countUserByRoleId(string $roleId): Collection;
+    public function countUserById(string $roleId): Collection;
 
     /**
      * Function create role
@@ -42,15 +42,15 @@ interface RoleRepositoryInterface extends BaseRepositoryInterface {
      * @param array $permissions - Role permissions
      * @return array
      */
-    public function createRole(string $name, string $description, array $permissions): ?ModelsRoles;
+    public function create(string $name, string $description, array $permissions): ?ModelsRoles;
 
     /**
      * Function update role
      */
-    public function updateRole(string $id, string $name, string $description, array $permissions): ?ModelsRoles;
+    public function update(string $id, string $name, string $description, array $permissions): ?ModelsRoles;
 
     /**
      * Function delete role
      */
-    public function deleteRole(string $id): bool;
+    public function delete(string $id): bool;
 }

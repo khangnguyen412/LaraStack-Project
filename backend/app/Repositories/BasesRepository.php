@@ -4,7 +4,7 @@ namespace App\Repositories;
 /**
  * Interface BaseRepositoryInterface
  */
-use App\Repositories\interface\BaseRepositoryInterface;
+use App\Repositories\Interface\BaseRepositoryInterface;
 
 abstract class BasesRepository implements BaseRepositoryInterface {
     protected $model;
